@@ -121,3 +121,5 @@ git commit -m "removed cached"
 /.vs
 /Build
 *.sln
+/Saved
+/Intermediate
