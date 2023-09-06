@@ -115,3 +115,9 @@ Plugins/**/Intermediate/*
 git rm -r --cached .
 git add .
 git commit -m "removed cached"
+
+/Saved
+/Intermediate
+/.vs
+/Build
+*.sln
