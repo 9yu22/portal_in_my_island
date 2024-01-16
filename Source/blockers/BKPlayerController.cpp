@@ -26,6 +26,8 @@ void ABKPlayerController::SetupInputComponent()
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent))
 	{
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ABKPlayerController::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ABKPlayerController::StopJumping);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABKPlayerController::InputMove);
 	}
 }
@@ -38,4 +40,15 @@ void ABKPlayerController::InputMove(const FInputActionValue& value)
 	{
 		controlledCharacter->GetMovementComponent()->AddInputVector(FVector(inputAxis.Y, inputAxis.X, 0));
 	}
+}
+
+void ABKPlayerController::Jump(const FInputActionValue& Value)
+{
+
+	GetCharacter()->bPressedJump = true;
+}
+
+void ABKPlayerController::StopJumping(const FInputActionValue& Value)
+{
+	GetCharacter()->bPressedJump = false;
 }

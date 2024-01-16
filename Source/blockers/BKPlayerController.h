@@ -22,6 +22,9 @@ class BLOCKERS_API ABKPlayerController : public APlayerController
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* MoveAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* JumpAction;
+
 protected:
 	// 게임이 시작하는 BeginPlay (컨트롤러가 첫 번째 업데이트를 하기 전에 호출)
 	virtual void BeginPlay() override;
@@ -31,4 +34,8 @@ protected:
 	// 움직이라는 명령을 받음
 	UFUNCTION()
 	virtual void InputMove(const FInputActionValue& value);
+	UFUNCTION()
+	void Jump(const FInputActionValue& Value);
+	UFUNCTION()
+	void StopJumping(const FInputActionValue& Value);
 };
