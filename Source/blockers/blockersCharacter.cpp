@@ -78,8 +78,8 @@ void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
 		// Jumping
-		/*EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AblockersCharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AblockersCharacter::StopJumping);*/
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AblockersCharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &AblockersCharacter::StopJumping);
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AblockersCharacter::Move);
