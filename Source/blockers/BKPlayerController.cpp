@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
 
+
 void ABKPlayerController::BeginPlay()
 {
 	// 원본의 BeginPlay
@@ -35,26 +36,30 @@ void ABKPlayerController::SetupInputComponent()
 
 void ABKPlayerController::InputMove(const FInputActionValue& value)
 {
-	FVector2D inputAxis = value.Get<FVector2D>();
+	FVector2D InputAxis = value.Get<FVector2D>();
 
-	if (ACharacter* controlledCharacter = GetCharacter())
+	if (ACharacter* ControlledCharacter = GetCharacter())
 	{
-		//controlledCharacter->GetMovementComponent()->AddInputVector(FVector(inputAxis.Y, inputAxis.X, 0));
-		// find out which way is forward
-		const FRotator Rotation = controlledCharacter->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		//현재: "회전 후 이동" 이 아니라 "어딘가를 중심으로 회전"
+		// 회전 속도 및 이동 속도 변수 설정
+		float RotationRate = 90.0f;
+		float MovementSpeed = 500.0f;
 
-		// get forward vector
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		// 회전 속도 계산
+		FRotator Rotation = ControlledCharacter->GetControlRotation();
+		FRotator YawRotation(0, Rotation.Yaw, 0);
+		FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		// get right vector 
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		// 이동과 회전에 속도 적용
+		ControlledCharacter->AddMovementInput(ForwardDirection, InputAxis.Y * MovementSpeed * GetWorld()->GetDeltaSeconds());
+		ControlledCharacter->AddMovementInput(RightDirection, InputAxis.X * MovementSpeed * GetWorld()->GetDeltaSeconds());
 
-		// add movement 
-		GetCharacter()->AddMovementInput(ForwardDirection, inputAxis.Y);
-		GetCharacter()->AddMovementInput(RightDirection, inputAxis.X);
+		// 회전 속도 적용
+		AddYawInput(InputAxis.X * RotationRate * GetWorld()->GetDeltaSeconds());
 	}
 }
+
 
 void ABKPlayerController::Jump(const FInputActionValue& Value)
 {
