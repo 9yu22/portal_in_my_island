@@ -24,8 +24,8 @@ void ABKPlayerController::BeginPlay()
 		Subsystem->AddMappingContext(MappingContext, 0);
 	}
 
-	firePosition = CreateDefaultSubobject<UArrowComponent>(TEXT("Fire Position"));
-	firePosition->SetupAttachment(boxComp);
+	//firePosition = CreateDefaultSubobject<UArrowComponent>(TEXT("Fire Position"));
+	//firePosition->SetupAttachment(boxComp);
 }
 
 void ABKPlayerController::SetupInputComponent()
@@ -40,7 +40,7 @@ void ABKPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABKPlayerController::Look);
 	}
 
-	InputComponent->BindAction("Fire", IE_Pressed, this, &ABKPlayerController::Fire);
+	//InputComponent->BindAction("Fire", IE_Pressed, this, &ABKPlayerController::Fire);
 }
 
 void ABKPlayerController::InputMove(const FInputActionValue& value)
@@ -86,7 +86,7 @@ void ABKPlayerController::Look(const FInputActionValue& Value)
 	GetCharacter()->AddControllerPitchInput(LookAxisVector.Y);
 }
 
-void ABKPlayerController::Fire()
-{
-	ABullet* bullet = GetWorld()->SpawnActor<ABullet>(bulletFactory, firePosition->GetComponentLocation(), firePosition->GetComponentRotation());
-}
+//void ABKPlayerController::Fire()
+//{
+//	ABullet* bullet = GetWorld()->SpawnActor<ABullet>(bulletFactory, firePosition->GetComponentLocation(), firePosition->GetComponentRotation());
+//}

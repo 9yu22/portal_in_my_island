@@ -55,6 +55,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ABullet> bulletFactory;
 
-private:
-	void Fire();
+//private:
+//	void Fire();
 };
