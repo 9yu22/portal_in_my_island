@@ -7,6 +7,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
+#include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/ArrowComponent.h"
+#include "Bullet.h"
 
 
 void ABKPlayerController::BeginPlay()
@@ -19,6 +23,9 @@ void ABKPlayerController::BeginPlay()
 	{
 		Subsystem->AddMappingContext(MappingContext, 0);
 	}
+
+	firePosition = CreateDefaultSubobject<UArrowComponent>(TEXT("Fire Position"));
+	firePosition->SetupAttachment(boxComp);
 }
 
 void ABKPlayerController::SetupInputComponent()
@@ -32,6 +39,8 @@ void ABKPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABKPlayerController::InputMove);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABKPlayerController::Look);
 	}
+
+	InputComponent->BindAction("Fire", IE_Pressed, this, &ABKPlayerController::Fire);
 }
 
 void ABKPlayerController::InputMove(const FInputActionValue& value)
@@ -40,7 +49,6 @@ void ABKPlayerController::InputMove(const FInputActionValue& value)
 
 	if (ACharacter* ControlledCharacter = GetCharacter())
 	{
-		//현재: "회전 후 이동" 이 아니라 "어딘가를 중심으로 회전"
 		// 회전 속도 및 이동 속도 변수 설정
 		float RotationRate = 90.0f;
 		float MovementSpeed = 500.0f;
@@ -76,4 +84,9 @@ void ABKPlayerController::Look(const FInputActionValue& Value)
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 	GetCharacter()->AddControllerYawInput(LookAxisVector.X);
 	GetCharacter()->AddControllerPitchInput(LookAxisVector.Y);
+}
+
+void ABKPlayerController::Fire()
+{
+	ABullet* bullet = GetWorld()->SpawnActor<ABullet>(bulletFactory, firePosition->GetComponentLocation(), firePosition->GetComponentRotation());
 }

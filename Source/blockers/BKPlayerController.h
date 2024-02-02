@@ -43,4 +43,18 @@ protected:
 	void StopJumping(const FInputActionValue& Value);
 	UFUNCTION()
 	void Look(const FInputActionValue& Value);
+
+public:
+
+	UPROPERTY(EditAnywhere)
+	class UBoxComponent* boxComp;
+
+	UPROPERTY(EditAnywhere)
+	class UArrowComponent* firePosition;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class ABullet> bulletFactory;
+
+private:
+	void Fire();
 };
