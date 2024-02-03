@@ -70,5 +70,19 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	UPROPERTY(EditAnywhere)
+	class UBoxComponent* boxComp;
+
+	//총구위치
+	UPROPERTY(EditAnywhere)
+	class UArrowComponent* firePosition;
+
+	//총알 블루프린트
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class ABullet> bulletFactory;
+
+private:
+	void Fire();
 };
 

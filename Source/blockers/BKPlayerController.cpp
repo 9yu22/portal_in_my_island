@@ -7,10 +7,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
-#include "Components/BoxComponent.h"
-#include "Components/StaticMeshComponent.h"
-#include "Components/ArrowComponent.h"
-#include "Bullet.h"
 
 
 void ABKPlayerController::BeginPlay()
@@ -24,8 +20,7 @@ void ABKPlayerController::BeginPlay()
 		Subsystem->AddMappingContext(MappingContext, 0);
 	}
 
-	//firePosition = CreateDefaultSubobject<UArrowComponent>(TEXT("Fire Position"));
-	//firePosition->SetupAttachment(boxComp);
+
 }
 
 void ABKPlayerController::SetupInputComponent()
@@ -40,7 +35,7 @@ void ABKPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABKPlayerController::Look);
 	}
 
-	//InputComponent->BindAction("Fire", IE_Pressed, this, &ABKPlayerController::Fire);
+	
 }
 
 void ABKPlayerController::InputMove(const FInputActionValue& value)
@@ -85,8 +80,3 @@ void ABKPlayerController::Look(const FInputActionValue& Value)
 	GetCharacter()->AddControllerYawInput(LookAxisVector.X);
 	GetCharacter()->AddControllerPitchInput(LookAxisVector.Y);
 }
-
-//void ABKPlayerController::Fire()
-//{
-//	ABullet* bullet = GetWorld()->SpawnActor<ABullet>(bulletFactory, firePosition->GetComponentLocation(), firePosition->GetComponentRotation());
-//}

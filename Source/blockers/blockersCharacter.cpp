@@ -11,6 +11,12 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 
+
+#include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/ArrowComponent.h"
+#include "Bullet.h"
+
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 //////////////////////////////////////////////////////////////////////////
@@ -52,6 +58,9 @@ AblockersCharacter::AblockersCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+
+	//총구 표시 컴포넌트를 생성하고 박스 컴포넌트의 자식컴포넌트로 설정한다.
+	firePosition = CreateDefaultSubobject<UArrowComponent>(TEXT("Fire Position"));
 }
 
 void AblockersCharacter::BeginPlay()
@@ -74,6 +83,9 @@ void AblockersCharacter::BeginPlay()
 
 void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+	//UE_LOG(LogTemp, Warning, TEXT("Hello"));
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AblockersCharacter::Fire);
+
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
@@ -86,6 +98,7 @@ void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AblockersCharacter::Look);
+		
 	}
 	else
 	{
@@ -129,5 +142,12 @@ void AblockersCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+//마우스 왼쪽 버튼 입력 처리 함수
+void AblockersCharacter::Fire()
+{
+	FVector BulletLocation = GetMesh()->GetSocketLocation("gun");
+	ABullet* bullet = GetWorld()->SpawnActor<ABullet>(bulletFactory, BulletLocation, firePosition->GetComponentRotation());
 }
 
