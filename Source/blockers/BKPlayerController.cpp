@@ -40,26 +40,35 @@ void ABKPlayerController::SetupInputComponent()
 
 void ABKPlayerController::InputMove(const FInputActionValue& value)
 {
-	FVector2D InputAxis = value.Get<FVector2D>();
+	FVector2D inputAxis = value.Get<FVector2D>();
 
-	if (ACharacter* ControlledCharacter = GetCharacter())
+	if (ACharacter* controlledCharacter = GetCharacter())
 	{
-		// 회전 속도 및 이동 속도 변수 설정
-		float RotationRate = 90.0f;
-		float MovementSpeed = 500.0f;
+		//// 회전 속도 및 이동 속도 변수 설정
+		//float RotationRate = 90.0f;
+		//float MovementSpeed = 500.0f;
 
-		// 회전 속도 계산
-		FRotator Rotation = ControlledCharacter->GetControlRotation();
-		FRotator YawRotation(0, Rotation.Yaw, 0);
-		FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		//// 회전 속도 계산
+		//FRotator Rotation = ControlledCharacter->GetControlRotation();
+		//FRotator YawRotation(0, Rotation.Yaw, 0);
+		//FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		//FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		// 이동과 회전에 속도 적용
-		ControlledCharacter->AddMovementInput(ForwardDirection, InputAxis.Y * MovementSpeed * GetWorld()->GetDeltaSeconds());
-		ControlledCharacter->AddMovementInput(RightDirection, InputAxis.X * MovementSpeed * GetWorld()->GetDeltaSeconds());
+		//// 이동과 회전에 속도 적용
+		//ControlledCharacter->AddMovementInput(ForwardDirection, InputAxis.Y * MovementSpeed * GetWorld()->GetDeltaSeconds());
+		//ControlledCharacter->AddMovementInput(RightDirection, InputAxis.X * MovementSpeed * GetWorld()->GetDeltaSeconds());
 
-		// 회전 속도 적용
-		AddYawInput(InputAxis.X * RotationRate * GetWorld()->GetDeltaSeconds());
+		//// 회전 속도 적용
+		//AddYawInput(InputAxis.X * RotationRate * GetWorld()->GetDeltaSeconds());
+		const FRotator Rotation = controlledCharacter->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+		GetCharacter()->AddMovementInput(ForwardDirection, inputAxis.Y);
+		GetCharacter()->AddMovementInput(RightDirection, inputAxis.X);
 	}
 }
 
