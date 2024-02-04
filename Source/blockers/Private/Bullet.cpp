@@ -4,6 +4,8 @@
 #include "Bullet.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "PracticeDestroyBlock.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABullet::ABullet()
@@ -26,6 +28,12 @@ ABullet::ABullet()
 void ABullet::BeginPlay()
 {
 	Super::BeginPlay();
+
+	playerForward = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorForwardVector();
+
+	boxComp->OnComponentBeginOverlap;
+
+	boxComp->OnComponentBeginOverlap.AddDynamic(this, &ABullet::OnBulletOverlap);
 	
 }
 
@@ -33,11 +41,28 @@ void ABullet::BeginPlay()
 void ABullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	FVector newLocation = GetActorLocation() + GetActorForwardVector() * moveSpeed * DeltaTime;
+	
+	
+	FVector newLocation = GetActorLocation() + playerForward * moveSpeed * DeltaTime;
 	
 
 	SetActorLocation(newLocation);
+
+}
+
+void ABullet::OnBulletOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
+{
+	APracticeDestroyBlock* enemy = Cast<APracticeDestroyBlock>(OtherActor);
+
+	if (enemy != nullptr)
+	{
+		OtherActor->Destroy();
+
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosionFX, GetActorLocation(), GetActorRotation());
+	}
+
+	Destroy();
 
 }
 
