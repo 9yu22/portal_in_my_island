@@ -1,5 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+using System.IO;
+
 using UnrealBuildTool;
 
 public class blockers : ModuleRules
@@ -9,5 +11,7 @@ public class blockers : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "NavigationSystem", "AIModule", "Niagara", "EnhancedInput", "Sockets", "Networking" });
-	}
+
+        PrivateDependencyModuleNames.AddRange(new string[] { "ProceduralMeshComponent" });
+    }
 }
