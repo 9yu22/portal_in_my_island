@@ -1,2 +1,0 @@
-C:\Users\givoo\OneDrive - 한국공학대학교\바탕 화면\DemoServer\x64\Debug\DemoServer.exe
-C:\Users\givoo\Documents\GitHub\portal_in_my_island\DemoServer\x64\Debug\DemoServer.exe

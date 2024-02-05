@@ -24,5 +24,5 @@ public:
 public:
 	class FSocket* Socket;
 	FString IpAddress = TEXT("127.0.0.1");
-	int16 Port = 8000;
+	int16 Port = 4040;
 };

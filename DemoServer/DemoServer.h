@@ -8,7 +8,7 @@
 #define REMOVE_BLOCK 13
 
 #define BUFFERSIZE 1024
-#define SERVERPORT 8000
+#define SERVERPORT 4040
 
 struct packetHeader {
 	char packetSize; 
