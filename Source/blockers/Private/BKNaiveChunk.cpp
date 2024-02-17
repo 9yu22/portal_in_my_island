@@ -72,7 +72,7 @@ void ABKNaiveChunk::GenerateMesh()
 					{
 						if (Check(GetPositionInDirection(Direction, Position)))
 						{
-							CreateFace(Direction, Position * 100);
+							CreateFace(Direction, Position * 100, false);
 						}
 					}
 				}
@@ -88,12 +88,12 @@ bool ABKNaiveChunk::Check(const FVector Position) const
 	return Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)] == BKEBlock::Air;
 }
 
-void ABKNaiveChunk::CreateFace(const BKEDirection Direction, const FVector Position)
+void ABKNaiveChunk::CreateFace(const BKEDirection Direction, const FVector Position, bool isSplitBlock)
 {
 	const auto Color = FColor::MakeRandomColor();
 	const auto Normal = GetNormal(Direction);
 
-	MeshData.Vertices.Append(GetFaceVertices(Direction, Position));
+	MeshData.Vertices.Append(GetFaceVertices(Direction, Position, isSplitBlock));
 	MeshData.Triangles.Append({ VertexCount + 3, VertexCount + 2, VertexCount, VertexCount + 2, VertexCount + 1, VertexCount });
 	MeshData.Normals.Append({ Normal, Normal, Normal, Normal });
 	MeshData.Colors.Append({ Color, Color, Color, Color });
@@ -102,13 +102,16 @@ void ABKNaiveChunk::CreateFace(const BKEDirection Direction, const FVector Posit
 	VertexCount += 4;
 }
 
-TArray<FVector> ABKNaiveChunk::GetFaceVertices(BKEDirection Direction, const FVector Position) const
+TArray<FVector> ABKNaiveChunk::GetFaceVertices(BKEDirection Direction, const FVector Position, bool isSplitBlock) const
 {
 	TArray<FVector> Vertices;
 
 	for (int i = 0; i < 4; i++)
 	{
-		Vertices.Add(BlockVertexData[BlockTriangleData[i + static_cast<int>(Direction) * 4]] + Position);
+		if (isSplitBlock)
+			Vertices.Add(BlockVertexData[BlockTriangleData[i + static_cast<int>(Direction) * 4]] * 1 / (float)splitBlockNum * 0.8f + Position);
+		else
+			Vertices.Add(BlockVertexData[BlockTriangleData[i + static_cast<int>(Direction) * 4]] + Position);
 	}
 
 	return Vertices;
@@ -147,9 +150,56 @@ void ABKNaiveChunk::ModifyVoxelData(const FIntVector Position, const BKEBlock Bl
 	const int Index = GetBlockIndex(Position.X, Position.Y, Position.Z);
 
 	Blocks[Index] = Block;
+
+	// 전달 받은 Block이 Air라는 것 => 파괴하고자 하는 블록
+	// 그러면 해당 블록은 Air로 만들고 그 위치를 저장해서 8등분한다.
+	if (Block == BKEBlock::Air)
+	{
+		float splitNum = 1 / (float)splitBlockNum;
+		for (int x = 0; x < splitBlockNum; ++x)
+		{
+			for (int y = 0; y < splitBlockNum; ++y)
+			{
+				for (int z = 0; z < splitBlockNum; ++z)
+				{
+					splitBlocks.Add(FVector(Position.X + splitNum * x, Position.Y + splitNum * y, Position.Z + splitNum * z));
+				}
+			}
+		}
+	}
+}
+
+void ABKNaiveChunk::GenerateSplitBlockMesh()
+{
+	// 일단 작은 블록 8개만 그려보자
+	if (!splitBlocks.IsEmpty())
+	{
+		for (auto splitBlockPosition : splitBlocks)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Small Block Position: (%f, %f, %f)"), splitBlockPosition.X, splitBlockPosition.Y, splitBlockPosition.Z);
+
+			for (auto Direction : { BKEDirection::Forward, BKEDirection::Right, BKEDirection::Back, BKEDirection::Left, BKEDirection::Up, BKEDirection::Down })
+			{
+				CreateFace(Direction, splitBlockPosition * 100, true);
+			}
+		}
+	}
+	else
+		UE_LOG(LogTemp, Warning, TEXT("There are NOT mini blocks"));
 }
 
 int ABKNaiveChunk::GetBlockIndex(const int X, const int Y, const int Z) const
 {
 	return Z * Size * Size + Y * Size + X;
+}
+
+void ABKNaiveChunk::RemoveSplitBlocks()
+{
+	if (!splitBlocks.IsEmpty())
+	{
+		for (int i = 0; i < splitBlockNum * splitBlockNum * splitBlockNum; ++i)
+		{
+			splitBlocks.RemoveAt(0);
+		}
+	}
 }

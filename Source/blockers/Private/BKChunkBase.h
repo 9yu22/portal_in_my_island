@@ -30,6 +30,9 @@ class BLOCKERS_API ABKChunkBase : public AActor
 	UFUNCTION(BlueprintCallable, Category = "Chunk")
 	void ModifyVoxel(const FIntVector Position, const BKEBlock Block);
 
+	UFUNCTION(BlueprintCallable, Category = "Chunk")
+	void FunctionWithDelay();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -38,6 +41,8 @@ protected:
 	virtual void Generate2DHeightMap(const FVector Position) PURE_VIRTUAL(ABKChunkBase::Generate2DHeightMap);
 	virtual void Generate3DHeightMap(const FVector Position) PURE_VIRTUAL(ABKChunkBase::Generate3DHeightMap);
 	virtual void GenerateMesh() PURE_VIRTUAL(ABKChunkBase::GenerateMesh);
+	virtual void GenerateSplitBlockMesh() PURE_VIRTUAL(ABKChunkBase::GenerateSplitBlockMesh);	// 미니 블록 그리는 함수
+	virtual void RemoveSplitBlocks() PURE_VIRTUAL(ABKChunkBase::RemoveSplitBlocks);				// 미니 블록 배열 비우는 함수
 
 	virtual void ModifyVoxelData(const FIntVector Position, const BKEBlock Block) PURE_VIRTUAL(ABKChunkBase::RemoveVoxelData);
 
@@ -50,4 +55,5 @@ public:
 	void ApplyMesh() const;
 	void ClearMesh();
 	void GenerateHeightMap();
+	void FinishSplitBlocksAnimation();
 };

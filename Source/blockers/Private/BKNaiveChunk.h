@@ -24,10 +24,14 @@ class ABKNaiveChunk final : public ABKChunkBase
 	virtual void Generate3DHeightMap(FVector Position) override;
 	virtual void GenerateMesh() override;
 	virtual void ModifyVoxelData(const FIntVector Position, BKEBlock Block) override;
+	virtual void GenerateSplitBlockMesh() override;
+	virtual void RemoveSplitBlocks() override;
 
 private:
 	TArray<BKEBlock> Blocks;
+	TArray<FVector> splitBlocks;	// 쪼개지는 중인 블록들의 좌표를 저장하는 배열
 
+	int splitBlockNum = 4;			// 4 x 4 x 4로 쪼갠다는 의미
 	const FVector BlockVertexData[8] = {
 		FVector(100,100,100),
 		FVector(100,0,100),
@@ -48,8 +52,8 @@ private:
 	};
 
 	bool Check(FVector Position) const;
-	void CreateFace(BKEDirection Direction, FVector Position);
-	TArray<FVector> GetFaceVertices(BKEDirection Direction, FVector Position) const;
+	void CreateFace(BKEDirection Direction, FVector Position, bool isSplitBlock);
+	TArray<FVector> GetFaceVertices(BKEDirection Direction, FVector Position, bool isSplitBlock) const;
 	FVector GetPositionInDirection(BKEDirection Direction, FVector Position) const;
 	FVector GetNormal(BKEDirection Direction) const;
 	int GetBlockIndex(int X, int Y, int Z) const;
