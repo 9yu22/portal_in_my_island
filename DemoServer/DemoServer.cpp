@@ -11,6 +11,8 @@
 std::array<blockInfo, 3> blockList;
 std::vector<blockInfo> gameBlocks{ 10 };
 
+SOCKET client_sock;
+
 void InitBlockList()
 {
     blockList[0].blockType = WOOD;
@@ -64,7 +66,6 @@ void RecvPacket(SOCKET client_sock) {
             break;
         }
         AddGameBlock(block);
-        SendGameBlocks(client_sock);
         break;
 
     case REMOVE_BLOCK:
@@ -74,7 +75,6 @@ void RecvPacket(SOCKET client_sock) {
             break;
         }
         RemoveGameBlock(block);
-        SendGameBlocks(client_sock);
         break;
 
     default:
@@ -90,6 +90,11 @@ void AddGameBlock(const blockInfo block)
             return;
     }
     gameBlocks.emplace_back(block);
+
+    blockInfo addBlock = block;
+
+    int retval = send(client_sock, (char*)&addBlock, sizeof(addBlock), 0);
+    if (retval == SOCKET_ERROR) err_display("recv()");
 }
 
 void RemoveGameBlock(const blockInfo block)
@@ -99,33 +104,37 @@ void RemoveGameBlock(const blockInfo block)
             return block.x == blocks.x && block.y == blocks.y && block.z == blocks.z;
         }
     );
-
     gameBlocks.erase(newEnd, gameBlocks.end());
+
+    blockInfo removeBlock = block;
+
+    int retval = send(client_sock, (char*)&removeBlock, sizeof(removeBlock), 0);
+    if (retval == SOCKET_ERROR) err_display("recv()");
 }
 
-void SendGameBlocks(SOCKET client_sock)
-{
-    // 전체 블록 수 전송
-    int blocksNum = gameBlocks.size();
-    int retval = send(client_sock, (char*)&blocksNum, sizeof(blocksNum), 0);
-    if (retval == SOCKET_ERROR) {
-        err_display("send()");
-        return;
-    }
-
-    // 각 블록 정보 전송
-    for (int i = 0; i < gameBlocks.size(); ++i)
-    {
-        gameBlocks[i].packetType = ADD_BLOCK; // 이건 클라이언트쪽 코드 작성하면 맞게 바꿔줘야 함
-        gameBlocks[i].packetSize = sizeof(blockInfo);
-
-        retval = send(client_sock, (char*)&gameBlocks[i], sizeof(blockInfo), 0);
-        if (retval == SOCKET_ERROR) {
-            err_display("send()");
-            break;
-        }
-    }
-}
+//void SendGameBlocks(SOCKET client_sock)
+//{
+//    // 전체 블록 수 전송
+//    int blocksNum = gameBlocks.size();
+//    int retval = send(client_sock, (char*)&blocksNum, sizeof(blocksNum), 0);
+//    if (retval == SOCKET_ERROR) {
+//        err_display("send()");
+//        return;
+//    }
+//
+//    // 각 블록 정보 전송
+//    for (int i = 0; i < gameBlocks.size(); ++i)
+//    {
+//        gameBlocks[i].packetType = ADD_BLOCK; // 이건 클라이언트쪽 코드 작성하면 맞게 바꿔줘야 함
+//        gameBlocks[i].packetSize = sizeof(blockInfo);
+//
+//        retval = send(client_sock, (char*)&gameBlocks[i], sizeof(blockInfo), 0);
+//        if (retval == SOCKET_ERROR) {
+//            err_display("send()");
+//            break;
+//        }
+//    }
+//}
 
 DWORD WINAPI GameThread(LPVOID arg)
 {
@@ -139,8 +148,8 @@ DWORD WINAPI GameThread(LPVOID arg)
     getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
     inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
 
-    InitBlockList();
-    SendBlockList(client_sock);
+    /*InitBlockList();
+    SendBlockList(client_sock);*/
     while (true) {
         RecvPacket(client_sock);
     }
@@ -179,11 +188,13 @@ int main(int argc, char* argv[])
 
     while (1) {
         // accept()
-        SOCKET client_sock = accept(listen_sock, (struct sockaddr*)&clientaddr, &addrlen);
+        client_sock = accept(listen_sock, (struct sockaddr*)&clientaddr, &addrlen);
         if (client_sock == INVALID_SOCKET) {
             err_display("accept()");
             return 1;
         }
+
+        std::cout << "클라이언트 연결 성공" << std::endl;
 
         hThread = CreateThread(NULL, 0, GameThread, (LPVOID)client_sock, 0, NULL);
         if (hThread == NULL) { closesocket(client_sock); }

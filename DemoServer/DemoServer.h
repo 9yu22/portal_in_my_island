@@ -8,7 +8,7 @@
 #define REMOVE_BLOCK 13
 
 #define BUFFERSIZE 1024
-#define SERVERPORT 8000
+#define SERVERPORT 4040
 
 struct packetHeader {
 	char packetSize; 
@@ -22,9 +22,17 @@ struct blockInfo {
 	char blockType;
 };
 
+struct LocationInfo {
+	char packetSize;
+	char packetType;
+	float posX;
+	float posY;
+	float posZ;
+};
+
 void InitBlockList();
 void SendBlockList(SOCKET client_sock);
 void RecvPacket(SOCKET client_sock);
 void AddGameBlock(const blockInfo block);
 void RemoveGameBlock(const blockInfo block);
-void SendGameBlocks(SOCKET client_sock);
+//void SendGameBlocks(SOCKET client_sock);
