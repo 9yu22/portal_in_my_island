@@ -6,7 +6,7 @@
 #include "Common/TcpSocketBuilder.h"
 #include "Serialization/ArrayWriter.h"
 #include "SocketSubsystem.h"
-#include "../Network/PacketSession.h"
+
 
 void US1GameInstance::ConnectToGameServer()
 {
@@ -49,5 +49,15 @@ void US1GameInstance::HandleRecvPackets()
 	if (Socket == nullptr || GameServerSession == nullptr)
 		return;
 
+	// 워커스레드가 큐에 쌓아놓은 것을 소모
 	GameServerSession->HandleRecvPackets();
+}
+
+void US1GameInstance::SendPacket(SendBufferRef SendBuffer)
+{
+	if (Socket == nullptr || GameServerSession == nullptr)
+		return;
+
+	// 큐에 패킷을 쌓는 역할
+	GameServerSession->SendPacket(SendBuffer);
 }

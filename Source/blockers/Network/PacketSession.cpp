@@ -2,7 +2,11 @@
 
 
 #include "PacketSession.h"
-
+//#include "NetworkWorker.h"
+#include "Sockets.h"
+#include "Common/TcpSocketBuilder.h"
+#include "Serialization/ArrayWriter.h"
+#include "SocketSubsystem.h"
 
 PacketSession::PacketSession(class FSocket* Socket) : Socket(Socket)
 {
@@ -17,14 +21,7 @@ void PacketSession::Run()
 {
 	// AsShared()는 Weak포인터를 Shared포인터로 바꿔줌
 	RecvWorkerThread = MakeShared<RecvWorker>(Socket, AsShared());
-}
-
-void PacketSession::Recv()
-{
-}
-
-void PacketSession::Disconnect()
-{
+	SendWorkerThread = MakeShared<SendWorker>(Socket, AsShared());
 }
 
 void PacketSession::HandleRecvPackets()
@@ -37,5 +34,25 @@ void PacketSession::HandleRecvPackets()
 		// Switch로 받게되면 수가 너무 많아져 관리가 힘들다.
 		// TODO
 		// ClientPacketHandler::HandlePacket();
+	}
+}
+
+void PacketSession::SendPacket(SendBufferRef SendBuffer)
+{
+	SendPacketQueue.Enqueue(SendBuffer);
+}
+
+void PacketSession::Disconnect()
+{
+	if (RecvWorkerThread)
+	{
+		RecvWorkerThread->Destroy();
+		RecvWorkerThread = nullptr;
+	}
+
+	if (SendWorkerThread)
+	{
+		SendWorkerThread->Destroy();
+		SendWorkerThread = nullptr;
 	}
 }

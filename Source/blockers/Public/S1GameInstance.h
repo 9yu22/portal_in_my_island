@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "../Network/S1.h"
+#include "../Network/PacketSession.h"
 #include "S1GameInstance.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class BLOCKERS_API US1GameInstance : public UGameInstance
@@ -23,6 +25,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void HandleRecvPackets();
+
+	void SendPacket(SendBufferRef SendBuffer);
 
 public:
 	class FSocket* Socket;

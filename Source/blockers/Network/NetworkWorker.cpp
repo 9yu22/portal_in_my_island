@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "NetworkWorker.h"
 #include "Sockets.h"
 #include "Serialization/ArrayWriter.h"
@@ -23,7 +22,7 @@ bool RecvWorker::Init()
 
 uint32 RecvWorker::Run() // 패킷 조립
 {
-	while(Running) {
+	while (Running) {
 		TArray<uint8> Packet;
 
 		// 뱓은 패킷을 큐에 넣어놓고 메인 스레드에서 꺼내가게 만들자.
@@ -33,7 +32,7 @@ uint32 RecvWorker::Run() // 패킷 조립
 			if (TSharedPtr<PacketSession> Session = SessionRef.Pin()) {
 				Session->RecvPacketQueue.Enqueue(Packet);
 			}
-			
+
 		}
 	}
 
@@ -83,7 +82,7 @@ bool RecvWorker::ReceivePacket(TArray<uint8>& OutPacket)
 }
 
 // 원하는 크기의 데이터가 들어올 때 까지 대기
-bool RecvWorker::ReceiveDesiredBytes(uint8* Results, int32 Size) 
+bool RecvWorker::ReceiveDesiredBytes(uint8* Results, int32 Size)
 {
 	uint32 PendingDAtaSIze;
 	// 보통 접속 종료 시 패킷 리시브 크기가 0으로 온다.
@@ -102,4 +101,70 @@ bool RecvWorker::ReceiveDesiredBytes(uint8* Results, int32 Size)
 		Size -= NumRead;
 	}
 	return false;
+}
+
+// --------SendWorker--------
+
+SendWorker::SendWorker(FSocket* Socket, TSharedPtr<class PacketSession> Session) : Socket(Socket), SessionRef(Session)
+{
+	Thread = FRunnableThread::Create(this, TEXT("RecvWorkerThread"));
+}
+
+SendWorker::~SendWorker()
+{
+
+}
+
+bool SendWorker::Init()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Send Thread Init")));
+	return true;
+}
+
+uint32 SendWorker::Run()
+{
+	while (Running) {
+		SendBufferRef SendBuffer;
+
+		if (TSharedPtr<PacketSession> Session = SessionRef.Pin()) {
+			if (Session->SendPacketQueue.Dequeue(OUT SendBuffer)) {
+				SendPacket(SendBuffer);
+			}
+		}
+
+		//Sleep?
+	}
+
+	return 0;
+}
+
+void SendWorker::Exit()
+{
+}
+
+bool SendWorker::SendPacket(SendBufferRef SendBuffer)
+{
+	if (SendDesiredBytes(SendBuffer->Buffer(), SendBuffer->WriteSize()) == false)
+		return false;
+
+	return true;
+}
+
+void SendWorker::Destroy()
+{
+	Running = false;
+}
+
+bool SendWorker::SendDesiredBytes(uint8* Buffer, int32 Size)
+{
+	while (Size > 0) {
+		int32 BytesSent = 0;
+		if (Socket->Send(Buffer, Size, BytesSent) == 0)
+			return false;
+
+		Size -= BytesSent;
+		Buffer += BytesSent;
+	}
+
+	return true;
 }

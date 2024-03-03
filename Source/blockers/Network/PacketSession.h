@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "NetworkWorker.h"
+#include "S1.h"
 
 /**
- * 
+ *
  */
 class BLOCKERS_API PacketSession : public TSharedFromThis<PacketSession> // TSharedPtr(스마트 포인터)
 {
@@ -15,11 +16,13 @@ public:
 	~PacketSession();
 
 	void Run();
-	void Recv();
-	void Disconnect();
 
 	UFUNCTION(BlueprintCallable)
 	void HandleRecvPackets();
+
+	void SendPacket(SendBufferRef SendBuffer);
+
+	void Disconnect();
 
 public:
 	class FSocket* Socket;
@@ -29,4 +32,5 @@ public:
 
 	// GameThread와 NetworkThread가 데이터를 주고 받는 큐
 	TQueue<TArray<uint8>> RecvPacketQueue;
+	TQueue<SendBufferRef> SendPacketQueue;
 };
