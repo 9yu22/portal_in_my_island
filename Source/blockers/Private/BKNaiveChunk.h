@@ -29,9 +29,9 @@ class ABKNaiveChunk final : public ABKChunkBase
 
 private:
 	TArray<BKEBlock> Blocks;
-	TArray<FVector> splitBlocks;	// ÂÉ°³Áö´Â ÁßÀÎ ºí·ÏµéÀÇ ÁÂÇ¥¸¦ ÀúÀåÇÏ´Â ¹è¿­
+	TArray<FIntVector> splitBlocks;	// ÂÉ°³Áö´Â ºí·Ï ÀÚÃ¼ÀÇ ÁÂÇ¥¸¦ ÀúÀåÇÏ´Â ¹è¿­
 
-	int splitBlockNum = 4;			// 4 x 4 x 4·Î ÂÉ°µ´Ù´Â ÀÇ¹Ì
+	int splitBlockNum = 10;			// splitBlockNum x splitBlockNum x splitBlockNum·Î ÂÉ°³Áü
 	const FVector BlockVertexData[8] = {
 		FVector(100,100,100),
 		FVector(100,0,100),

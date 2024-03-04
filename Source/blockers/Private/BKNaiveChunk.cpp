@@ -155,17 +155,7 @@ void ABKNaiveChunk::ModifyVoxelData(const FIntVector Position, const BKEBlock Bl
 	// 그러면 해당 블록은 Air로 만들고 그 위치를 저장해서 8등분한다.
 	if (Block == BKEBlock::Air)
 	{
-		float splitNum = 1 / (float)splitBlockNum;
-		for (int x = 0; x < splitBlockNum; ++x)
-		{
-			for (int y = 0; y < splitBlockNum; ++y)
-			{
-				for (int z = 0; z < splitBlockNum; ++z)
-				{
-					splitBlocks.Add(FVector(Position.X + splitNum * x, Position.Y + splitNum * y, Position.Z + splitNum * z));
-				}
-			}
-		}
+		splitBlocks.Add(Position);
 	}
 }
 
@@ -174,13 +164,24 @@ void ABKNaiveChunk::GenerateSplitBlockMesh()
 	// 일단 작은 블록 8개만 그려보자
 	if (!splitBlocks.IsEmpty())
 	{
+		float splitNum = 1 / (float)splitBlockNum;
+
 		for (auto splitBlockPosition : splitBlocks)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Small Block Position: (%f, %f, %f)"), splitBlockPosition.X, splitBlockPosition.Y, splitBlockPosition.Z);
+			//UE_LOG(LogTemp, Warning, TEXT("Small Block Position: (%f, %f, %f)"), splitBlockPosition.X, splitBlockPosition.Y, splitBlockPosition.Z);
 
-			for (auto Direction : { BKEDirection::Forward, BKEDirection::Right, BKEDirection::Back, BKEDirection::Left, BKEDirection::Up, BKEDirection::Down })
+			for (int x = 0; x < splitBlockNum; ++x)
 			{
-				CreateFace(Direction, splitBlockPosition * 100, true);
+				for (int y = 0; y < splitBlockNum; ++y)
+				{
+					for (int z = 0; z < splitBlockNum; ++z)
+					{
+						for (auto Direction : { BKEDirection::Forward, BKEDirection::Right, BKEDirection::Back, BKEDirection::Left, BKEDirection::Up, BKEDirection::Down })
+						{
+							CreateFace(Direction, FVector(splitBlockPosition.X + splitNum * x, splitBlockPosition.Y + splitNum * y, splitBlockPosition.Z + splitNum * z) * 100, true);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -197,9 +198,6 @@ void ABKNaiveChunk::RemoveSplitBlocks()
 {
 	if (!splitBlocks.IsEmpty())
 	{
-		for (int i = 0; i < splitBlockNum * splitBlockNum * splitBlockNum; ++i)
-		{
-			splitBlocks.RemoveAt(0);
-		}
+		splitBlocks.RemoveAt(0);
 	}
 }
