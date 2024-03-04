@@ -150,6 +150,18 @@ DWORD WINAPI GameThread(LPVOID arg)
 
     /*InitBlockList();
     SendBlockList(client_sock);*/
+    char message[] = "Hello";
+    WSABUF buf;
+    buf.buf = message;
+    buf.len = strlen(message) + 1;
+    DWORD sent_size = 0;
+    DWORD RES = WSASend(client_sock, &buf, 1, &sent_size, 0, 0, 0);
+    if (RES != 0) {
+        err_display("SEND()");
+    }
+    else {
+        std::cout << "Message Sent!\n";
+    }
     while (true) {
         RecvPacket(client_sock);
     }

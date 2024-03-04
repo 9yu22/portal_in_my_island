@@ -21,6 +21,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void HandleRecvPackets();
 
+	//UFUNCTION(BlueprintCallable)
+	//void SendOnePacket(TCHAR * buf, int16 size);
+
 public:
 	class FSocket* Socket;
 

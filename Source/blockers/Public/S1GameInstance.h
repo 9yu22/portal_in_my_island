@@ -24,6 +24,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void HandleRecvPackets();
 
+	//UFUNCTION(BlueprintCallable)
+	//void SendPacket(TCHAR *buf, int16 size);
+
 public:
 	class FSocket* Socket;
 	FString IpAddress = TEXT("127.0.0.1");

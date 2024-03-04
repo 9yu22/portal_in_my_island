@@ -51,3 +51,8 @@ void US1GameInstance::HandleRecvPackets()
 
 	GameServerSession->HandleRecvPackets();
 }
+
+//void US1GameInstance::SendPacket(TCHAR *buf, int16 size)
+//{
+//	GameServerSession->SendOnePacket(buf, size);
+//}

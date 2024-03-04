@@ -39,3 +39,12 @@ void PacketSession::HandleRecvPackets()
 		// ClientPacketHandler::HandlePacket();
 	}
 }
+//
+//void PacketSession::SendOnePacket(TCHAR * buf, int16 p_size)
+//{
+//	TArray<uint8> Packet;
+//
+//	//memcpy(buf, Packet, p_size);
+//
+//	//SendPacket(IN Packet);
+//}
