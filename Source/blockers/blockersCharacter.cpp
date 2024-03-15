@@ -17,6 +17,8 @@
 #include "Components/ArrowComponent.h"
 #include "Bullet.h"
 
+#include "blockersGameMode.h"
+
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 //////////////////////////////////////////////////////////////////////////
@@ -86,6 +88,9 @@ void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	//UE_LOG(LogTemp, Warning, TEXT("Hello"));
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AblockersCharacter::Fire);
 
+	//Sets up an input key action to call Restart Player.
+	PlayerInputComponent->BindAction("Restart", IE_Pressed, this, &AblockersCharacter::CallRestartPlayer);
+
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
@@ -151,3 +156,34 @@ void AblockersCharacter::Fire()
 	ABullet* bullet = GetWorld()->SpawnActor<ABullet>(bulletFactory, BulletLocation, firePosition->GetComponentRotation());
 }
 
+void AblockersCharacter::Destroyed()
+{
+	Super::Destroyed();
+
+	// Example to bind to OnPlayerDied event in GameMode.
+	if (UWorld* World = GetWorld())
+	{
+		if (AblockersGameMode* GameMode = Cast<AblockersGameMode>(World->GetAuthGameMode()))
+		{
+			GameMode->GetOnPlayerDied().Broadcast(this);
+		}
+	}
+}
+
+void AblockersCharacter::CallRestartPlayer()
+{
+	//Get a reference to the Pawn Controller.
+	AController* CortollerRef = GetController();
+
+	//Destroy the Player.
+	Destroy();
+
+	//Get the World and GameMode in the world to invoke its restart player function.
+	if (UWorld* World = GetWorld())
+	{
+		if (AblockersGameMode* GameMode = Cast<AblockersGameMode>(World->GetAuthGameMode()))
+		{
+			GameMode->RestartPlayer(CortollerRef);
+		}
+	}
+}
