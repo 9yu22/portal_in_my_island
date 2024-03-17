@@ -4,13 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "S1GameInstance.generated.h"
+#include "NetworkWorkers.h"
+//#include "S1.h"
+#include "PacketSession.h"
+#include "../blockersCharacter.h"
+#include "SGameInstance.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
-class BLOCKERS_API US1GameInstance : public UGameInstance
+class BLOCKERS_API USGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
@@ -21,15 +25,17 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void DisconnectFromGameServer();
 
-	UFUNCTION(BlueprintCallable)
-	void HandleRecvPackets();
-
 	//UFUNCTION(BlueprintCallable)
-	//void SendPacket(TCHAR *buf, int16 size);
+	//void HandleRecvPackets();
+
+	//void SendPacket(SendBufferRef SendBuffer);
 
 public:
 	class FSocket* Socket;
 	FString IpAddress = TEXT("127.0.0.1");
 	int16 Port = 4040;
-	TSharedPtr<class PacketSession> GameServerSession;
+	AblockersCharacter* Character;
+
+	//TSharedPtr<class PacketSession> GameServerSession;
+	//TSharedPtr<class FRecvWorker> makeRecvThread;
 };
