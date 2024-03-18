@@ -53,10 +53,12 @@ uint32 FRecvWorker::Run()
                     if (socket->Recv(((uint8*)&locationPacket) + sizeof(UPacketHeader), sizeof(locationPacket) - sizeof(UPacketHeader), BytesRead))
                     {
                         FVector NewLocation(locationPacket.x, locationPacket.y, locationPacket.z);
+                        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("x: %f, y: %f, z: %f"), locationPacket.x, locationPacket.y, locationPacket.z));
 
                         // AsyncTask를 사용하여 메인 스레드에서 캐릭터의 위치 업데이트
                         AsyncTask(ENamedThreads::GameThread, [this, NewLocation]()
                             {
+                                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Packet")));
                                 if (IsValid(Character))
                                 {
                                     Character->SetActorLocation(NewLocation);
