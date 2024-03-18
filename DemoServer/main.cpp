@@ -1,15 +1,18 @@
 ﻿// DemoServer.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
 
 #include "Common.h"
+#include "gameServer.h"
 #include "DemoServer.h"
+#include "player.h"
 
 #include <iostream>
 #include <array>
 #include <vector>
 #include <algorithm>
 
-std::array<blockInfo, 3> blockList;
-std::vector<blockInfo> gameBlocks{ 10 };
+std::array<BlockPacket, 3> blockList;
+std::vector<BlockPacket> gameBlocks{ 10 };
+std::array<player, 3> players;
 
 SOCKET client_sock;
 
@@ -46,6 +49,23 @@ void SendBlockList(SOCKET client_sock)
     if (retval == SOCKET_ERROR) err_display("recv()");
 }
 
+void SendPacket(SOCKET client_sock)
+{
+    LocationPacket location;
+    location.packetSize = sizeof(LocationPacket);
+    location.packetType = LOCATION;
+    location.x = players[0].x;
+    location.y = players[0].y;
+    location.z = players[0].z;
+
+    // 플레이어 좌표 전송
+    int retval = send(client_sock, (char*)&location, sizeof(location), 0);
+    if (retval == SOCKET_ERROR) {
+        err_display("send()");
+        return;
+    }
+}
+
 void RecvPacket(SOCKET client_sock) {
 
     packetHeader header;
@@ -56,7 +76,8 @@ void RecvPacket(SOCKET client_sock) {
         return;
     }
 
-    blockInfo block;
+    BlockPacket block;
+    LocationPacket location;
 
     switch (header.packetType) {
     case ADD_BLOCK:
@@ -77,13 +98,22 @@ void RecvPacket(SOCKET client_sock) {
         RemoveGameBlock(block);
         break;
 
+    case LOCATION:
+        retval = recv(client_sock, ((char*)&location) + sizeof(header), sizeof(location) - sizeof(header), 0);
+        players[0].UpdateLocation(location.x, location.y, location.z);
+        std::cout << "x: " << location.x << "y: " << location.y << "z: " << location.z << std::endl;
+        if (retval == SOCKET_ERROR) {
+            err_display("recv()");
+            break;
+        }
+
     default:
         break;
     }
 }
 
 // 일단 블록 위치는 자율이 아닌 일정 간격으로 정해져 있으므로 좌표가 같으면 충돌로 판정
-void AddGameBlock(const blockInfo block)
+void AddGameBlock(const BlockPacket block)
 {
     for (int i = 0; i < gameBlocks.size(); ++i) {
         if (block.x == gameBlocks[i].x && block.y == gameBlocks[i].y && block.z == gameBlocks[i].z)
@@ -91,52 +121,52 @@ void AddGameBlock(const blockInfo block)
     }
     gameBlocks.emplace_back(block);
 
-    blockInfo addBlock = block;
+    BlockPacket addBlock = block;
 
     int retval = send(client_sock, (char*)&addBlock, sizeof(addBlock), 0);
     if (retval == SOCKET_ERROR) err_display("recv()");
 }
 
-void RemoveGameBlock(const blockInfo block)
+void RemoveGameBlock(const BlockPacket block)
 {
     auto newEnd = std::remove_if(gameBlocks.begin(), gameBlocks.end(),
-        [&block](const blockInfo& blocks) {// 현재 반복자에 대한 요소
+        [&block](const BlockPacket& blocks) {// 현재 반복자에 대한 요소
             return block.x == blocks.x && block.y == blocks.y && block.z == blocks.z;
         }
     );
     gameBlocks.erase(newEnd, gameBlocks.end());
 
-    blockInfo removeBlock = block;
+    BlockPacket removeBlock = block;
 
     int retval = send(client_sock, (char*)&removeBlock, sizeof(removeBlock), 0);
     if (retval == SOCKET_ERROR) err_display("recv()");
 }
 
-//void SendGameBlocks(SOCKET client_sock)
-//{
-//    // 전체 블록 수 전송
-//    int blocksNum = gameBlocks.size();
-//    int retval = send(client_sock, (char*)&blocksNum, sizeof(blocksNum), 0);
-//    if (retval == SOCKET_ERROR) {
-//        err_display("send()");
-//        return;
-//    }
-//
-//    // 각 블록 정보 전송
-//    for (int i = 0; i < gameBlocks.size(); ++i)
-//    {
-//        gameBlocks[i].packetType = ADD_BLOCK; // 이건 클라이언트쪽 코드 작성하면 맞게 바꿔줘야 함
-//        gameBlocks[i].packetSize = sizeof(blockInfo);
-//
-//        retval = send(client_sock, (char*)&gameBlocks[i], sizeof(blockInfo), 0);
-//        if (retval == SOCKET_ERROR) {
-//            err_display("send()");
-//            break;
-//        }
-//    }
-//}
+void SendGameBlocks(SOCKET client_sock)
+{
+    // 전체 블록 수 전송
+    int blocksNum = gameBlocks.size();
+    int retval = send(client_sock, (char*)&blocksNum, sizeof(blocksNum), 0);
+    if (retval == SOCKET_ERROR) {
+        err_display("send()");
+        return;
+    }
 
-DWORD WINAPI GameThread(LPVOID arg)
+    // 각 블록 정보 전송
+    for (int i = 0; i < gameBlocks.size(); ++i)
+    {
+        gameBlocks[i].packetType = ADD_BLOCK;
+        gameBlocks[i].packetSize = sizeof(BlockPacket);
+
+        retval = send(client_sock, (char*)&gameBlocks[i], sizeof(BlockPacket), 0);
+        if (retval == SOCKET_ERROR) {
+            err_display("send()");
+            break;
+        }
+    }
+}
+
+DWORD WINAPI RecvThread(LPVOID arg)
 {
     char addr[INET_ADDRSTRLEN];
     int addrlen;
@@ -148,22 +178,29 @@ DWORD WINAPI GameThread(LPVOID arg)
     getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
     inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
 
-    /*InitBlockList();
-    SendBlockList(client_sock);*/
-    char message[] = "Hello";
-    WSABUF buf;
-    buf.buf = message;
-    buf.len = strlen(message) + 1;
-    DWORD sent_size = 0;
-    DWORD RES = WSASend(client_sock, &buf, 1, &sent_size, 0, 0, 0);
-    if (RES != 0) {
-        err_display("SEND()");
-    }
-    else {
-        std::cout << "Message Sent!\n";
-    }
     while (true) {
         RecvPacket(client_sock);
+    }
+
+    closesocket(client_sock);
+}
+
+DWORD WINAPI SendThread(LPVOID arg)
+{
+    char addr[INET_ADDRSTRLEN];
+    int addrlen;
+
+    SOCKET client_sock = (SOCKET)arg;
+    struct sockaddr_in clientaddr;
+
+    addrlen = sizeof(clientaddr);
+    getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
+    inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
+
+    while (true) {
+        SendPacket(client_sock);
+        Sleep(33);
+        std::cout << "위치 데이터 전송" << std::endl;
     }
 
     closesocket(client_sock);
@@ -208,7 +245,8 @@ int main(int argc, char* argv[])
 
         std::cout << "클라이언트 연결 성공" << std::endl;
 
-        hThread = CreateThread(NULL, 0, GameThread, (LPVOID)client_sock, 0, NULL);
+        hThread = CreateThread(NULL, 0, RecvThread, (LPVOID)client_sock, 0, NULL);
+        hThread = CreateThread(NULL, 0, SendThread, (LPVOID)client_sock, 0, NULL);
         if (hThread == NULL) { closesocket(client_sock); }
         else { CloseHandle(hThread); }
     }
