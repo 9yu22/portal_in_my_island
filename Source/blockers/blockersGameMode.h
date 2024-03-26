@@ -6,8 +6,6 @@
 #include "GameFramework/GameModeBase.h"
 #include "blockersGameMode.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerDiedSignature, ACharacter*, Character);
-
 UCLASS(minimalapi)
 class AblockersGameMode : public AGameModeBase
 {
@@ -15,19 +13,6 @@ class AblockersGameMode : public AGameModeBase
 
 public:
 	AblockersGameMode();
-
-	const FOnPlayerDiedSignature& GetOnPlayerDied() const { return OnPlayerDied; }
-
-	virtual void RestartPlayer(AController* NewPlayer) override; //TRY TO SPAWN
-
-protected:
-	virtual void BeginPlay()override;
-
-	UFUNCTION()
-	virtual void PlayerDied(ACharacter* Character); //Call When Player die
-
-	UPROPERTY()
-	FOnPlayerDiedSignature OnPlayerDied; //Signature to bind delegate
 };
 
 
