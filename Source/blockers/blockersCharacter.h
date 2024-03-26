@@ -84,5 +84,9 @@ public:
 
 private:
 	void Fire();
+
+protected:
+	virtual void Destroyed();
+	void CallRestartPlayer();
 };
 
