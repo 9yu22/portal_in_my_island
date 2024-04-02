@@ -24,8 +24,6 @@ class ABKNaiveChunk final : public ABKChunkBase
 	virtual void Generate3DHeightMap(FVector Position) override;
 	virtual void GenerateMesh() override;
 	virtual void ModifyVoxelData(const FIntVector Position, BKEBlock Block) override;
-	virtual void GenerateSplitBlockMesh() override;
-	virtual void RemoveSplitBlocks() override;
 
 private:
 	TArray<BKEBlock> Blocks;

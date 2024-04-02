@@ -59,15 +59,6 @@ void ABKChunkBase::GenerateHeightMap()
 	}
 }
 
-void ABKChunkBase::FunctionWithDelay()
-{
-	// 새로운 타이머 핸들을 생성합니다.
-	FTimerHandle NewTimerHandle;
-
-	// 2초 후에 호출될 함수를 예약합니다.
-	GetWorld()->GetTimerManager().SetTimer(NewTimerHandle, this, &ABKChunkBase::FinishSplitBlocksAnimation, 2.0f, false);
-}
-
 void ABKChunkBase::ApplyMesh() const
 {
 	Mesh->SetMaterial(0, Material);
@@ -80,32 +71,20 @@ void ABKChunkBase::ClearMesh()
 	MeshData.Clear();
 }
 
-void ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
+FIntVector ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
 {
-	if (Position.X >= Size || Position.Y >= Size || Position.Z >= Size || Position.X < 0 || Position.Y < 0 || Position.Z < 0) return;
+	if (Position.X >= Size || Position.Y >= Size || Position.Z >= Size || Position.X < 0 || Position.Y < 0 || Position.Z < 0) return Position;
 
 	ModifyVoxelData(Position, Block);
 
 	ClearMesh();
 
 	// split blocks를 그리자
-	GenerateSplitBlockMesh();
+	//GenerateSplitBlockMesh();
 
 	GenerateMesh();
 
 	ApplyMesh();
-}
 
-void ABKChunkBase::FinishSplitBlocksAnimation()
-{
-	// 배열 맨 앞의 미니 블록들만 제거
-	RemoveSplitBlocks();
-
-	ClearMesh();
-
-	GenerateMesh();
-
-	GenerateSplitBlockMesh();
-
-	ApplyMesh();
+	return FIntVector(Position.X * 100 + 50, Position.Y * 100 + 50, Position.Z * 100 + 50);
 }

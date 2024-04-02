@@ -159,45 +159,7 @@ void ABKNaiveChunk::ModifyVoxelData(const FIntVector Position, const BKEBlock Bl
 	}
 }
 
-void ABKNaiveChunk::GenerateSplitBlockMesh()
-{
-	// 일단 작은 블록 8개만 그려보자
-	if (!splitBlocks.IsEmpty())
-	{
-		float splitNum = 1 / (float)splitBlockNum;
-
-		for (auto splitBlockPosition : splitBlocks)
-		{
-			//UE_LOG(LogTemp, Warning, TEXT("Small Block Position: (%f, %f, %f)"), splitBlockPosition.X, splitBlockPosition.Y, splitBlockPosition.Z);
-
-			for (int x = 0; x < splitBlockNum; ++x)
-			{
-				for (int y = 0; y < splitBlockNum; ++y)
-				{
-					for (int z = 0; z < splitBlockNum; ++z)
-					{
-						for (auto Direction : { BKEDirection::Forward, BKEDirection::Right, BKEDirection::Back, BKEDirection::Left, BKEDirection::Up, BKEDirection::Down })
-						{
-							CreateFace(Direction, FVector(splitBlockPosition.X + splitNum * x, splitBlockPosition.Y + splitNum * y, splitBlockPosition.Z + splitNum * z) * 100, true);
-						}
-					}
-				}
-			}
-		}
-	}
-	else
-		UE_LOG(LogTemp, Warning, TEXT("There are NOT mini blocks"));
-}
-
 int ABKNaiveChunk::GetBlockIndex(const int X, const int Y, const int Z) const
 {
 	return Z * Size * Size + Y * Size + X;
-}
-
-void ABKNaiveChunk::RemoveSplitBlocks()
-{
-	if (!splitBlocks.IsEmpty())
-	{
-		splitBlocks.RemoveAt(0);
-	}
 }
