@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Bullet.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class BLOCKERS_API ABullet : public AActor
 {
 	GENERATED_BODY()
@@ -27,6 +27,15 @@ public:
 	FVector playerForward;
 
 	UPROPERTY(EditAnywhere)
+	FVector bulletDirection;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FHitResult HitResult;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bHit = false;
+
+	UPROPERTY(EditAnywhere)
 	float moveSpeed = 800.0f;
 
 	UPROPERTY(EditAnywhere)
@@ -42,4 +51,9 @@ public:
 	void OnBulletOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
 						 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, 
 						 bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION(BlueprintCallable, Category = "Bullet")
+	void FunctionWithDelay(float delayTime);
+
+	void DestroyBullet();
 };

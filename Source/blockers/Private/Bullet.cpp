@@ -31,6 +31,8 @@ void ABullet::BeginPlay()
 
 	playerForward = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorForwardVector();
 
+	bulletDirection = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraRotation().Quaternion().GetForwardVector();
+
 	boxComp->OnComponentBeginOverlap;
 
 	boxComp->OnComponentBeginOverlap.AddDynamic(this, &ABullet::OnBulletOverlap);
@@ -43,10 +45,15 @@ void ABullet::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	
-	FVector newLocation = GetActorLocation() + playerForward * moveSpeed * DeltaTime;
-	
+	FVector startLocation = GetActorLocation() + bulletDirection * moveSpeed * DeltaTime;
 
-	SetActorLocation(newLocation);
+
+	SetActorLocation(startLocation);
+
+	FVector endLocation = GetActorLocation() + bulletDirection * 100;
+
+	// LineTraceByChannel로 레이를 쏴서 충돌을 감지
+	bHit = GetWorld()->LineTraceSingleByChannel(HitResult, startLocation, endLocation, ECollisionChannel::ECC_Visibility);
 
 }
 
@@ -64,5 +71,19 @@ void ABullet::OnBulletOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 
 	Destroy();
 
+}
+
+void ABullet::FunctionWithDelay(float delayTime)
+{
+	// 새로운 타이머 핸들을 생성합니다.
+	FTimerHandle NewTimerHandle;
+
+	// 2초 후에 호출될 함수를 예약합니다.
+	GetWorld()->GetTimerManager().SetTimer(NewTimerHandle, this, &ABullet::DestroyBullet, delayTime, false);
+}
+
+void ABullet::DestroyBullet()
+{
+	Destroy();
 }
 
