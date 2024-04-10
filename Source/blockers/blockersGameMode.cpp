@@ -2,8 +2,8 @@
 
 #include "blockersGameMode.h"
 #include "BKPlayerController.h"
-#include "blockersCharacter.h"
 #include "UObject/ConstructorHelpers.h"
+
 
 AblockersGameMode::AblockersGameMode()
 {
@@ -23,6 +23,9 @@ AblockersGameMode::AblockersGameMode()
 	{
 		PlayerControllerClass = PlayerControllerBPClass.Class;
 	}
+
+
+
 }
 
 void AblockersGameMode::BeginPlay()
@@ -34,11 +37,14 @@ void AblockersGameMode::BeginPlay()
 	{
 		OnPlayerDied.AddDynamic(this, &AblockersGameMode::PlayerDied);
 	}
+
+
 }
 
 void AblockersGameMode::RestartPlayer(AController* NewPlayer)
 {
 	Super::RestartPlayer(NewPlayer);
+
 }
 
 void AblockersGameMode::PlayerDied(ACharacter* Character)

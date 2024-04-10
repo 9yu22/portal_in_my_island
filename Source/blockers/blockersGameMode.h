@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "GameFramework/Controller.h"
+#include "blockersCharacter.h"
 #include "blockersGameMode.generated.h"
+
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerDiedSignature, ACharacter*, Character);
 
@@ -28,6 +31,7 @@ protected:
 
 	UPROPERTY()
 	FOnPlayerDiedSignature OnPlayerDied; //Signature to bind delegate
+
 };
 
 

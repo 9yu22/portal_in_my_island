@@ -7,10 +7,15 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
+#include "UObject/Class.h"
+
+
 
 
 void ABKPlayerController::BeginPlay()
 {
+
+
 	// 원본의 BeginPlay
 	// 부모
 	Super::BeginPlay();
@@ -19,7 +24,7 @@ void ABKPlayerController::BeginPlay()
 	{
 		Subsystem->AddMappingContext(MappingContext, 0);
 	}
-
+	player2 = GetWorld()->SpawnActor<AblockersCharacter>(AblockersCharacter::StaticClass(), FVector(890.0f, 2000.0f, 950.0f/*여기에 초기 위치 넣어주면 됨*/), FRotator(0.0f, 0.0f, 0.0f));
 
 }
 

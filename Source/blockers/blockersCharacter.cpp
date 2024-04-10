@@ -26,8 +26,18 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 AblockersCharacter::AblockersCharacter()
 {
+
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_blockers(TEXT("/Game/Blockers/Meshs/new_player_Mesh.new_player_Mesh"));
+	if (SK_blockers.Succeeded()) {
+		GetMesh()->SetSkeletalMesh(SK_blockers.Object);
+	}
+	GetMesh()->SetWorldScale3D(FVector(0.3f, 0.3f, 0.3f));
+	//FVector NewLocation = FVector(0.0f, 0.0f, -100.0f); // 예시: X축으로 100 단위만큼 이동
+	//SetActorLocation(NewLocation); // 캐릭터의 위치를 새로운 위치로 변경합니다.
+	GetCapsuleComponent()->SetWorldLocation(FVector(0.0f, 0.0f, -100.0f));
+	
 	// Set size for collision capsule
-	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+	//GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 		
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -63,6 +73,10 @@ AblockersCharacter::AblockersCharacter()
 
 	//총구 표시 컴포넌트를 생성하고 박스 컴포넌트의 자식컴포넌트로 설정한다.
 	firePosition = CreateDefaultSubobject<UArrowComponent>(TEXT("Fire Position"));
+
+
+
+	
 }
 
 void AblockersCharacter::BeginPlay()

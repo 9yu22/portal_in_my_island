@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "GameFramework/Controller.h"
+#include "blockersCharacter.h"
 #include "BKPlayerController.generated.h"
+
 
 /**
  *
@@ -43,4 +46,9 @@ protected:
 	void StopJumping(const FInputActionValue& Value);
 	UFUNCTION()
 	void Look(const FInputActionValue& Value);
+
+
+private:
+	AblockersCharacter* player2;
+
 };
