@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#define TEST 100
-#define LOCATION 90
+
 
 #include "NetworkWorkers.h"
 
@@ -28,55 +27,59 @@ bool FRecvWorker::Init()
 
 uint32 FRecvWorker::Run()
 {
-    UPacketHeader header;
-    LocationPacket locationPacket;
+    //LocationPacket locationPacket;
+    uint8 recv_buf[256];
 
     //TestPacket t;
     //int32 tempread = 0;
     //socket->Recv((uint8*)&t, sizeof(TestPacket), tempread);
 
-    while (recvRunning)
-    {
+    while (recvRunning) {
         // 버퍼에 읽어올 데이터가 있는지 확인
         uint32 bHasPendingData = 0;
         socket->HasPendingData(bHasPendingData);
 
-        if (bHasPendingData > 0)
-        {
+        if (bHasPendingData > 0) {
+
             int32 BytesRead = 0;
-            if (socket->Recv((uint8*)&header, sizeof(UPacketHeader), BytesRead))
-            {
-                switch (header.type)
-                {
-                case LOCATION:
-                {
-                    if (socket->Recv(((uint8*)&locationPacket) + sizeof(UPacketHeader), sizeof(locationPacket) - sizeof(UPacketHeader), BytesRead))
-                    {
-                        FVector NewLocation(locationPacket.x, locationPacket.y, locationPacket.z);
-                        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("x: %f, y: %f, z: %f"), locationPacket.x, locationPacket.y, locationPacket.z));
+            socket->Recv(recv_buf, sizeof(recv_buf), BytesRead);
+            switch (recv_buf[0] + 1){
 
-                        // AsyncTask를 사용하여 메인 스레드에서 캐릭터의 위치 업데이트
-                        AsyncTask(ENamedThreads::GameThread, [this, NewLocation]()
-                            {
-                                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Packet")));
-                                if (IsValid(Character))
-                                {
-                                    Character->SetActorLocation(NewLocation);
-                                }
-                                else
-                                    recvRunning = false;
-                            });
-                    }
-                    break;
-                }
-                case TEST:
-                    TestPacket test;
-                    if (socket->Recv(((uint8*)&test) + sizeof(UPacketHeader), sizeof(TestPacket) - sizeof(UPacketHeader), BytesRead))
-                    {
+            case SC_LOGIN_INFO: {
+                SC_LOGIN_INFO_PACKET info;
+                memcpy(&info, recv_buf, sizeof(SC_LOGIN_INFO_PACKET));
+                FVector NewLocation(info.x, info.y, info.z);
+                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Login Info id: %f, x: %f, y: %f, z: %f"), info.id, info.x, info.y, info.z));
+                break;
+            }
+               
+            case SC_MOVE_PLAYER:{
+                CS_MOVE_PACKET new_pos;
+                memcpy(&new_pos, recv_buf, sizeof(CS_MOVE_PACKET));
+                FVector NewLocation(new_pos.x, new_pos.y, new_pos.z);
+                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv New Pos x: %f, y: %f, z: %f"), new_pos.x, new_pos.y, new_pos.z));
 
-                        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Test Packet Recv: %d"), test.number));
-                    }
-                }
+                // AsyncTask를 사용하여 메인 스레드에서 캐릭터의 위치 업데이트
+                AsyncTask(ENamedThreads::GameThread, [this, NewLocation]()
+                    {
+                        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Packet")));
+                        if (IsValid(Character))
+                        {
+                            Character->SetActorLocation(NewLocation);
+                        }
+                        else
+                            recvRunning = false;
+                    });
+                break;
+            }
+            case TEST: {
+                TestPacket test;
+                memcpy(&test, recv_buf, sizeof(TestPacket));
+
+                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Test Packet Recv: %d"), test.number));
+
+            }
+               
             }
         }
 
@@ -95,6 +98,16 @@ void FRecvWorker::Stop()
 
 FSendWorker::FSendWorker(FSocket* c_Socket, AblockersCharacter* Character) : socket(c_Socket), Character(Character)
 {
+    CS_LOGIN_PACKET login;
+    login.size = sizeof(CS_LOGIN_PACKET);
+    login.type = CS_LOGIN;
+
+    int32 BytesSent = 0;
+    socket->Send((uint8*)&login, sizeof(CS_MOVE_PACKET), BytesSent);
+    if (BytesSent > 0)
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Login Packet Send")));
+    else
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Login Packet Send Fail...")));
 }
 
 FSendWorker::~FSendWorker()
@@ -110,7 +123,7 @@ bool FSendWorker::Init()
 uint32 FSendWorker::Run()
 {
     //UPacketHeader Header;
-    LocationPacket location;
+    CS_MOVE_PACKET new_pos;
     FVector lastLocation;
 
     while (sendRunning)
@@ -123,15 +136,15 @@ uint32 FSendWorker::Run()
             if (Character)
             {
                 // 위치 정보 패킷 구성
-                location.type = LOCATION;
-                location.size = sizeof(LocationPacket);
-                location.x = CurrentLocation.X;
-                location.y = CurrentLocation.Y;
-                location.z = CurrentLocation.Z;
+                new_pos.type = CS_MOVE;
+                new_pos.size = sizeof(CS_MOVE_PACKET);
+                new_pos.x = CurrentLocation.X;
+                new_pos.y = CurrentLocation.Y;
+                new_pos.z = CurrentLocation.Z;
 
                 // 패킷 전송
                 int32 BytesSent = 0;
-                socket->Send((uint8*)&location, sizeof(LocationPacket), BytesSent);
+                socket->Send((uint8*)&new_pos, sizeof(CS_MOVE_PACKET), BytesSent);
                 lastLocation = CurrentLocation;
             }
 

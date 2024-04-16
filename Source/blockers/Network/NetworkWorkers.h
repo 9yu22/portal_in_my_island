@@ -6,10 +6,11 @@
 #include "Sockets.h"
 #include "../blockersCharacter.h"
 #include "GameFramework/Character.h"
-
+#include "Protocol.h"
 /**
- *
- */
+*
+*/
+
 class BLOCKERS_API FRecvWorker : public FRunnable
 {
 private:
@@ -46,21 +47,4 @@ public:
     virtual void Stop() override;
 
     //void UpdateLocation(const FVector& NewLocation);
-};
-
-struct UPacketHeader {
-    int8 size;
-    int8 type;
-};
-
-struct LocationPacket {
-    int8 size;
-    int8 type;
-    float x, y, z;
-};
-
-struct TestPacket {
-    int8 size;
-    int8 type;
-    int16 number;
 };
