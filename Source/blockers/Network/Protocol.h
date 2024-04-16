@@ -27,20 +27,20 @@ struct CS_LOGIN_PACKET {
 struct CS_MOVE_PACKET {
     uint8 size;
     int8 type;
-    short x, y, z;
+    float x, y, z;
 };
 
 struct SC_LOGIN_INFO_PACKET {
     uint8 size;
     int8 type;
-    char id;
+    int8 id;
     float x, y, z;
 };
 
 struct SC_ADD_PLAYER_PACKET {
     uint8 size;
     int8 type;
-    char id;
+    int8 id;
     float x, y, z;
     //char	name[NAME_SIZE];
 };
@@ -48,13 +48,13 @@ struct SC_ADD_PLAYER_PACKET {
 struct SC_REMOVE_PLAYER_PACKET {
     uint8 size;
     int8 type;
-    short id;
+    int8 id;
 };
 
 struct SC_MOVE_PLAYER_PACKET {
     uint8 size;
     int8 type;
-    char id;
+    int8 id;
     float x, y, z;
 };
 

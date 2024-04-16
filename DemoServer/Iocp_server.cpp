@@ -116,32 +116,32 @@ void process_packet(int c_id, char* packet)
 		//strcpy_s(clients[c_id]._name, p->name);
 		clients[c_id].send_login_info_packet();
 
-		for (auto& pl : clients) {
-			if (false == pl.in_use) continue;
-			if (pl._id == c_id) continue;
-			SC_ADD_PLAYER_PACKET add_packet;
-			add_packet.id = c_id;
-			//strcpy_s(add_packet.name, p->name);
-			add_packet.size = sizeof(add_packet);
-			add_packet.type = SC_ADD_PLAYER;
-			add_packet.x = clients[c_id].x;
-			add_packet.y = clients[c_id].y;
-			add_packet.z = clients[c_id].z;
-			pl.do_send(&add_packet);
-		}
-		for (auto& pl : clients) {
-			if (false == pl.in_use) continue;
-			if (pl._id == c_id) continue;
-			SC_ADD_PLAYER_PACKET add_packet;
-			add_packet.id = pl._id;
-			//strcpy_s(add_packet.name, pl._name);
-			add_packet.size = sizeof(add_packet);
-			add_packet.type = SC_ADD_PLAYER;
-			add_packet.x = pl.x;
-			add_packet.y = pl.y; 
-			add_packet.z = pl.z;
-			clients[c_id].do_send(&add_packet);
-		}
+		//for (auto& pl : clients) {
+		//	if (false == pl.in_use) continue;
+		//	if (pl._id == c_id) continue;
+		//	SC_ADD_PLAYER_PACKET add_packet;
+		//	add_packet.id = c_id;
+		//	//strcpy_s(add_packet.name, p->name);
+		//	add_packet.size = sizeof(add_packet);
+		//	add_packet.type = SC_ADD_PLAYER;
+		//	add_packet.x = clients[c_id].x;
+		//	add_packet.y = clients[c_id].y;
+		//	add_packet.z = clients[c_id].z;
+		//	pl.do_send(&add_packet);
+		//}
+		//for (auto& pl : clients) {
+		//	if (false == pl.in_use) continue;
+		//	if (pl._id == c_id) continue;
+		//	SC_ADD_PLAYER_PACKET add_packet;
+		//	add_packet.id = pl._id;
+		//	//strcpy_s(add_packet.name, pl._name);
+		//	add_packet.size = sizeof(add_packet);
+		//	add_packet.type = SC_ADD_PLAYER;
+		//	add_packet.x = pl.x;
+		//	add_packet.y = pl.y; 
+		//	add_packet.z = pl.z;
+		//	clients[c_id].do_send(&add_packet);
+		//}
 		break;
 	}
 	case CS_MOVE: { // 무브 패킷 오면 저장 후 브로드캐스트

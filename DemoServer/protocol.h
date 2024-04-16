@@ -29,7 +29,7 @@ struct CS_LOGIN_PACKET {
 struct CS_MOVE_PACKET {
     u_char size;
     char type;
-    short x, y, z;
+    float x, y, z;
 };
 
 struct SC_LOGIN_INFO_PACKET {
@@ -50,7 +50,7 @@ struct SC_ADD_PLAYER_PACKET {
 struct SC_REMOVE_PLAYER_PACKET {
     u_char size;
     char type;
-    short id;
+    char id;
 };
 
 struct SC_MOVE_PLAYER_PACKET {
