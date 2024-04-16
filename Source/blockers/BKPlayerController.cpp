@@ -14,8 +14,6 @@
 
 void ABKPlayerController::BeginPlay()
 {
-
-
 	// 원본의 BeginPlay
 	// 부모
 	Super::BeginPlay();

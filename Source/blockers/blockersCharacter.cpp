@@ -94,7 +94,11 @@ void AblockersCharacter::BeginPlay()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////
+void AblockersCharacter::Tick(float DeltaTime) {
+
+	Super::Tick(DeltaTime);
+}
+////////////////////////////////////////////////////////////////////////
 // Input
 
 void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

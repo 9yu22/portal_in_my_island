@@ -47,6 +47,8 @@ class AblockersCharacter : public ACharacter
 
 public:
 	AblockersCharacter();
+
+	virtual void Tick(float DeltaTime) override;
 	
 
 protected:
