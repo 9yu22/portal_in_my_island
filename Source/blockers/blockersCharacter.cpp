@@ -36,8 +36,8 @@ AblockersCharacter::AblockersCharacter()
 	FRotator NewRotation = FRotator(0.0f, -90.0f, 0.0f); // Yaw 회전 90도 설정
 	GetMesh()->SetRelativeRotation(NewRotation);
 	
-	FVector CharacterLocation = GetActorLocation();
-	UE_LOG(LogTemp, Warning, TEXT("Character's World Location: %s"), *CharacterLocation.ToString());
+	//FVector CharacterLocation = GetActorLocation();
+	//UE_LOG(LogTemp, Warning, TEXT("Character's World Location: %s"), *CharacterLocation.ToString());
 
 	// Set size for collision capsule
 	//GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);

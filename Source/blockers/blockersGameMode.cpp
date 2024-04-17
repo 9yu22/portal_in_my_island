@@ -3,6 +3,7 @@
 #include "blockersGameMode.h"
 #include "BKPlayerController.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 
 AblockersGameMode::AblockersGameMode()
@@ -11,7 +12,7 @@ AblockersGameMode::AblockersGameMode()
 	PlayerControllerClass = ABKPlayerController::StaticClass();
 
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blockers/Blueprints/BP_Player")); //BP_PlayerPawn 이용시 총알 발사.
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blockers/Blueprints/BP_Player"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
@@ -31,6 +32,22 @@ AblockersGameMode::AblockersGameMode()
 void AblockersGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+
+
+	// Spawn 3 players
+	for (int32 i = 0; i < 3; i++)
+	{
+		// Spawn player
+		APlayerController* NewPlayerController = Cast<APlayerController>(UGameplayStatics::CreatePlayer(GetWorld(), -1, true));
+
+		if (NewPlayerController)
+		{
+			// Optionally, you can set initial properties or perform other setup for each player here
+
+			// You might want to store references to these player controllers for further manipulation
+			PlayerControllersArray.Add(NewPlayerController);
+		}
+	}
 
 	//Bind our Player died delegate to the Gamemode's PlayerDied function.
 	if (!OnPlayerDied.IsBound())
