@@ -82,6 +82,7 @@ public:
 		p.x = x;
 		p.y = y;
 		p.z = z;
+		std::cout << "id: " << p.id << " x:" << p.x << " y: " << p.y << " z: " << p.z << " 로그인 패킷 전송" << std::endl;
 		do_send(&p);
 	}
 
@@ -99,7 +100,7 @@ void SESSION::send_move_packet(int c_id)
 	p.x = clients[c_id].x;
 	p.y = clients[c_id].y;
 	p.z = clients[c_id].z;
-	std::cout << "로그인 패킷 전송 요청" << std::endl;
+	std::cout << "x:" << p.x << "y: " << p.y << "z: " << p.z << " 무브 패킷 전송" << std::endl;
 	do_send(&p);
 }
 
@@ -120,40 +121,41 @@ void process_packet(int c_id, char* packet)
 		//strcpy_s(clients[c_id]._name, p->name);
 		clients[c_id].send_login_info_packet();
 
-		//for (auto& pl : clients) {
-		//	if (false == pl.in_use) continue;
-		//	if (pl._id == c_id) continue;
-		//	SC_ADD_PLAYER_PACKET add_packet;
-		//	add_packet.id = c_id;
-		//	//strcpy_s(add_packet.name, p->name);
-		//	add_packet.size = sizeof(add_packet);
-		//	add_packet.type = SC_ADD_PLAYER;
-		//	add_packet.x = clients[c_id].x;
-		//	add_packet.y = clients[c_id].y;
-		//	add_packet.z = clients[c_id].z;
-		//	pl.do_send(&add_packet);
-		//}
-		//for (auto& pl : clients) {
-		//	if (false == pl.in_use) continue;
-		//	if (pl._id == c_id) continue;
-		//	SC_ADD_PLAYER_PACKET add_packet;
-		//	add_packet.id = pl._id;
-		//	//strcpy_s(add_packet.name, pl._name);
-		//	add_packet.size = sizeof(add_packet);
-		//	add_packet.type = SC_ADD_PLAYER;
-		//	add_packet.x = pl.x;
-		//	add_packet.y = pl.y; 
-		//	add_packet.z = pl.z;
-		//	clients[c_id].do_send(&add_packet);
-		//}
+		for (auto& pl : clients) {
+			if (false == pl.in_use) continue;
+			if (pl._id == c_id) continue;
+			//SC_ADD_PLAYER_PACKET add_packet;
+			//add_packet.id = c_id;
+			////strcpy_s(add_packet.name, p->name);
+			//add_packet.size = sizeof(add_packet);
+			//add_packet.type = SC_ADD_PLAYER;
+			//add_packet.x = clients[c_id].x;
+			//add_packet.y = clients[c_id].y;
+			//add_packet.z = clients[c_id].z;
+			//pl.do_send(&add_packet);
+		}
+		for (auto& pl : clients) {
+			if (false == pl.in_use) continue;
+			if (pl._id == c_id) continue;
+			//SC_ADD_PLAYER_PACKET add_packet;
+			//add_packet.id = pl._id;
+			////strcpy_s(add_packet.name, pl._name);
+			//add_packet.size = sizeof(add_packet);
+			//add_packet.type = SC_ADD_PLAYER;
+			//add_packet.x = pl.x;
+			//add_packet.y = pl.y; 
+			//add_packet.z = pl.z;
+			//clients[c_id].do_send(&add_packet);
+		}
 		break;
 	}
 	case CS_MOVE: { // 무브 패킷 오면 저장 후 브로드캐스트
+		
 		CS_MOVE_PACKET* p = reinterpret_cast<CS_MOVE_PACKET*>(packet);
 		clients[c_id].x = p->x;
 		clients[c_id].y = p->y;
 		clients[c_id].z = p->z;
-
+		std::cout << " x:" << p->x << " y: " << p->y << " z: " << p->z << " 무브 패킷 도착" << std::endl;
 		for (auto& pl : clients)
 			if (true == pl.in_use)
 				pl.send_move_packet(c_id);
@@ -229,9 +231,10 @@ int main()
 				/*clients[client_id].x = 0;
 				clients[client_id].y = 0;
 				clients[client_id].z = 0;*/
-				clients[client_id].x = 900;
-				clients[client_id].y = 1600;
-				clients[client_id].z = 1030;
+				// 890.f, 1600.f, 990.f
+				clients[client_id].x = 900.f;
+				clients[client_id].y = 1600.f;
+				clients[client_id].z = 1000.f;
 				clients[client_id]._id = client_id;
 				//clients[client_id]._name[0] = 0;
 				clients[client_id]._prev_remain = 0;

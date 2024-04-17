@@ -28,7 +28,7 @@ void USGameInstance::ConnectToGameServer()
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Connection Success!")));
 
 		// Session
-		// PacketSession 객체 생성 및 GameServerSession 에 TSharedPtr객체 할당, 이 객체에 생성된 객체를 가리키는 포인터 존쟈
+		// PacketSession 객체 생성 및 GameServerSession 에 TSharedPtr객체 할당, 이 객체에 생성된 객체를 가리키는 포인터 존재
 		/*GameServerSession = MakeShared<PacketSession>(Socket);
 		GameServerSession->Run();*/
 

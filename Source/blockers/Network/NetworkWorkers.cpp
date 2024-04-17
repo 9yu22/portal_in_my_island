@@ -4,6 +4,9 @@
 
 #include "NetworkWorkers.h"
 
+std::mutex getPosMx;
+bool loginOk = false;
+
 FRecvWorker::FRecvWorker(FSocket* c_Socket, AblockersCharacter* Character) : socket(c_Socket), Character(Character)
 {
     //recvThread = FRunnableThread::Create(this, TEXT("recvThread"));
@@ -42,28 +45,35 @@ uint32 FRecvWorker::Run()
 
             case SC_LOGIN_INFO: {
                 SC_LOGIN_INFO_PACKET info;
+                if (BytesRead < sizeof(info))
+                    break;
                 memcpy(&info, recv_buf, sizeof(SC_LOGIN_INFO_PACKET));
                 FVector NewLocation(info.x, info.y, info.z);
-                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Login Info id: %f, x: %f, y: %f, z: %f"), info.id, info.x, info.y, info.z));
+                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Login Packet id: %f, x: %f, y: %f, z: %f"), info.id, info.x, info.y, info.z));
 
                 AsyncTask(ENamedThreads::GameThread, [this, NewLocation]()
                     {
-                        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Packet")));
+                        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Login Packet")));
                         if (IsValid(Character))
                         {
+                            getPosMx.lock();
                             Character->SetActorLocation(NewLocation);
+                            getPosMx.unlock();
                         }
                         else
                             recvRunning = false;
                     });
+                loginOk = true;
                 break;
             }
                
             case SC_MOVE_PLAYER:{
-                CS_MOVE_PACKET new_pos;
-                memcpy(&new_pos, recv_buf, sizeof(CS_MOVE_PACKET));
+                SC_MOVE_PLAYER_PACKET new_pos;
+                if (BytesRead < sizeof(new_pos)) // 일단은 도착한 패킷 크기가 실제 크기보다 작다면 처리 안함.->나중에 조립으로 수정
+                    break;
+                memcpy(&new_pos, recv_buf, sizeof(new_pos));
                 FVector NewLocation(new_pos.x, new_pos.y, new_pos.z);
-                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv New Pos x: %f, y: %f, z: %f"), new_pos.x, new_pos.y, new_pos.z));
+                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Move Packet x: %f, y: %f, z: %f"), new_pos.x, new_pos.y, new_pos.z));
 
                 // AsyncTask를 사용하여 메인 스레드에서 캐릭터의 위치 업데이트
                 AsyncTask(ENamedThreads::GameThread, [this, NewLocation]()
@@ -71,7 +81,9 @@ uint32 FRecvWorker::Run()
                         //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Move Packet")));
                         if (IsValid(Character))
                         {
+                            getPosMx.lock();
                             Character->SetActorLocation(NewLocation);
+                            getPosMx.unlock();
                         }
                         else
                             recvRunning = false;
@@ -89,7 +101,7 @@ uint32 FRecvWorker::Run()
             }
         }
 
-        FPlatformProcess::Sleep(0.1);
+        FPlatformProcess::Sleep(0.01);
     }
     return 0;
 }
@@ -134,14 +146,20 @@ uint32 FSendWorker::Run()
     else
         GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Login Packet Send Fail...")));
 
+    while (!loginOk)
+        // 로그인 패킷 받기 전까지 대기
+
     while (sendRunning)
     {
         // 캐릭터 위치 가져오기
+        getPosMx.lock();
         CurrentLocation = Character->GetActorLocation();
+        getPosMx.unlock();
+        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Get Player Pos, x: %f, y: %f, z: %f"), CurrentLocation.X, CurrentLocation.Y, CurrentLocation.Z));
 
-        if (!CurrentLocation.Equals(lastLocation, KINDA_SMALL_NUMBER))
+        if (IsValid(Character))
         {
-            if (Character)
+            if (!CurrentLocation.Equals(lastLocation, KINDA_SMALL_NUMBER))
             {
                 // 위치 정보 패킷 구성
                 new_pos.type = CS_MOVE;
@@ -152,12 +170,14 @@ uint32 FSendWorker::Run()
 
                 // 패킷 전송
                 BytesSent = 0;
-                socket->Send((uint8*)&new_pos, sizeof(CS_MOVE_PACKET), BytesSent);
+                socket->Send((uint8*)&new_pos, sizeof(new_pos), BytesSent);
                 lastLocation = CurrentLocation;
-            }
-
-            //FPlatformProcess::Sleep(0.01);
+                //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Send Move Packet, x: %f, y: %f, z: %f"), new_pos.x, new_pos.y, new_pos.z));
+            }        
         }
+        else
+            sendRunning = false;
+        FPlatformProcess::Sleep(0.01);
     }
 
     return 0;
