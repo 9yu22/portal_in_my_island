@@ -40,7 +40,7 @@ public:
 	bool in_use;
 	int _id;
 	SOCKET _socket;
-	short	x, y, z;
+	float	x, y, z;
 	//char	_name[NAME_SIZE];
 
 	int		_prev_remain;
@@ -48,7 +48,9 @@ public:
 	SESSION() : _socket(0), in_use(false)
 	{
 		_id = -1;
-		x = y = 0;
+		x = 0;
+		y = 0;
+		z = 0;
 		//_name[0] = 0;
 		_prev_remain = 0;
 	}
@@ -79,7 +81,7 @@ public:
 		p.type = SC_LOGIN_INFO;
 		p.x = x;
 		p.y = y;
-		p.x = z;
+		p.z = z;
 		do_send(&p);
 	}
 
@@ -97,6 +99,7 @@ void SESSION::send_move_packet(int c_id)
 	p.x = clients[c_id].x;
 	p.y = clients[c_id].y;
 	p.z = clients[c_id].z;
+	std::cout << "로그인 패킷 전송 요청" << std::endl;
 	do_send(&p);
 }
 
@@ -112,6 +115,7 @@ void process_packet(int c_id, char* packet)
 {
 	switch (packet[1]) {
 	case CS_LOGIN: {
+		std::cout << "클라이언트 " << c_id << " 로그인 패킷 도착" << std::endl;
 		CS_LOGIN_PACKET* p = reinterpret_cast<CS_LOGIN_PACKET*>(packet);
 		//strcpy_s(clients[c_id]._name, p->name);
 		clients[c_id].send_login_info_packet();
@@ -222,9 +226,12 @@ int main()
 			int client_id = get_new_client_id();
 			if (client_id != -1) {
 				clients[client_id].in_use = true;
-				clients[client_id].x = 0;
+				/*clients[client_id].x = 0;
 				clients[client_id].y = 0;
-				clients[client_id].z = 0;
+				clients[client_id].z = 0;*/
+				clients[client_id].x = 900;
+				clients[client_id].y = 1600;
+				clients[client_id].z = 1030;
 				clients[client_id]._id = client_id;
 				//clients[client_id]._name[0] = 0;
 				clients[client_id]._prev_remain = 0;

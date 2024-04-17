@@ -27,12 +27,7 @@ bool FRecvWorker::Init()
 
 uint32 FRecvWorker::Run()
 {
-    //LocationPacket locationPacket;
     uint8 recv_buf[256];
-
-    //TestPacket t;
-    //int32 tempread = 0;
-    //socket->Recv((uint8*)&t, sizeof(TestPacket), tempread);
 
     while (recvRunning) {
         // 버퍼에 읽어올 데이터가 있는지 확인
@@ -43,13 +38,24 @@ uint32 FRecvWorker::Run()
 
             int32 BytesRead = 0;
             socket->Recv(recv_buf, sizeof(recv_buf), BytesRead);
-            switch (recv_buf[0] + 1){
+            switch (recv_buf[1]){
 
             case SC_LOGIN_INFO: {
                 SC_LOGIN_INFO_PACKET info;
                 memcpy(&info, recv_buf, sizeof(SC_LOGIN_INFO_PACKET));
                 FVector NewLocation(info.x, info.y, info.z);
                 GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Login Info id: %f, x: %f, y: %f, z: %f"), info.id, info.x, info.y, info.z));
+
+                AsyncTask(ENamedThreads::GameThread, [this, NewLocation]()
+                    {
+                        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Packet")));
+                        if (IsValid(Character))
+                        {
+                            Character->SetActorLocation(NewLocation);
+                        }
+                        else
+                            recvRunning = false;
+                    });
                 break;
             }
                
@@ -62,7 +68,7 @@ uint32 FRecvWorker::Run()
                 // AsyncTask를 사용하여 메인 스레드에서 캐릭터의 위치 업데이트
                 AsyncTask(ENamedThreads::GameThread, [this, NewLocation]()
                     {
-                        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Packet")));
+                        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Move Packet")));
                         if (IsValid(Character))
                         {
                             Character->SetActorLocation(NewLocation);
@@ -83,8 +89,7 @@ uint32 FRecvWorker::Run()
             }
         }
 
-        //// 프로세스를 매우 빠르게 반복하지 않도록 약간의 지연을 추가
-        //FPlatformProcess::Sleep(0.01);
+        FPlatformProcess::Sleep(0.1);
     }
     return 0;
 }
@@ -98,16 +103,7 @@ void FRecvWorker::Stop()
 
 FSendWorker::FSendWorker(FSocket* c_Socket, AblockersCharacter* Character) : socket(c_Socket), Character(Character)
 {
-    CS_LOGIN_PACKET login;
-    login.size = sizeof(CS_LOGIN_PACKET);
-    login.type = CS_LOGIN;
-
-    int32 BytesSent = 0;
-    socket->Send((uint8*)&login, sizeof(CS_MOVE_PACKET), BytesSent);
-    if (BytesSent > 0)
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Login Packet Send")));
-    else
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Login Packet Send Fail...")));
+    
 }
 
 FSendWorker::~FSendWorker()
@@ -122,9 +118,21 @@ bool FSendWorker::Init()
 
 uint32 FSendWorker::Run()
 {
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("SendWorker Running Start")));
     //UPacketHeader Header;
     CS_MOVE_PACKET new_pos;
     FVector lastLocation;
+
+    CS_LOGIN_PACKET login;
+    login.size = sizeof(CS_LOGIN_PACKET);
+    login.type = CS_LOGIN;
+
+    int32 BytesSent = 0;
+    socket->Send((uint8*)&login, sizeof(login), BytesSent);
+    if (BytesSent > 0)
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Login Packet Send")));
+    else
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Login Packet Send Fail...")));
 
     while (sendRunning)
     {
@@ -143,12 +151,12 @@ uint32 FSendWorker::Run()
                 new_pos.z = CurrentLocation.Z;
 
                 // 패킷 전송
-                int32 BytesSent = 0;
+                BytesSent = 0;
                 socket->Send((uint8*)&new_pos, sizeof(CS_MOVE_PACKET), BytesSent);
                 lastLocation = CurrentLocation;
             }
 
-            FPlatformProcess::Sleep(0.01);
+            //FPlatformProcess::Sleep(0.01);
         }
     }
 
