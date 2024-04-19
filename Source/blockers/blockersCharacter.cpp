@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Kismet/GameplayStatics.h"
 
 
 #include "Components/BoxComponent.h"
@@ -21,8 +22,6 @@
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
-//////////////////////////////////////////////////////////////////////////
-// AblockersCharacter
 
 AblockersCharacter::AblockersCharacter()
 {
@@ -33,14 +32,9 @@ AblockersCharacter::AblockersCharacter()
 
 	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -86.0f));
 	GetMesh()->SetWorldScale3D(FVector(0.3f, 0.3f, 0.3f));
-	FRotator NewRotation = FRotator(0.0f, -90.0f, 0.0f); // Yaw 회전 90도 설정
+	FRotator NewRotation = FRotator(0.0f, -90.0f, 0.0f);
 	GetMesh()->SetRelativeRotation(NewRotation);
-	
-	//FVector CharacterLocation = GetActorLocation();
-	//UE_LOG(LogTemp, Warning, TEXT("Character's World Location: %s"), *CharacterLocation.ToString());
 
-	// Set size for collision capsule
-	//GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 		
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -81,25 +75,29 @@ AblockersCharacter::AblockersCharacter()
 
 void AblockersCharacter::BeginPlay()
 {
-	// Call the base class  
+
 	Super::BeginPlay();
 
-	//Add Input Mapping Context
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AblockersCharacter::StaticClass(), FoundActors);
+
+	TSet<AblockersCharacter*> PlayerSet;
+	for (AActor* Actor : FoundActors)
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		AblockersCharacter* Character = Cast<AblockersCharacter>(Actor);
+		if (Character)
 		{
-			Subsystem->AddMappingContext(DefaultMappingContext, 0);
+			PlayerSet.Add(Character);
 		}
 	}
+	//UE_LOG(LogTemp, Warning, TEXT("Number of characters in PlayerSet: %d"), PlayerSet.Num());
+
 }
 
 void AblockersCharacter::Tick(float DeltaTime) {
 
 	Super::Tick(DeltaTime);
 }
-////////////////////////////////////////////////////////////////////////
-// Input
 
 void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -131,7 +129,7 @@ void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 void AblockersCharacter::Move(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hello"));
+	//UE_LOG(LogTemp, Warning, TEXT("Hello"));
 
 	 //input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>(); //입력으로 들어오는 값(Value)을 2D 벡터(FVector2D)로 변환하여 MovementVector에 저장. 이 벡터는 캐릭터의 이동할 방향을 나타냄.

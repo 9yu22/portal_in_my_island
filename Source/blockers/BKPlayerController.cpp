@@ -10,8 +10,6 @@
 #include "UObject/Class.h"
 
 
-
-
 void ABKPlayerController::BeginPlay()
 {
 	// 원본의 BeginPlay
@@ -22,9 +20,6 @@ void ABKPlayerController::BeginPlay()
 	{
 		Subsystem->AddMappingContext(MappingContext, 0);
 	}
-	
-	//player2 = GetWorld()->SpawnActor<AblockersCharacter>(AblockersCharacter::StaticClass(), FVector(890.0f, 2000.0f, 950.0f/*여기에 초기 위치 넣어주면 됨*/), FRotator(0.0f, 0.0f, 0.0f));
-
 }
 
 void ABKPlayerController::SetupInputComponent()
@@ -39,7 +34,6 @@ void ABKPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABKPlayerController::Look);
 	}
 
-	
 }
 
 void ABKPlayerController::InputMove(const FInputActionValue& value)
@@ -48,22 +42,6 @@ void ABKPlayerController::InputMove(const FInputActionValue& value)
 
 	if (ACharacter* controlledCharacter = GetCharacter())
 	{
-		//// 회전 속도 및 이동 속도 변수 설정
-		//float RotationRate = 90.0f;
-		//float MovementSpeed = 500.0f;
-
-		//// 회전 속도 계산
-		//FRotator Rotation = ControlledCharacter->GetControlRotation();
-		//FRotator YawRotation(0, Rotation.Yaw, 0);
-		//FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		//FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-		//// 이동과 회전에 속도 적용
-		//ControlledCharacter->AddMovementInput(ForwardDirection, InputAxis.Y * MovementSpeed * GetWorld()->GetDeltaSeconds());
-		//ControlledCharacter->AddMovementInput(RightDirection, InputAxis.X * MovementSpeed * GetWorld()->GetDeltaSeconds());
-
-		//// 회전 속도 적용
-		//AddYawInput(InputAxis.X * RotationRate * GetWorld()->GetDeltaSeconds());
 		const FRotator Rotation = controlledCharacter->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 

@@ -47,8 +47,4 @@ protected:
 	UFUNCTION()
 	void Look(const FInputActionValue& Value);
 
-
-private:
-	AblockersCharacter* player2;
-
 };

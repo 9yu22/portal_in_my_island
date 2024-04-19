@@ -23,7 +23,7 @@ public:
 
 	virtual void RestartPlayer(AController* NewPlayer) override; //TRY TO SPAWN
 
-	TArray<APlayerController*> PlayerControllersArray;
+
 
 protected:
 	virtual void BeginPlay()override;

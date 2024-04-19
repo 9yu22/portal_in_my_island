@@ -25,27 +25,23 @@ AblockersGameMode::AblockersGameMode()
 		PlayerControllerClass = PlayerControllerBPClass.Class;
 	}
 
-
-
 }
 
 void AblockersGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-
 	// Spawn 3 players
+	TSet<ABKPlayerController*> PlayerControllersSet;
 	for (int32 i = 0; i < 3; i++)
 	{
 		// Spawn player
-		APlayerController* NewPlayerController = Cast<APlayerController>(UGameplayStatics::CreatePlayer(GetWorld(), -1, true));
+		ABKPlayerController* NewPlayerController = Cast<ABKPlayerController>(UGameplayStatics::CreatePlayer(GetWorld(), -1, true));
 
 		if (NewPlayerController)
 		{
 			// Optionally, you can set initial properties or perform other setup for each player here
-
-			// You might want to store references to these player controllers for further manipulation
-			PlayerControllersArray.Add(NewPlayerController);
+			PlayerControllersSet.Add(NewPlayerController);
 		}
 	}
 
@@ -66,7 +62,6 @@ void AblockersGameMode::RestartPlayer(AController* NewPlayer)
 
 void AblockersGameMode::PlayerDied(ACharacter* Character)
 {
-	//Get a reference to our Character's Player Controller
-	AController* CharacterController = Character->GetController();
+	AController* CharacterController = Character -> GetController();
 	RestartPlayer(CharacterController);
 }
