@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
 #include "UObject/Class.h"
+#include "Kismet/KismetMathLibrary.h"	// for getFowardVector(), getRightVector()
 
 
 void ABKPlayerController::BeginPlay()
@@ -40,17 +41,13 @@ void ABKPlayerController::InputMove(const FInputActionValue& value)
 {
 	FVector2D inputAxis = value.Get<FVector2D>();
 
-	if (ACharacter* controlledCharacter = GetCharacter())
+	if (APawn* controlledPawn = GetPawn())
 	{
-		const FRotator Rotation = controlledCharacter->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		FVector ForwardVector = UKismetMathLibrary::GetForwardVector(GetControlRotation());
+		FVector RightVector = UKismetMathLibrary::GetRightVector(GetControlRotation());
 
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-		GetCharacter()->AddMovementInput(ForwardDirection, inputAxis.Y);
-		GetCharacter()->AddMovementInput(RightDirection, inputAxis.X);
+		controlledPawn->AddMovementInput(ForwardVector, inputAxis.Y);
+		controlledPawn->AddMovementInput(RightVector, inputAxis.X);
 	}
 }
 
