@@ -33,7 +33,7 @@ void AblockersGameMode::BeginPlay()
 
 	// Spawn 3 players
 	TSet<ABKPlayerController*> PlayerControllersSet;
-	for (int32 i = 0; i < 3; i++)
+	for (int32 i = 0; i < 1; i++)
 	{
 		// Spawn player
 		ABKPlayerController* NewPlayerController = Cast<ABKPlayerController>(UGameplayStatics::CreatePlayer(GetWorld(), -1, true));
