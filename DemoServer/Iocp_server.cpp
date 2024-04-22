@@ -41,6 +41,7 @@ public:
 	int _id;
 	SOCKET _socket;
 	float	x, y, z;
+	float pitch, yaw, roll;
 	//char	_name[NAME_SIZE];
 
 	int		_prev_remain;
@@ -100,6 +101,9 @@ void SESSION::send_move_packet(int c_id)
 	p.x = clients[c_id].x;
 	p.y = clients[c_id].y;
 	p.z = clients[c_id].z;
+	p.pitch = clients[c_id].pitch;
+	p.yaw = clients[c_id].yaw;
+	p.roll = clients[c_id].roll;
 	std::cout << "x:" << p.x << "y: " << p.y << "z: " << p.z << " 무브 패킷 전송" << std::endl;
 	do_send(&p);
 }
@@ -121,31 +125,32 @@ void process_packet(int c_id, char* packet)
 		//strcpy_s(clients[c_id]._name, p->name);
 		clients[c_id].send_login_info_packet();
 
-		for (auto& pl : clients) {
+		for (auto& pl : clients) { // 새로 추가된 클라를 모두에게 전송
 			if (false == pl.in_use) continue;
 			if (pl._id == c_id) continue;
-			//SC_ADD_PLAYER_PACKET add_packet;
-			//add_packet.id = c_id;
-			////strcpy_s(add_packet.name, p->name);
-			//add_packet.size = sizeof(add_packet);
-			//add_packet.type = SC_ADD_PLAYER;
-			//add_packet.x = clients[c_id].x;
-			//add_packet.y = clients[c_id].y;
-			//add_packet.z = clients[c_id].z;
-			//pl.do_send(&add_packet);
+			SC_ADD_PLAYER_PACKET add_packet;
+			add_packet.id = c_id;
+			//strcpy_s(add_packet.name, p->name);
+			add_packet.size = sizeof(add_packet);
+			add_packet.type = SC_ADD_PLAYER;
+			add_packet.x = clients[c_id].x;
+			add_packet.y = clients[c_id].y;
+			add_packet.z = clients[c_id].z;
+			std::cout << "클라이언트 " << c_id << " 추가 패킷 전송" << std::endl;
+			pl.do_send(&add_packet);
 		}
-		for (auto& pl : clients) {
+		for (auto& pl : clients) { // 새로 추가된 클라에게 모두 전송
 			if (false == pl.in_use) continue;
 			if (pl._id == c_id) continue;
-			//SC_ADD_PLAYER_PACKET add_packet;
-			//add_packet.id = pl._id;
-			////strcpy_s(add_packet.name, pl._name);
-			//add_packet.size = sizeof(add_packet);
-			//add_packet.type = SC_ADD_PLAYER;
-			//add_packet.x = pl.x;
-			//add_packet.y = pl.y; 
-			//add_packet.z = pl.z;
-			//clients[c_id].do_send(&add_packet);
+			SC_ADD_PLAYER_PACKET add_packet;
+			add_packet.id = pl._id;
+			//strcpy_s(add_packet.name, pl._name);
+			add_packet.size = sizeof(add_packet);
+			add_packet.type = SC_ADD_PLAYER;
+			add_packet.x = pl.x;
+			add_packet.y = pl.y; 
+			add_packet.z = pl.z;
+			clients[c_id].do_send(&add_packet);
 		}
 		break;
 	}
@@ -228,11 +233,8 @@ int main()
 			int client_id = get_new_client_id();
 			if (client_id != -1) {
 				clients[client_id].in_use = true;
-				/*clients[client_id].x = 0;
-				clients[client_id].y = 0;
-				clients[client_id].z = 0;*/
 				// 890.f, 1600.f, 990.f
-				clients[client_id].x = 900.f;
+				clients[client_id].x = 900.f + 100 * client_id;
 				clients[client_id].y = 1600.f;
 				clients[client_id].z = 1000.f;
 				clients[client_id]._id = client_id;

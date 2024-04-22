@@ -28,6 +28,7 @@ struct CS_MOVE_PACKET {
     uint8 size;
     int8 type;
     float x, y, z;
+    float pitch, yaw, roll;
 };
 
 struct SC_LOGIN_INFO_PACKET {
@@ -56,6 +57,7 @@ struct SC_MOVE_PLAYER_PACKET {
     int8 type;
     int8 id;
     float x, y, z;
+    float pitch, yaw, roll;
 };
 
 //struct LocationPacket {

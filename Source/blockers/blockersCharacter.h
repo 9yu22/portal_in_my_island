@@ -59,6 +59,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ABullet> bulletFactory;
 
+	int8 id = -1;
+	TArray<AblockersCharacter*> Players;
+
 private:
 	void Fire();
 

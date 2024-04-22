@@ -38,6 +38,7 @@ private:
     bool sendRunning = true;
 
     FVector CurrentLocation;
+    FRotator CurrentRotation;
 
 public:
     FSendWorker(FSocket* c_Socket, AblockersCharacter* Character);

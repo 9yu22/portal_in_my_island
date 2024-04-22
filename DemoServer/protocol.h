@@ -30,6 +30,7 @@ struct CS_MOVE_PACKET {
     u_char size;
     char type;
     float x, y, z;
+    float pitch, yaw, roll;
 };
 
 struct SC_LOGIN_INFO_PACKET {
@@ -58,6 +59,7 @@ struct SC_MOVE_PLAYER_PACKET {
     char type;
     char id;
     float x, y, z;
+    float pitch, yaw, roll;
 };
 
 //struct LocationPacket {

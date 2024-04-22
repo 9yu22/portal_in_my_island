@@ -81,13 +81,12 @@ void AblockersCharacter::BeginPlay()
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AblockersCharacter::StaticClass(), FoundActors);
 
-	TSet<AblockersCharacter*> PlayerSet;
 	for (AActor* Actor : FoundActors)
 	{
 		AblockersCharacter* Character = Cast<AblockersCharacter>(Actor);
 		if (Character)
 		{
-			PlayerSet.Add(Character);
+			Players.Add(Character);
 		}
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Number of characters in PlayerSet: %d"), PlayerSet.Num());
