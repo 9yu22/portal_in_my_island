@@ -33,14 +33,22 @@ public:
 	AblockersCharacter();
 
 	virtual void Tick(float DeltaTime) override;
+
+	float GetHealth() const { return health; }
+	void SetHealth(float val) { health = val; }
+
+	float GetMaxHealth() const { return MaxHealth; }
+	void SetMaxHealth(float val) { health = val; }
 	
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	// To add mapping context
-	virtual void BeginPlay();
-			
+	virtual void BeginPlay();		
+
+	UPROPERTY(VisibleAnywhere)
+	class UWidgetComponent* HealthWidgetComp;
 
 public:
 	/** Returns CameraBoom subobject **/
@@ -68,5 +76,8 @@ private:
 protected:
 	virtual void Destroyed();
 	void CallRestartPlayer();
+
+	float health;
+	float MaxHealth = 100;
 };
 

@@ -1,22 +1,26 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "blockersCharacter.h"
-#include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "GameFramework/Controller.h"
+#include "Engine/LocalPlayer.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Controller.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "InputActionValue.h"
 #include "Kismet/GameplayStatics.h"
 
 
+#include "Bullet.h"
+#include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
-#include "Components/ArrowComponent.h"
-#include "Bullet.h"
+#include "Components/SceneComponent.h"
+#include "Components/WidgetComponent.h"
+
+#include"HealthBarWidget.h"
 
 #include "blockersGameMode.h"
 
@@ -71,6 +75,11 @@ AblockersCharacter::AblockersCharacter()
 	//총구 표시 컴포넌트를 생성하고 박스 컴포넌트의 자식컴포넌트로 설정한다.
 	firePosition = CreateDefaultSubobject<UArrowComponent>(TEXT("Fire Position"));
 
+	HealthWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
+	HealthWidgetComp->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+
+	health = MaxHealth;
+
 }
 
 void AblockersCharacter::BeginPlay()
@@ -90,12 +99,18 @@ void AblockersCharacter::BeginPlay()
 		}
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Number of characters in PlayerSet: %d"), PlayerSet.Num());
-
+	UHealthBarWidget* HealthBar = Cast<UHealthBarWidget>(HealthWidgetComp->GetUserWidgetObject());
+	HealthBar->SetOwnerCharacter(this);
 }
 
 void AblockersCharacter::Tick(float DeltaTime) {
 
 	Super::Tick(DeltaTime);
+
+	health = FMath::Clamp<float>(health - DeltaTime * 3.0, 0, MaxHealth); //시간에 따라 줄어들도록 설정.
+	if (health < 0.f) {
+		health = 0;
+	}
 }
 
 void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
