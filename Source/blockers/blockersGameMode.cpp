@@ -31,7 +31,7 @@ void AblockersGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Spawn 3 players
+	// Spawn 'i' players
 	TSet<ABKPlayerController*> PlayerControllersSet;
 	for (int32 i = 0; i < 1; i++)
 	{

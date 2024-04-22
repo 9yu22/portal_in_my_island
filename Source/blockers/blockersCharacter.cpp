@@ -1,28 +1,30 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "blockersCharacter.h"
-#include "Camera/CameraComponent.h"
-#include "Components/CapsuleComponent.h"
-#include "Engine/LocalPlayer.h"
-#include "EnhancedInputComponent.h"
-#include "EnhancedInputSubsystems.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/Controller.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "InputActionValue.h"
+
+
 #include "Kismet/GameplayStatics.h"
+#include "Engine/LocalPlayer.h"
+#include "InputActionValue.h"
+#include "EnhancedInputSubsystems.h"
+#include "GameFramework/Controller.h"
 
 
-#include "Bullet.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Components/BoxComponent.h"
-#include "Components/StaticMeshComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/SceneComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "Components/WidgetComponent.h"
+#include "EnhancedInputComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
-#include"HealthBarWidget.h"
 
 #include "blockersGameMode.h"
+#include "Bullet.h"
+#include "HealthBarWidget.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -99,6 +101,7 @@ void AblockersCharacter::BeginPlay()
 		}
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Number of characters in PlayerSet: %d"), PlayerSet.Num());
+
 	UHealthBarWidget* HealthBar = Cast<UHealthBarWidget>(HealthWidgetComp->GetUserWidgetObject());
 	HealthBar->SetOwnerCharacter(this);
 }

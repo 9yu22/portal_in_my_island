@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
 #include "../blockersCharacter.h"
+#include "Blueprint/UserWidget.h"
 #include "HealthBarWidget.generated.h"
 
 /**
@@ -14,6 +14,7 @@ UCLASS()
 class BLOCKERS_API UHealthBarWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
 public:
 
 	void SetOwnerCharacter(AblockersCharacter* InCharacter) { OwnerCharacter = InCharacter; }

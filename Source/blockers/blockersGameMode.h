@@ -17,12 +17,11 @@ class AblockersGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
+
 	AblockersGameMode();
 
 	const FOnPlayerDiedSignature& GetOnPlayerDied() const { return OnPlayerDied; }
-
-	virtual void RestartPlayer(AController* NewPlayer) override; //TRY TO SPAWN
-
+	virtual void RestartPlayer(AController* NewPlayer) override; //TRY TO RESPAWN
 
 
 protected:
@@ -30,7 +29,6 @@ protected:
 
 	UFUNCTION()
 	virtual void PlayerDied(ACharacter* Character); //Call When Player die
-
 	UPROPERTY()
 	FOnPlayerDiedSignature OnPlayerDied; //Signature to bind delegate
 

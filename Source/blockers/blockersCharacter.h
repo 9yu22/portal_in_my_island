@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "GameFramework/Character.h"
 #include "blockersCharacter.generated.h"
 
 
@@ -33,12 +33,6 @@ public:
 	AblockersCharacter();
 
 	virtual void Tick(float DeltaTime) override;
-
-	float GetHealth() const { return health; }
-	void SetHealth(float val) { health = val; }
-
-	float GetMaxHealth() const { return MaxHealth; }
-	void SetMaxHealth(float val) { health = val; }
 	
 protected:
 	// APawn interface
@@ -46,9 +40,6 @@ protected:
 	
 	// To add mapping context
 	virtual void BeginPlay();		
-
-	UPROPERTY(VisibleAnywhere)
-	class UWidgetComponent* HealthWidgetComp;
 
 public:
 	/** Returns CameraBoom subobject **/
@@ -70,12 +61,28 @@ public:
 	int8 id = -1;
 	TArray<AblockersCharacter*> Players;
 
+	//bullet
 private:
 	void Fire();
 
+	//Respawn
 protected:
 	virtual void Destroyed();
 	void CallRestartPlayer();
+
+	//HP & HealthBar
+public:
+
+	float GetHealth() const { return health; }
+	void SetHealth(float val) { health = val; }
+
+	float GetMaxHealth() const { return MaxHealth; }
+	void SetMaxHealth(float val) { health = val; }
+
+protected:
+
+	UPROPERTY(VisibleAnywhere)
+	class UWidgetComponent* HealthWidgetComp;
 
 	float health;
 	float MaxHealth = 100;
