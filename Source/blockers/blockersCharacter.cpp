@@ -36,6 +36,15 @@ AblockersCharacter::AblockersCharacter()
 		GetMesh()->SetSkeletalMesh(SK_blockers.Object);
 	}
 
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimBPClass(TEXT("/Game/Blockers/Blueprints/BlockersAnimBP.BlockersAnimBP_C"));
+	if (AnimBPClass.Succeeded()) {
+		UE_LOG(LogTemp, Warning, TEXT("Animation OK"));
+		GetMesh()->SetAnimInstanceClass(AnimBPClass.Class);
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Animation NO"));
+	}
+
 	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -86.0f));
 	GetMesh()->SetWorldScale3D(FVector(0.3f, 0.3f, 0.3f));
 	FRotator NewRotation = FRotator(0.0f, -90.0f, 0.0f);
