@@ -44,7 +44,7 @@ public:
 	UPROPERTY() //Inventory that owns this item
 	class UInventoryComponent* OwningInventory; 
 
-	virtual void Use(class AblockersCharacter* character) PURE_VIRTUAL(UItem, );
+	virtual void Use(class AblockersCharacter* character);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnUse(class AblockersCharacter* Character);
