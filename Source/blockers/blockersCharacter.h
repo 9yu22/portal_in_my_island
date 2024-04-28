@@ -29,6 +29,10 @@ class AblockersCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
+	/**Inventory Component */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true")) //category
+	class UInventoryComponent* Inventory;
+
 public:
 	AblockersCharacter();
 
@@ -84,7 +88,13 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* HealthWidgetComp;
 
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	float health;
-	float MaxHealth = 100;
+
+	UFUNCTION(BlueprintCallable, Category = "Items")
+	void UseItem(class UItem* Item);
+
+	float MaxHealth = 100.f;
 };
 

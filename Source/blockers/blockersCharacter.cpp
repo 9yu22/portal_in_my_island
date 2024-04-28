@@ -22,6 +22,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 
+#include "../blockers/Public/InventoryComponent.h"
+#include "../blockers/Public/Item.h"
 #include "blockersGameMode.h"
 #include "Bullet.h"
 #include "HealthBarWidget.h"
@@ -90,6 +92,9 @@ AblockersCharacter::AblockersCharacter()
 	HealthWidgetComp->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 	health = MaxHealth;
+
+	Inventory = CreateDefaultSubobject<UInventoryComponent>("Inventory");
+	Inventory->Capacity = 20; //you can input 20 items
 
 }
 
@@ -170,5 +175,13 @@ void AblockersCharacter::CallRestartPlayer()
 		{
 			GameMode->RestartPlayer(CortollerRef);
 		}
+	}
+}
+
+void AblockersCharacter::UseItem(UItem* Item)
+{
+	if (Item) {
+		Item->Use(this);
+		Item->OnUse(this); //BP EVENT
 	}
 }
