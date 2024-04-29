@@ -50,8 +50,8 @@ private:
 	};
 
 	bool Check(FVector Position) const;
-	void CreateFace(BKEDirection Direction, FVector Position, bool isSplitBlock);
-	TArray<FVector> GetFaceVertices(BKEDirection Direction, FVector Position, bool isSplitBlock) const;
+	void CreateFace(BKEDirection Direction, FVector Position);
+	TArray<FVector> GetFaceVertices(BKEDirection Direction, FVector Position) const;
 	FVector GetPositionInDirection(BKEDirection Direction, FVector Position) const;
 	FVector GetNormal(BKEDirection Direction) const;
 	int GetBlockIndex(int X, int Y, int Z) const;
