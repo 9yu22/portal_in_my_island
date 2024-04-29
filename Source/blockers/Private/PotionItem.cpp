@@ -8,6 +8,6 @@ void UPotionItem::Use(AblockersCharacter* Character)
 {
 	if (Character)
 	{
-		Character->health += HealthToHeal; 
+		Character->health += HealthToHeal; //HealthToHeal = 10.f 
 	}
 }
