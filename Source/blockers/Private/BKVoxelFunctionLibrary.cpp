@@ -40,3 +40,18 @@ FIntVector UBKVoxelFunctionLibrary::WorldToChunkPosition(const FVector& Position
 
 	return Result;
 }
+
+FIntVector UBKVoxelFunctionLibrary::GetBlockWorldPostion(const FVector& Position, const int Size)
+{
+	const auto ChunkPosition = WorldToChunkPosition(Position, Size);
+	const auto LocalBlockPosition = WorldToLocalBlockPosition(Position, Size);
+
+	if (ChunkPosition.X == 0 && ChunkPosition.Y == 0)
+		return FIntVector(LocalBlockPosition) * 100 + FIntVector(50);
+	else if (ChunkPosition.X == -1 && ChunkPosition.Y == 0)
+		return FIntVector(LocalBlockPosition.X - Size, LocalBlockPosition.Y, LocalBlockPosition.Z) * 100 + FIntVector(50);
+	else if (ChunkPosition.X == 0 && ChunkPosition.Y == -1)
+		return FIntVector(LocalBlockPosition.X, LocalBlockPosition.Y - Size, LocalBlockPosition.Z) * 100 + FIntVector(50);
+	else
+		return FIntVector(LocalBlockPosition.X - Size, LocalBlockPosition.Y - Size, LocalBlockPosition.Z) * 100 + FIntVector(50);
+}
