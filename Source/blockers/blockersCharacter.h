@@ -64,6 +64,7 @@ public:
 
 	int8 id = -1;
 	TArray<AblockersCharacter*> Players;
+	bool loginOk = false;
 
 	//bullet
 private:

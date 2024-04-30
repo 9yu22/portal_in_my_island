@@ -34,8 +34,9 @@ public:
 	class FSocket* Socket;
 	FString IpAddress = TEXT("127.0.0.1");
 	int16 Port = 4040;
-	AblockersCharacter* Character;
 
 	//TSharedPtr<class PacketSession> GameServerSession;
 	//TSharedPtr<class FRecvWorker> makeRecvThread;
 };
+
+//TArray<AblockersCharacter*> players; //전역으로 해서 변경된 사항을 항상 가져올 수 있게 해보자

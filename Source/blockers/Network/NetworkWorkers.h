@@ -18,6 +18,7 @@ private:
     FSocket* socket;
     AblockersCharacter* Character;
     bool recvRunning = true;
+    int8 th_num = 0;
 
 public:
     FRecvWorker(FSocket* c_Socket, AblockersCharacter* Character);

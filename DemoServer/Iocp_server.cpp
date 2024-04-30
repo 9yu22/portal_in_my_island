@@ -104,7 +104,7 @@ void SESSION::send_move_packet(int c_id)
 	p.pitch = clients[c_id].pitch;
 	p.yaw = clients[c_id].yaw;
 	p.roll = clients[c_id].roll;
-	std::cout << "x:" << p.x << "y: " << p.y << "z: " << p.z << " 무브 패킷 전송" << std::endl;
+	//std::cout << "클라이언트 " << c_id << "x:" << p.x << " y : " << p.y << " z : " << p.z << " 무브 패킷 전송" << std::endl << std::endl;
 	do_send(&p);
 }
 
@@ -136,8 +136,8 @@ void process_packet(int c_id, char* packet)
 			add_packet.x = clients[c_id].x;
 			add_packet.y = clients[c_id].y;
 			add_packet.z = clients[c_id].z;
-			std::cout << "클라이언트 " << c_id << " 추가 패킷 전송" << std::endl;
 			pl.do_send(&add_packet);
+			std::cout << "새로운 클라이언트 " << c_id << "의 ADD 패킷을 원래 있던 클라이언트 " << pl._id << "에게 전송" << std::endl;
 		}
 		for (auto& pl : clients) { // 새로 추가된 클라에게 모두 전송
 			if (false == pl.in_use) continue;
@@ -151,18 +151,22 @@ void process_packet(int c_id, char* packet)
 			add_packet.y = pl.y; 
 			add_packet.z = pl.z;
 			clients[c_id].do_send(&add_packet);
+			std::cout << "새로운 클라이언트 " << c_id <<"에게 원래 존재하던 " << pl._id << "의 ADD 패킷을 전송" << std::endl;
 		}
 		break;
 	}
-	case CS_MOVE: { // 무브 패킷 오면 저장 후 브로드캐스트
+	case CS_MOVE: {
 		
 		CS_MOVE_PACKET* p = reinterpret_cast<CS_MOVE_PACKET*>(packet);
 		clients[c_id].x = p->x;
 		clients[c_id].y = p->y;
 		clients[c_id].z = p->z;
-		std::cout << " x:" << p->x << " y: " << p->y << " z: " << p->z << " 무브 패킷 도착" << std::endl;
+		clients[c_id].pitch = p->pitch;
+		clients[c_id].yaw = p->yaw;
+		clients[c_id].roll = p->roll;
+		//std::cout << "클라이언트 " <<c_id << "x:" << p->x << " y : " << p->y << " z : " << p->z << " 무브 패킷 도착" << std::endl;
 		for (auto& pl : clients)
-			if (true == pl.in_use)
+			if (true == pl.in_use && pl._id != c_id)
 				pl.send_move_packet(c_id);
 		break;
 	}

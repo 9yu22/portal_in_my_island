@@ -32,12 +32,14 @@ void USGameInstance::ConnectToGameServer()
 		/*GameServerSession = MakeShared<PacketSession>(Socket);
 		GameServerSession->Run();*/
 
-		Character = Cast<AblockersCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
-		FRecvWorker* RecvWorker = new FRecvWorker(Socket, Character);
-		FSendWorker* SendWorker = new FSendWorker(Socket, Character);
-		// 스레드 생성 및 시작
-		FRunnableThread* RecvThread = FRunnableThread::Create(RecvWorker, TEXT("RecvWorkerThread"), 0, TPri_BelowNormal);
-		FRunnableThread* SendThread = FRunnableThread::Create(SendWorker, TEXT("SendWorkerThread"), 0, TPri_BelowNormal);
+		AblockersCharacter* Character = Cast<AblockersCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+		if (Character) {
+			FRecvWorker* RecvWorker = new FRecvWorker(Socket, Character);
+			FSendWorker* SendWorker = new FSendWorker(Socket, Character);
+			// 스레드 생성 및 시작
+			FRunnableThread* RecvThread = FRunnableThread::Create(RecvWorker, TEXT("RecvWorkerThread"), 0, TPri_BelowNormal);
+			FRunnableThread* SendThread = FRunnableThread::Create(SendWorker, TEXT("SendWorkerThread"), 0, TPri_BelowNormal);
+		}
 	}
 	else {
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Connection Failed")));
