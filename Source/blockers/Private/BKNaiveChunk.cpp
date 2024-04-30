@@ -42,15 +42,38 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 		{
 			for (int z = 0; z < Size; ++z)
 			{
-				const auto NoiseValue = Noise->GetNoise(x + Position.X, y + Position.Y, z + Position.Z);
-				if (NoiseValue >= 0)
-				{
-					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Air;
-				}
-				else
-				{
+				// point: (0,0) / size: 64
+				if (z + Position.Z == 0 && sqrt((x + Position.X) * (x + Position.X) + (y + Position.Y) * (y + Position.Y)) < 32) {
 					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
 				}
+				// point: (50,50) / size: 10
+				else if (z + Position.Z == 0 && sqrt((x + Position.X - 50) * (x + Position.X - 50) + (y + Position.Y - 50) * (y + Position.Y - 50)) < 10) {
+					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
+				}
+				// point: (-50,50) / size: 10
+				else if (z + Position.Z == 0 && sqrt((x + Position.X + 50) * (x + Position.X + 50) + (y + Position.Y - 50) * (y + Position.Y - 50)) < 10) {
+					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
+				}
+				// point: (50,-50) / size: 10
+				else if (z + Position.Z == 0 && sqrt((x + Position.X - 50) * (x + Position.X - 50) + (y + Position.Y + 50) * (y + Position.Y + 50)) < 10) {
+					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
+				}
+				// point: (-50,-50) / size: 10
+				else if (z + Position.Z == 0 && sqrt((x + Position.X + 50) * (x + Position.X + 50) + (y + Position.Y + 50) * (y + Position.Y + 50)) < 10) {
+					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
+				}
+				else {
+					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Air;
+				}
+				//const auto NoiseValue = Noise->GetNoise(x + Position.X, y + Position.Y, z + Position.Z);
+				//if (NoiseValue >= 0)
+				//{
+				//	Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Air;
+				//}
+				//else
+				//{
+				//	Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
+				//}
 			}
 		}
 	}
@@ -72,7 +95,7 @@ void ABKNaiveChunk::GenerateMesh()
 					{
 						if (Check(GetPositionInDirection(Direction, Position)))
 						{
-							CreateFace(Direction, Position * 100, false);
+							CreateFace(Direction, Position * 100);
 						}
 					}
 				}
@@ -88,12 +111,12 @@ bool ABKNaiveChunk::Check(const FVector Position) const
 	return Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)] == BKEBlock::Air;
 }
 
-void ABKNaiveChunk::CreateFace(const BKEDirection Direction, const FVector Position, bool isSplitBlock)
+void ABKNaiveChunk::CreateFace(const BKEDirection Direction, const FVector Position)
 {
 	const auto Color = FColor::MakeRandomColor();
 	const auto Normal = GetNormal(Direction);
 
-	MeshData.Vertices.Append(GetFaceVertices(Direction, Position, isSplitBlock));
+	MeshData.Vertices.Append(GetFaceVertices(Direction, Position));
 	MeshData.Triangles.Append({ VertexCount + 3, VertexCount + 2, VertexCount, VertexCount + 2, VertexCount + 1, VertexCount });
 	MeshData.Normals.Append({ Normal, Normal, Normal, Normal });
 	MeshData.Colors.Append({ Color, Color, Color, Color });
@@ -102,16 +125,13 @@ void ABKNaiveChunk::CreateFace(const BKEDirection Direction, const FVector Posit
 	VertexCount += 4;
 }
 
-TArray<FVector> ABKNaiveChunk::GetFaceVertices(BKEDirection Direction, const FVector Position, bool isSplitBlock) const
+TArray<FVector> ABKNaiveChunk::GetFaceVertices(BKEDirection Direction, const FVector Position) const
 {
 	TArray<FVector> Vertices;
 
 	for (int i = 0; i < 4; i++)
 	{
-		if (isSplitBlock)
-			Vertices.Add(BlockVertexData[BlockTriangleData[i + static_cast<int>(Direction) * 4]] * 1 / (float)splitBlockNum * 0.8f + Position);
-		else
-			Vertices.Add(BlockVertexData[BlockTriangleData[i + static_cast<int>(Direction) * 4]] + Position);
+		Vertices.Add(BlockVertexData[BlockTriangleData[i + static_cast<int>(Direction) * 4]] + Position);
 	}
 
 	return Vertices;
@@ -150,13 +170,6 @@ void ABKNaiveChunk::ModifyVoxelData(const FIntVector Position, const BKEBlock Bl
 	const int Index = GetBlockIndex(Position.X, Position.Y, Position.Z);
 
 	Blocks[Index] = Block;
-
-	// 전달 받은 Block이 Air라는 것 => 파괴하고자 하는 블록
-	// 그러면 해당 블록은 Air로 만들고 그 위치를 저장해서 8등분한다.
-	if (Block == BKEBlock::Air)
-	{
-		splitBlocks.Add(Position);
-	}
 }
 
 int ABKNaiveChunk::GetBlockIndex(const int X, const int Y, const int Z) const

@@ -71,20 +71,15 @@ void ABKChunkBase::ClearMesh()
 	MeshData.Clear();
 }
 
-FIntVector ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
+void ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
 {
-	if (Position.X >= Size || Position.Y >= Size || Position.Z >= Size || Position.X < 0 || Position.Y < 0 || Position.Z < 0) return Position;
+	//if (Position.X >= Size || Position.Y >= Size || Position.Z >= Size || Position.X < 0 || Position.Y < 0 || Position.Z < 0) return Position;
 
 	ModifyVoxelData(Position, Block);
 
 	ClearMesh();
 
-	// split blocks를 그리자
-	//GenerateSplitBlockMesh();
-
 	GenerateMesh();
 
 	ApplyMesh();
-
-	return FIntVector(Position.X * 100 + 50, Position.Y * 100 + 50, Position.Z * 100 + 50);
 }

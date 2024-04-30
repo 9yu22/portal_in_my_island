@@ -28,7 +28,7 @@ class BLOCKERS_API ABKChunkBase : public AActor
 	EGenerationType GenerationType;
 
 	UFUNCTION(BlueprintCallable, Category = "Chunk")
-	FIntVector ModifyVoxel(const FIntVector Position, const BKEBlock Block);
+	void ModifyVoxel(const FIntVector Position, const BKEBlock Block);
 
 protected:
 	// Called when the game starts or when spawned

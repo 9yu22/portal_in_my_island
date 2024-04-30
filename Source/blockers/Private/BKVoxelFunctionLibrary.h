@@ -22,4 +22,7 @@ class UBKVoxelFunctionLibrary final : public UBlueprintFunctionLibrary
 
 	UFUNCTION(BlueprintPure, Category = "Voxel")
 	static FIntVector WorldToChunkPosition(const FVector& Position, const int Size);
+
+	UFUNCTION(BlueprintPure, Category = "Voxel")
+	static FIntVector GetBlockWorldPostion(const FVector& Position, const int Size);
 };
