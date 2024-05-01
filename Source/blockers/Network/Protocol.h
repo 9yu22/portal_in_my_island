@@ -12,12 +12,6 @@ constexpr char SC_REMOVE_PLAYER = 4;
 constexpr char SC_MOVE_PLAYER = 5;
 
 #pragma pack (push, 1)
-
-//struct UPacketHeader {
-//    int8 size;
-//    int8 type;
-//};
-
 struct CS_LOGIN_PACKET {
     uint8 size;
     int8 type;
@@ -58,17 +52,5 @@ struct SC_MOVE_PLAYER_PACKET {
     int8 id;
     float x, y, z;
     float pitch, yaw, roll;
-};
-
-//struct LocationPacket {
-//    uint8 size;
-//    int8 type;
-//    float x, y, z;
-//};
-
-struct TestPacket {
-    uint8 size;
-    int8 type;
-    int16 number;
 };
 #pragma pack (pop)

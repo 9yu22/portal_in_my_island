@@ -41,13 +41,24 @@ uint32 FRecvWorker::Run()
         socket->HasPendingData(bHasPendingData);
 
         if (bHasPendingData > 0) {
-
             int32 BytesRead = 0;
             socket->Recv(recv_buf, sizeof(recv_buf), BytesRead);
-            if (recv_buf[1] != SC_MOVE_PLAYER)
-                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("%dRecv_Thread Check Packet Type: %d"), th_num, recv_buf[1]));
-            switch (recv_buf[1]){
-                
+            switch (recv_buf[1]) {
+            case SC_LOGIN_INFO:
+                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("%dRecv_Thread Recv Login Packet"), th_num));
+                break;
+            case SC_ADD_PLAYER:
+                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("%dRecv_Thread Recv Add Packet"), th_num));
+                break;
+            case SC_MOVE_PLAYER:
+                break;
+            default:
+                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("%dRecv_Thread Other Packet"), th_num));
+                break;
+            }
+
+            switch (recv_buf[1]) {
+
             case SC_LOGIN_INFO: {
                 SC_LOGIN_INFO_PACKET info;
 
@@ -76,8 +87,8 @@ uint32 FRecvWorker::Run()
 
                 break;
             }
-               
-            case SC_MOVE_PLAYER:{
+
+            case SC_MOVE_PLAYER: {
                 SC_MOVE_PLAYER_PACKET new_pos;
 
                 memcpy(&new_pos, recv_buf, sizeof(new_pos));
@@ -103,7 +114,7 @@ uint32 FRecvWorker::Run()
                             recvRunning = false;
                     });
                 break;
-             
+
             }
             case SC_ADD_PLAYER: {
                 SC_ADD_PLAYER_PACKET new_player;
@@ -115,7 +126,7 @@ uint32 FRecvWorker::Run()
                 AsyncTask(ENamedThreads::GameThread, [this, NewLocation, new_player]()
                     {
                         //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Move Packet")));
-                        if (IsValid(Character)){   
+                        if (IsValid(Character)) {
                             for (auto& p : Character->Players) {
                                 if (p->id < 0) {
                                     p->id = new_player.id;
@@ -123,21 +134,15 @@ uint32 FRecvWorker::Run()
                                     break;
                                 }
                             }
-                           
+
                         }
                         else
                             recvRunning = false;
                     });
                 break;
             }
-            case TEST: {
-                TestPacket test;
-                memcpy(&test, recv_buf, sizeof(TestPacket));
-
-                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Test Packet Recv: %d"), test.number));
-
-            }
-               
+            default:
+                break;
             }
         }
 
@@ -175,20 +180,13 @@ uint32 FSendWorker::Run()
     CS_MOVE_PACKET new_pos;
     FVector lastLocation;
 
-    CS_LOGIN_PACKET login;
-    login.size = sizeof(CS_LOGIN_PACKET);
-    login.type = CS_LOGIN;
 
-    int32 BytesSent = 0;
-    socket->Send((uint8*)&login, sizeof(login), BytesSent);
-    if (BytesSent > 0)
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Login Packet Send")));
-    else
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Login Packet Send Fail...")));
 
     while (!Character->loginOk) {
         // 로그인 패킷 받기 전까지 대기
     }
+
+    int32 BytesSent = 0;
        
     double LastSendTime = FPlatformTime::Seconds();
 

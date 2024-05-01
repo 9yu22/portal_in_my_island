@@ -16,6 +16,7 @@ public:
 	WSABUF _wsabuf;
 	char _send_buf[BUF_SIZE];
 	OP_TYPE _op_type;
+	char _packet_type;
 	EX_OVERLAPPED()
 	{
 		_wsabuf.len = BUF_SIZE;
@@ -29,6 +30,7 @@ public:
 		_wsabuf.buf = _send_buf;
 		ZeroMemory(&_over, sizeof(_over));
 		_op_type = OP_SEND;
+		_packet_type = packet[1];
 		memcpy(_send_buf, packet, packet[0]);
 	}
 };
@@ -121,10 +123,11 @@ void process_packet(int c_id, char* packet)
 	switch (packet[1]) {
 	case CS_LOGIN: {
 		std::cout << "클라이언트 " << c_id << " 로그인 패킷 도착" << std::endl;
-		CS_LOGIN_PACKET* p = reinterpret_cast<CS_LOGIN_PACKET*>(packet);
+		//CS_LOGIN_PACKET* p = reinterpret_cast<CS_LOGIN_PACKET*>(packet);
 		//strcpy_s(clients[c_id]._name, p->name);
 		clients[c_id].send_login_info_packet();
 
+		std::cout << std::endl;
 		for (auto& pl : clients) { // 새로 추가된 클라를 모두에게 전송
 			if (false == pl.in_use) continue;
 			if (pl._id == c_id) continue;
@@ -152,6 +155,7 @@ void process_packet(int c_id, char* packet)
 			add_packet.z = pl.z;
 			clients[c_id].do_send(&add_packet);
 			std::cout << "새로운 클라이언트 " << c_id <<"에게 원래 존재하던 " << pl._id << "의 ADD 패킷을 전송" << std::endl;
+
 		}
 		break;
 	}
@@ -237,7 +241,6 @@ int main()
 			int client_id = get_new_client_id();
 			if (client_id != -1) {
 				clients[client_id].in_use = true;
-				// 890.f, 1600.f, 990.f
 				clients[client_id].x = 900.f + 100 * client_id;
 				clients[client_id].y = 1600.f;
 				clients[client_id].z = 1000.f;
@@ -277,6 +280,17 @@ int main()
 			break;
 		}
 		case OP_SEND:
+			if (ex_over->_packet_type == SC_LOGIN_INFO) {
+				std::cout << "GQCS Login Send" << std::endl;
+			}
+				
+			else if (ex_over->_packet_type == SC_ADD_PLAYER) {
+				std::cout << "GQCS Add Send" << std::endl;
+			}
+				
+			/*else if (ex_over->_packet_type == SC_MOVE_PLAYER)
+				std::cout << "GQCS Move Send" << std::endl;*/
+			
 			delete ex_over;
 			break;
 		}
