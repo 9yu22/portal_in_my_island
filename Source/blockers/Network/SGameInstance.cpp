@@ -32,13 +32,24 @@ void USGameInstance::ConnectToGameServer()
 		/*GameServerSession = MakeShared<PacketSession>(Socket);
 		GameServerSession->Run();*/
 
+		CS_LOGIN_PACKET login;
+		login.size = sizeof(CS_LOGIN_PACKET);
+		login.type = CS_LOGIN;
+
+		int32 BytesSent = 0;
+		Socket->Send((uint8*)&login, sizeof(login), BytesSent);
+		if (BytesSent > 0)
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Login Packet Send")));
+		else
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Login Packet Send Fail...")));
+
 		AblockersCharacter* Character = Cast<AblockersCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
 		if (Character) {
 			FRecvWorker* RecvWorker = new FRecvWorker(Socket, Character);
 			FSendWorker* SendWorker = new FSendWorker(Socket, Character);
 			// 스레드 생성 및 시작
-			FRunnableThread* RecvThread = FRunnableThread::Create(RecvWorker, TEXT("RecvWorkerThread"), 0, TPri_BelowNormal);
-			FRunnableThread* SendThread = FRunnableThread::Create(SendWorker, TEXT("SendWorkerThread"), 0, TPri_BelowNormal);
+			FRunnableThread* RecvThread = FRunnableThread::Create(RecvWorker, TEXT("RecvWorkerThread"), 0, TPri_Normal);
+			FRunnableThread* SendThread = FRunnableThread::Create(SendWorker, TEXT("SendWorkerThread"), 0, TPri_Normal);
 		}
 	}
 	else {
