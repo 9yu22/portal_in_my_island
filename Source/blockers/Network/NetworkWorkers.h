@@ -25,6 +25,8 @@ public:
     virtual ~FRecvWorker();
 
     void RecvPacket();
+    void MergePacket(uint8* buffer, uint16 recvPacketSize);
+    void ProcessPacket(uint8* packet);
 
     virtual bool Init() override;
     virtual uint32 Run() override;
