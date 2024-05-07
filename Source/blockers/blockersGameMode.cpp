@@ -25,6 +25,7 @@ AblockersGameMode::AblockersGameMode()
 		PlayerControllerClass = PlayerControllerBPClass.Class;
 	}
 
+
 }
 
 void AblockersGameMode::BeginPlay()
@@ -40,7 +41,7 @@ void AblockersGameMode::BeginPlay()
 
 		if (NewPlayerController)
 		{
-			// Optionally, you can set initial properties or perform other setup for each player here
+
 			PlayerControllersSet.Add(NewPlayerController);
 		}
 	}
@@ -53,6 +54,8 @@ void AblockersGameMode::BeginPlay()
 
 
 }
+
+
 
 void AblockersGameMode::RestartPlayer(AController* NewPlayer)
 {
