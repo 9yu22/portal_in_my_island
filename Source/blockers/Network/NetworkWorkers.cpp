@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-
+#include "GameFramework/CharacterMovementComponent.h"
 #include "NetworkWorkers.h"
 
 
@@ -124,6 +124,9 @@ void FRecvWorker::ProcessPacket(uint8* packet)
                         if (p->id < 0) {
                             p->id = new_player.id;
                             p->SetActorLocation(NewLocation);
+                            UCharacterMovementComponent* MovementComponent = p->GetCharacterMovement();
+                            MovementComponent->GravityScale = 0.0f;  // 중력을 0으로 설정
+
                             break;
                         }
                     }
