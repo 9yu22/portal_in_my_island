@@ -30,9 +30,12 @@ public:
 
 	//void SendPacket(SendBufferRef SendBuffer);
 
+	bool SetIpAddress();
+
 public:
 	class FSocket* Socket;
-	FString IpAddress = TEXT("127.0.0.1");
+	//FString IpAddress = TEXT("127.0.0.1");
+	FString IpAddress;
 	int16 Port = 4040;
 
 	//TSharedPtr<class PacketSession> GameServerSession;

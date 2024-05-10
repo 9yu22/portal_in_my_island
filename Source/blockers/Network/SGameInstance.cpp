@@ -7,11 +7,16 @@
 #include "Serialization/ArrayWriter.h"
 #include "SocketSubsystem.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "Misc/FileHelper.h"
+#include "HAL/PlatformFilemanager.h"
 
 void USGameInstance::ConnectToGameServer()
 {
 	Socket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(TEXT("Stream"), TEXT("Client Socket"));
+
+	bool ret = SetIpAddress();
+	if (!ret)
+		return;
 
 	FIPv4Address Ip;
 	FIPv4Address::Parse(IpAddress, Ip);
@@ -64,6 +69,17 @@ void USGameInstance::DisconnectFromGameServer()
 		SocketSubsystem->DestroySocket(Socket);
 		Socket = nullptr;
 	}
+}
+
+bool USGameInstance::SetIpAddress()
+{
+	FString IpAddressPath = FPaths::Combine(FPaths::ProjectDir(), TEXT("IpAddress.txt"));
+
+	// 파일을 읽어 IpAddress 문자열에 저장
+	if (FFileHelper::LoadFileToString(IpAddress, *IpAddressPath))
+		return true;
+
+	return false;
 }
 
 //void US1GameInstance::HandleRecvPackets()
