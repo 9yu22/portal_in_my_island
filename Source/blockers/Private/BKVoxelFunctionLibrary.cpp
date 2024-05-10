@@ -8,16 +8,25 @@ FIntVector UBKVoxelFunctionLibrary::WorldToBlockPosition(const FVector& Position
 	return FIntVector(Position) / 100;
 }
 
-FIntVector UBKVoxelFunctionLibrary::WorldToLocalBlockPosition(const FVector& Position, const int Size)
+FIntVector UBKVoxelFunctionLibrary::WorldToLocalBlockPosition(const FVector& Position, const FVector& Normal, const int Size)
 {
-	const auto ChunkPosition = WorldToChunkPosition(Position, Size);
+	const auto ChunkPosition = WorldToChunkPosition(Position - Normal * 10, Size);
 
-	auto Result = WorldToBlockPosition(Position) - ChunkPosition * Size;
+	auto Result = WorldToBlockPosition(Position - Normal * 10) - ChunkPosition * Size;
 
 	// Negative Normalization
 	if (ChunkPosition.X < 0) Result.X--;
 	if (ChunkPosition.Y < 0) Result.Y--;
 	if (ChunkPosition.Z < 0) Result.Z--;
+
+	if (ChunkPosition.X == 0 && Result.X == 0 && Normal.X < 0)
+		Result.Y++;
+	if (ChunkPosition.X < 0 && Result.X == 63 && Normal.X > 0)
+		Result.Y--;
+	if (ChunkPosition.Y == 0 && Result.Y == 0 && Normal.Y < 0)
+		Result.Z++;
+	if (ChunkPosition.Y < 0 && Result.Y == 63 && Normal.Y > 0)
+		Result.Z--;
 
 	return Result;
 }
@@ -41,10 +50,10 @@ FIntVector UBKVoxelFunctionLibrary::WorldToChunkPosition(const FVector& Position
 	return Result;
 }
 
-FIntVector UBKVoxelFunctionLibrary::GetBlockWorldPostion(const FVector& Position, const int Size)
+FIntVector UBKVoxelFunctionLibrary::GetBlockWorldPostion(const FVector& Position, const FVector& Normal, const int Size)
 {
 	const auto ChunkPosition = WorldToChunkPosition(Position, Size);
-	const auto LocalBlockPosition = WorldToLocalBlockPosition(Position, Size);
+	const auto LocalBlockPosition = WorldToLocalBlockPosition(Position, Normal, Size);
 
 	if (ChunkPosition.X == 0 && ChunkPosition.Y == 0)
 		return FIntVector(LocalBlockPosition) * 100 + FIntVector(50);

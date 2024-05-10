@@ -60,6 +60,14 @@ void ABKChunkWorld::Generate3DWorld()
 
 				UGameplayStatics::FinishSpawningActor(chunk, transform);
 
+				Chunks.Add(chunk);
+
+				// µð¹ö±ë¿ë
+				//FTransform actorTransform = chunk->GetTransform();
+				//FVector actorLocation = actorTransform.GetLocation();
+				//UE_LOG(LogTemp, Warning, TEXT("Add Chunk Location: (%f, %f, %f)"), actorLocation.X, actorLocation.Y, actorLocation.Z);
+
+
 				ChunkCount++;
 			}
 		}
@@ -91,8 +99,32 @@ void ABKChunkWorld::Generate2DWorld()
 
 			UGameplayStatics::FinishSpawningActor(chunk, transform);
 
+			//Chunks.Add(chunk);
+
+			// µð¹ö±ë¿ë
+			//FTransform actorTransform = chunk->GetTransform();
+			//FVector actorLocation = actorTransform.GetLocation();
+			//UE_LOG(LogTemp, Warning, TEXT("Add Chunk Location: (%f, %f, %f)"), actorLocation.X, actorLocation.Y, actorLocation.Z);
+
 			ChunkCount++;
 		}
 	}
 }
 
+AActor* ABKChunkWorld::GetAdjacentActor(const AActor* ChunkActor, const FVector Normal)
+{
+	FVector AdjActorLocation = ChunkActor->GetActorLocation() + Normal * Size * 100;
+
+	UE_LOG(LogTemp, Warning, TEXT("To Find: (%f, %f, %f)"), AdjActorLocation.X, AdjActorLocation.Y, AdjActorLocation.Z);
+
+	for (int index = 0; index < Chunks.Num(); ++index)
+	{
+		FTransform actorTransform = Chunks[index]->GetTransform();
+		FVector actorLocation = actorTransform.GetLocation();
+
+		UE_LOG(LogTemp, Warning, TEXT("Finding...: (%f, %f, %f)"), actorLocation.X, actorLocation.Y, actorLocation.Z);
+
+		if (FIntVector(actorLocation) == FIntVector(AdjActorLocation)) return Chunks[index];
+	}
+	return nullptr;
+}

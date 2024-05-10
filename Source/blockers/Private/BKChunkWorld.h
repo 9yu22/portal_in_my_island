@@ -33,6 +33,9 @@ class ABKChunkWorld final : public AActor
 	UPROPERTY(EditInstanceOnly, Category = "Height Map")
 	float Frequency = 0.03f;
 
+	UFUNCTION(BlueprintCallable, Category = "Chunk")
+	AActor* GetAdjacentActor(const AActor* ChunkActor, const FVector Normal);
+
 	// Sets default values for this actor's properties
 	ABKChunkWorld();
 
@@ -42,6 +45,8 @@ protected:
 
 private:
 	int ChunkCount;
+
+	TArray<AActor*> Chunks;		// 没农 包府 硅凯
 
 	void Generate3DWorld();
 	void Generate2DWorld();

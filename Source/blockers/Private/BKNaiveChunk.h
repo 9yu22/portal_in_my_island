@@ -50,9 +50,11 @@ private:
 	};
 
 	bool Check(FVector Position) const;
-	void CreateFace(BKEDirection Direction, FVector Position);
+	void CreateFace(const BKEBlock Block, BKEDirection Direction, FVector Position);
 	TArray<FVector> GetFaceVertices(BKEDirection Direction, FVector Position) const;
 	FVector GetPositionInDirection(BKEDirection Direction, FVector Position) const;
 	FVector GetNormal(BKEDirection Direction) const;
 	int GetBlockIndex(int X, int Y, int Z) const;
+
+	int GetTextureIndex(BKEBlock Block, FVector Normal) const;
 };

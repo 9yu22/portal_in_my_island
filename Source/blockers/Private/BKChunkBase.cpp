@@ -62,7 +62,7 @@ void ABKChunkBase::GenerateHeightMap()
 void ABKChunkBase::ApplyMesh() const
 {
 	Mesh->SetMaterial(0, Material);
-	Mesh->CreateMeshSection(0, MeshData.Vertices, MeshData.Triangles, MeshData.Normals, MeshData.UV0, TArray<FColor>(), TArray<FProcMeshTangent>(), true);
+	Mesh->CreateMeshSection(0, MeshData.Vertices, MeshData.Triangles, MeshData.Normals, MeshData.UV0, MeshData.Colors, TArray<FProcMeshTangent>(), true);
 }
 
 void ABKChunkBase::ClearMesh()

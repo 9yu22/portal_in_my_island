@@ -95,7 +95,7 @@ void ABKNaiveChunk::GenerateMesh()
 					{
 						if (Check(GetPositionInDirection(Direction, Position)))
 						{
-							CreateFace(Direction, Position * 100);
+							CreateFace(Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)], Direction, Position * 100);
 						}
 					}
 				}
@@ -111,10 +111,10 @@ bool ABKNaiveChunk::Check(const FVector Position) const
 	return Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)] == BKEBlock::Air;
 }
 
-void ABKNaiveChunk::CreateFace(const BKEDirection Direction, const FVector Position)
+void ABKNaiveChunk::CreateFace(const BKEBlock Block, const BKEDirection Direction, const FVector Position)
 {
-	const auto Color = FColor::MakeRandomColor();
 	const auto Normal = GetNormal(Direction);
+	const auto Color = FColor(0, 0, 0, GetTextureIndex(Block, Normal));
 
 	MeshData.Vertices.Append(GetFaceVertices(Direction, Position));
 	MeshData.Triangles.Append({ VertexCount + 3, VertexCount + 2, VertexCount, VertexCount + 2, VertexCount + 1, VertexCount });
@@ -175,4 +175,29 @@ void ABKNaiveChunk::ModifyVoxelData(const FIntVector Position, const BKEBlock Bl
 int ABKNaiveChunk::GetBlockIndex(const int X, const int Y, const int Z) const
 {
 	return Z * Size * Size + Y * Size + X;
+}
+
+int ABKNaiveChunk::GetTextureIndex(BKEBlock Block, FVector Normal) const
+{
+	// Block Texture Array //
+	// 0: Amethyst
+	// 1: Stone
+	// 
+
+	switch (Block)
+	{
+	case BKEBlock::Stone:
+		return 1;
+		break;
+	/*case BKEBlock::Grass:
+		if (Normal == FVector::UpVector) return 0;
+		if (Normal == FVector::DownVector) return 2;
+		return 1;*/
+	case BKEBlock::Amethyst:
+		return 0;
+		break;
+	default:
+		return 255;
+		break;
+	}
 }
