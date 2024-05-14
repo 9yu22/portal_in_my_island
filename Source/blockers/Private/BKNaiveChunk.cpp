@@ -42,46 +42,57 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 		{
 			for (int z = 0; z < Size; ++z)
 			{
+				auto distanceFromCenter = sqrt((x + Position.X) * (x + Position.X) + (y + Position.Y) * (y + Position.Y));
+				auto distanceFromPoint1 = sqrt((x + Position.X - 50) * (x + Position.X - 50) + (y + Position.Y - 50) * (y + Position.Y - 50));	// point: (50,50)
+				auto distanceFromPoint2 = sqrt((x + Position.X + 50) * (x + Position.X + 50) + (y + Position.Y - 50) * (y + Position.Y - 50));	// point: (-50,50)
+				auto distanceFromPoint3 = sqrt((x + Position.X - 50) * (x + Position.X - 50) + (y + Position.Y + 50) * (y + Position.Y + 50));	// point: (50,-50)
+				auto distanceFromPoint4 = sqrt((x + Position.X + 50) * (x + Position.X + 50) + (y + Position.Y + 50) * (y + Position.Y + 50));	// point: (-50,-50)
+
 				// z = 0
-				// point: (0,0) / size: 100
-				if (z + Position.Z == 0 && sqrt((x + Position.X) * (x + Position.X) + (y + Position.Y) * (y + Position.Y)) < 50) {
+				// point: (0,0) / radius: 40
+				if (z + Position.Z == 0 && distanceFromCenter < 40) {
 					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
 				}
-				// point: (50,50) / size: 10
-				else if (z + Position.Z == 0 && sqrt((x + Position.X - 50) * (x + Position.X - 50) + (y + Position.Y - 50) * (y + Position.Y - 50)) < 10) {
+				// point: (50,50) / radius: 10
+				else if (z + Position.Z == 0 && distanceFromPoint1 < 10) {
 					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
 				}
-				// point: (-50,50) / size: 10
-				else if (z + Position.Z == 0 && sqrt((x + Position.X + 50) * (x + Position.X + 50) + (y + Position.Y - 50) * (y + Position.Y - 50)) < 10) {
+				// point: (-50,50) / radius: 10
+				else if (z + Position.Z == 0 && distanceFromPoint2 < 10) {
 					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
 				}
-				// point: (50,-50) / size: 10
-				else if (z + Position.Z == 0 && sqrt((x + Position.X - 50) * (x + Position.X - 50) + (y + Position.Y + 50) * (y + Position.Y + 50)) < 10) {
+				// point: (50,-50) / radius: 10
+				else if (z + Position.Z == 0 && distanceFromPoint3 < 10) {
 					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
 				}
-				// point: (-50,-50) / size: 10
-				else if (z + Position.Z == 0 && sqrt((x + Position.X + 50) * (x + Position.X + 50) + (y + Position.Y + 50) * (y + Position.Y + 50)) < 10) {
+				// point: (-50,-50) / radius: 10
+				else if (z + Position.Z == 0 && distanceFromPoint4 < 10) {
 					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
 				}
 				// z = 1
-				// point: (0,0) / size: 80
-				else if (z + Position.Z == 1 && sqrt((x + Position.X) * (x + Position.X) + (y + Position.Y) * (y + Position.Y)) < 40) {
+				// point: (0,0) / radius: 30
+				else if (z + Position.Z == 1 && distanceFromCenter < 30) {
 					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
 				}
-				// point: (50,50) / size: 8
-				else if (z + Position.Z == 1 && sqrt((x + Position.X - 50) * (x + Position.X - 50) + (y + Position.Y - 50) * (y + Position.Y - 50)) < 8) {
+				// point: (50,50) / radius: 8
+				else if (z + Position.Z == 1 && distanceFromPoint1 < 8) {
 					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
 				}
-				// point: (-50,50) / size: 8
-				else if (z + Position.Z == 1 && sqrt((x + Position.X + 50) * (x + Position.X + 50) + (y + Position.Y - 50) * (y + Position.Y - 50)) < 8) {
+				// point: (-50,50) / radius: 8
+				else if (z + Position.Z == 1 && distanceFromPoint2 < 8) {
 					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
 				}
-				// point: (50,-50) / size: 8
-				else if (z + Position.Z == 1 && sqrt((x + Position.X - 50) * (x + Position.X - 50) + (y + Position.Y + 50) * (y + Position.Y + 50)) < 8) {
+				// point: (50,-50) / radius: 8
+				else if (z + Position.Z == 1 && distanceFromPoint3 < 8) {
 					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
 				}
-				// point: (-50,-50) / size: 8
-				else if (z + Position.Z == 1 && sqrt((x + Position.X + 50) * (x + Position.X + 50) + (y + Position.Y + 50) * (y + Position.Y + 50)) < 8) {
+				// point: (-50,-50) / radius: 8
+				else if (z + Position.Z == 1 && distanceFromPoint4 < 8) {
+					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
+				}
+				// z = 10
+				// point: (0,0) / radius: 20~30
+				else if (z + Position.Z == 10 && distanceFromCenter > 20 && distanceFromCenter < 30) {
 					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
 				}
 				else {
