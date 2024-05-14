@@ -25,7 +25,6 @@ AblockersGameMode::AblockersGameMode()
 		PlayerControllerClass = PlayerControllerBPClass.Class;
 	}
 
-
 }
 
 void AblockersGameMode::BeginPlay()

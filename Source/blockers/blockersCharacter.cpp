@@ -88,8 +88,8 @@ AblockersCharacter::AblockersCharacter()
 	//총구 표시 컴포넌트를 생성하고 박스 컴포넌트의 자식컴포넌트로 설정한다.
 	firePosition = CreateDefaultSubobject<UArrowComponent>(TEXT("Fire Position"));
 
-	HealthWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
-	HealthWidgetComp->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	//HealthWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
+	//HealthWidgetComp->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 	health = MaxHealth;
 
@@ -116,8 +116,8 @@ void AblockersCharacter::BeginPlay()
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Number of characters in PlayerSet: %d"), PlayerSet.Num());
 
-	UHealthBarWidget* HealthBar = Cast<UHealthBarWidget>(HealthWidgetComp->GetUserWidgetObject());
-	HealthBar->SetOwnerCharacter(this);
+	//UHealthBarWidget* HealthBar = Cast<UHealthBarWidget>(HealthWidgetComp->GetUserWidgetObject());
+	//HealthBar->SetOwnerCharacter(this);
 }
 
 void AblockersCharacter::Tick(float DeltaTime) {

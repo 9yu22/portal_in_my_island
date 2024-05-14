@@ -33,6 +33,10 @@ class AblockersCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true")) //category
 	class UInventoryComponent* Inventory;
 
+	/** HealthBar Component */
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	//class UWidgetComponent* HealthWidgetComp;
+
 public:
 	AblockersCharacter();
 
@@ -84,12 +88,7 @@ public:
 	float GetMaxHealth() const { return MaxHealth; }
 	void SetMaxHealth(float val) { health = val; }
 
-protected:
 
-	UPROPERTY(VisibleAnywhere)
-	class UWidgetComponent* HealthWidgetComp;
-
-public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	float health;
 

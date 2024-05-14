@@ -14,15 +14,15 @@ UCLASS()
 class BLOCKERS_API UHealthBarWidget : public UUserWidget
 {
 	GENERATED_BODY()
-
-public:
-
-	void SetOwnerCharacter(AblockersCharacter* InCharacter) { OwnerCharacter = InCharacter; }
-
+//
+//public:
+//
+//	void SetOwnerCharacter(AblockersCharacter* InCharacter) { OwnerCharacter = InCharacter; }
+	
 protected:
 
-	AblockersCharacter* OwnerCharacter;
-
+	APlayerController* OwnerCharacter = GetOwningPlayer();
+	
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* HealthBar;
 	UPROPERTY(meta = (BindWidget))

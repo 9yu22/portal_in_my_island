@@ -9,6 +9,7 @@
 
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
+#include "HealthBarWidget.h"
 
 #include "UObject/Class.h"
 #include "Kismet/KismetMathLibrary.h"	// for getFowardVector(), getRightVector()
