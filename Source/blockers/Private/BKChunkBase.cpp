@@ -18,7 +18,7 @@ ABKChunkBase::ABKChunkBase()
 	Noise = new FastNoiseLite();
 
 	// Mesh Settings
-	Mesh->SetCastShadow(false);
+	Mesh->SetCastShadow(true);
 
 	// Set Mesh as root
 	SetRootComponent(Mesh);
