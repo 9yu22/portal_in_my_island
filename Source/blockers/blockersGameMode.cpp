@@ -4,6 +4,7 @@
 #include "BKPlayerController.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/HUD.h"
 
 
 AblockersGameMode::AblockersGameMode()
@@ -25,6 +26,13 @@ AblockersGameMode::AblockersGameMode()
 		PlayerControllerClass = PlayerControllerBPClass.Class;
 	}
 
+	// Set default HUD class to our Blueprinted HUD
+	static ConstructorHelpers::FClassFinder<AHUD> HUDBPClass(TEXT("/Game/Blockers/Blueprints/BlockersHUD"));
+	if (HUDBPClass.Succeeded())
+	{
+		// Assign the found HUD class
+		HUDClass = HUDBPClass.Class;
+	}
 }
 
 void AblockersGameMode::BeginPlay()

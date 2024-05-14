@@ -42,8 +42,9 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 		{
 			for (int z = 0; z < Size; ++z)
 			{
-				// point: (0,0) / size: 64
-				if (z + Position.Z == 0 && sqrt((x + Position.X) * (x + Position.X) + (y + Position.Y) * (y + Position.Y)) < 32) {
+				// z = 0
+				// point: (0,0) / size: 100
+				if (z + Position.Z == 0 && sqrt((x + Position.X) * (x + Position.X) + (y + Position.Y) * (y + Position.Y)) < 50) {
 					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
 				}
 				// point: (50,50) / size: 10
@@ -60,6 +61,27 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				}
 				// point: (-50,-50) / size: 10
 				else if (z + Position.Z == 0 && sqrt((x + Position.X + 50) * (x + Position.X + 50) + (y + Position.Y + 50) * (y + Position.Y + 50)) < 10) {
+					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
+				}
+				// z = 1
+				// point: (0,0) / size: 80
+				else if (z + Position.Z == 1 && sqrt((x + Position.X) * (x + Position.X) + (y + Position.Y) * (y + Position.Y)) < 40) {
+					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
+				}
+				// point: (50,50) / size: 8
+				else if (z + Position.Z == 1 && sqrt((x + Position.X - 50) * (x + Position.X - 50) + (y + Position.Y - 50) * (y + Position.Y - 50)) < 8) {
+					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
+				}
+				// point: (-50,50) / size: 8
+				else if (z + Position.Z == 1 && sqrt((x + Position.X + 50) * (x + Position.X + 50) + (y + Position.Y - 50) * (y + Position.Y - 50)) < 8) {
+					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
+				}
+				// point: (50,-50) / size: 8
+				else if (z + Position.Z == 1 && sqrt((x + Position.X - 50) * (x + Position.X - 50) + (y + Position.Y + 50) * (y + Position.Y + 50)) < 8) {
+					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
+				}
+				// point: (-50,-50) / size: 8
+				else if (z + Position.Z == 1 && sqrt((x + Position.X + 50) * (x + Position.X + 50) + (y + Position.Y + 50) * (y + Position.Y + 50)) < 8) {
 					Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
 				}
 				else {
