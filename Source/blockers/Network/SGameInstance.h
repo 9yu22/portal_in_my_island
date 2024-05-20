@@ -6,8 +6,9 @@
 #include "Engine/GameInstance.h"
 #include "NetworkWorkers.h"
 //#include "S1.h"
-#include "PacketSession.h"
+//#include "PacketSession.h"
 #include "../blockersCharacter.h"
+#include "ProcessQueue.h"
 #include "SGameInstance.generated.h"
 
 /**
@@ -33,13 +34,16 @@ public:
 	bool SetIpAddress();
 
 public:
-	class FSocket* Socket;
+	FSocket* Socket;
 	//FString IpAddress = TEXT("127.0.0.1");
 	FString IpAddress;
 	int16 Port = 4040;
 
+	ProcessQueueBlock Blocks;
+
 	//TSharedPtr<class PacketSession> GameServerSession;
 	//TSharedPtr<class FRecvWorker> makeRecvThread;
+	//TSharedPtr<class FSendWorker> makeSendThread;
 };
 
 //TArray<AblockersCharacter*> players; //전역으로 해서 변경된 사항을 항상 가져올 수 있게 해보자

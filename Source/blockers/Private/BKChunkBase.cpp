@@ -7,6 +7,8 @@
 #include "ProceduralMeshComponent.h"
 
 #include "Voxel/FastNoiseLite.h"
+#include "../Network/SGameInstance.h"
+#include "../Network/ProcessQueue.h"
 
 // Sets default values
 ABKChunkBase::ABKChunkBase()
@@ -42,6 +44,8 @@ void ABKChunkBase::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Vertex Cont : %d"), VertexCount);
 
 	ApplyMesh();
+
+	SetinstanceTag("BKChunkBase");
 }
 
 void ABKChunkBase::GenerateHeightMap()
@@ -75,6 +79,17 @@ void ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
 {
 	//if (Position.X >= Size || Position.Y >= Size || Position.Z >= Size || Position.X < 0 || Position.Y < 0 || Position.Z < 0) return Position;
 
+	USGameInstance* GameInstance = Cast<USGameInstance>(GetWorld()->GetGameInstance());
+	if (GameInstance)
+	{
+		BlockInfo block;
+		block.index = Position;
+		block.type = Block;
+
+		GameInstance->Blocks.EnQ(block);
+		UE_LOG(LogTemp, Warning, TEXT("Enqueued Block"));
+	}
+
 	ModifyVoxelData(Position, Block);
 
 	ClearMesh();
@@ -82,4 +97,23 @@ void ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
 	GenerateMesh();
 
 	ApplyMesh();
+}
+
+void ABKChunkBase::ModifyVoxelQueue(const FIntVector Position, const BKEBlock Block)
+{
+	ModifyVoxelData(Position, Block);
+
+	ClearMesh();
+
+	GenerateMesh();
+
+	ApplyMesh();
+}
+
+void ABKChunkBase::SetinstanceTag(FName NewTag)
+{
+	if (!NewTag.IsNone())
+	{
+		Tags.AddUnique(NewTag);
+	}
 }

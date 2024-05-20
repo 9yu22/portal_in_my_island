@@ -6,27 +6,33 @@
 #include "Sockets.h"
 #include "../blockersCharacter.h"
 #include "GameFramework/Character.h"
+#include "SGameInstance.h"
+//#include "../Private/BKChunkBase.h"
 #include "Protocol.h"
 #include <mutex>
 /**
 *
 */
 
+class USGameInstance;
+
 class BLOCKERS_API FRecvWorker : public FRunnable
 {
 private:
-    FSocket* socket;
+    USGameInstance* Instance;
+    FSocket* c_Socket;
     AblockersCharacter* Character;
     bool recvRunning = true;
     int8 th_num = 0; // µð¹ö±ë¿ë
 
 public:
-    FRecvWorker(FSocket* c_Socket, AblockersCharacter* Character);
+    FRecvWorker(USGameInstance* Instance, AblockersCharacter* Character);
     virtual ~FRecvWorker();
 
     void RecvPacket();
     void MergePacket(uint8* buffer, uint16 recvPacketSize);
     void ProcessPacket(uint8* packet);
+    void ProcessBlockPacket(const SC_ADD_BLOCK_PACKET& block);
 
     virtual bool Init() override;
     virtual uint32 Run() override;
@@ -36,7 +42,8 @@ public:
 class BLOCKERS_API FSendWorker : public FRunnable
 {
 private:
-    FSocket* socket;
+    USGameInstance* Instance;
+    FSocket* c_Socket;
     AblockersCharacter* Character;
     bool sendRunning = true;
 
@@ -44,7 +51,7 @@ private:
     FRotator CurrentRotation;
 
 public:
-    FSendWorker(FSocket* c_Socket, AblockersCharacter* Character);
+    FSendWorker(USGameInstance* Instance, AblockersCharacter* Character);
     virtual ~FSendWorker();
 
     virtual bool Init() override;

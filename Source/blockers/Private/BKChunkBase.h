@@ -30,6 +30,9 @@ class BLOCKERS_API ABKChunkBase : public AActor
 	UFUNCTION(BlueprintCallable, Category = "Chunk")
 	void ModifyVoxel(const FIntVector Position, const BKEBlock Block);
 
+	void ModifyVoxelQueue(const FIntVector Position, const BKEBlock Block);
+	void SetinstanceTag(FName NewTag);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

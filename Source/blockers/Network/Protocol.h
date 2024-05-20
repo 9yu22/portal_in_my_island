@@ -10,6 +10,8 @@ constexpr char SC_LOGIN_INFO = 2;
 constexpr char SC_ADD_PLAYER = 3;
 constexpr char SC_REMOVE_PLAYER = 4;
 constexpr char SC_MOVE_PLAYER = 5;
+constexpr char SC_ADD_BLOCK = 6;
+constexpr char CS_ADD_BLOCK = 7;
 
 #pragma pack (push, 1)
 struct CS_LOGIN_PACKET {
@@ -52,5 +54,19 @@ struct SC_MOVE_PLAYER_PACKET {
     int8 id;
     float x, y, z;
     float pitch, yaw, roll;
+};
+
+struct SC_ADD_BLOCK_PACKET {
+    uint8 size;
+    int8 type;
+    int32 ix, iy, iz;
+    int8 blocktype;
+};
+
+struct CS_ADD_BLOCK_PACKET {
+    uint8 size;
+    int8 type;
+    int32 ix, iy, iz;
+    int8 blocktype;
 };
 #pragma pack (pop)

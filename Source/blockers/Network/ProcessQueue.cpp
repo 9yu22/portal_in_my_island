@@ -19,7 +19,7 @@ bool ProcessQueueBlock::CheckEmpty()
 	return ret;
 }
 
-void ProcessQueueBlock::InQ(BlockInfo& block)
+void ProcessQueueBlock::EnQ(const BlockInfo& block)
 {
 	queue_mutex.lock();
 	BlockQ.Enqueue(block);

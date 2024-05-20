@@ -50,8 +50,8 @@ void USGameInstance::ConnectToGameServer()
 
 		AblockersCharacter* Character = Cast<AblockersCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
 		if (Character) {
-			FRecvWorker* RecvWorker = new FRecvWorker(Socket, Character);
-			FSendWorker* SendWorker = new FSendWorker(Socket, Character);
+			FRecvWorker* RecvWorker = new FRecvWorker(this, Character);
+			FSendWorker* SendWorker = new FSendWorker(this, Character);
 			// 스레드 생성 및 시작
 			FRunnableThread* RecvThread = FRunnableThread::Create(RecvWorker, TEXT("RecvWorkerThread"), 0, TPri_Normal);
 			FRunnableThread* SendThread = FRunnableThread::Create(SendWorker, TEXT("SendWorkerThread"), 0, TPri_Normal);
