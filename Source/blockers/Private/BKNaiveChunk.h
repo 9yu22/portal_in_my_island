@@ -29,7 +29,12 @@ class ABKNaiveChunk final : public ABKChunkBase
 	virtual void ModifyVoxelData(const FIntVector Position, BKEBlock Block) override;
 
 private:
-	TArray<BKEBlock> Blocks;
+	struct Block {
+		BKEBlock block;
+		BKEDirection backDir;
+	};
+
+	TArray<Block> Blocks;
 	TArray<FIntVector> splitBlocks;	// 쪼개지는 블록 자체의 좌표를 저장하는 배열
 
 	int splitBlockNum = 10;			// splitBlockNum x splitBlockNum x splitBlockNum로 쪼개짐
@@ -53,8 +58,9 @@ private:
 	};
 
 	bool Check(FVector Position) const;
-	void CreateFace(const BKEBlock Block, BKEDirection Direction, FVector Position);
+	void CreateFace(const Block Block, BKEDirection Direction, FVector Position);
 	TArray<FVector> GetFaceVertices(BKEDirection Direction, FVector Position) const;
+	TArray<FVector> GetStairFaceVertices(BKEDirection Direction, const FVector Position, const FVector Ratio, const FVector relationalPosition) const;
 	FVector GetPositionInDirection(BKEDirection Direction, FVector Position) const;
 	FVector GetNormal(BKEDirection Direction) const;
 	int GetBlockIndex(int X, int Y, int Z) const;
