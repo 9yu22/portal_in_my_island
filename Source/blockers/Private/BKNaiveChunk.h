@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BKChunkBase.h"
 #include "Voxel/BKEnum.h"
+#include "../Network/ProcessQueue.h"
 #include "BKNaiveChunk.generated.h"
 
 class FastNoiseLite;
