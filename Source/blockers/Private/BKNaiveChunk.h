@@ -5,11 +5,14 @@
 #include "CoreMinimal.h"
 #include "BKChunkBase.h"
 #include "Voxel/BKEnum.h"
+#include "../Network/ProcessQueue.h"
 #include "BKNaiveChunk.generated.h"
 
 class FastNoiseLite;
 class UProceduralMeshComponent;
 
+
+// 이런식으로 못하니까 큐를 맴버 변수로 만들고 포인터 getter 만들어서 통신 스레드 쪽에서 포인터로 접근하도록 해보자
 /**
  *
  */
@@ -58,3 +61,4 @@ private:
 
 	int GetTextureIndex(BKEBlock Block, FVector Normal) const;
 };
+

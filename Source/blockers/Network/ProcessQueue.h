@@ -3,7 +3,8 @@
 #include <mutex>
 #include "CoreMinimal.h"
 #include "Containers/Queue.h"
-#include "../Private/BKNaiveChunk.h"
+#include "../Private/Voxel/BKEnum.h"
+//#include "../Private/BKNaiveChunk.h"
 
 struct BlockInfo {
 	FIntVector index;
@@ -19,6 +20,6 @@ public:
 	~ProcessQueueBlock();
 
 	bool CheckEmpty();
-	void InQ(BlockInfo& block);
+	void EnQ(const BlockInfo& block);
 	BlockInfo DeQ();
 };

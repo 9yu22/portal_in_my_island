@@ -3,13 +3,14 @@
 
 #include "NetworkWorkers.h"
 #include "GameFramework/CharacterMovementComponent.h"
-
+#include "../Private/BKChunkBase.h"
+#include "Kismet/GameplayStatics.h"
 
 int8 recv_th_count = 0;
 
-FRecvWorker::FRecvWorker(FSocket* c_Socket, AblockersCharacter* Character) : socket(c_Socket), Character(Character)
+FRecvWorker::FRecvWorker(USGameInstance* Instance, AblockersCharacter* Character) : Instance(Instance), Character(Character)
 {
-   
+    c_Socket = Instance->Socket;
 }
 
 FRecvWorker::~FRecvWorker()
@@ -136,9 +137,65 @@ void FRecvWorker::ProcessPacket(uint8* packet)
             });
         break;
     }
+
+    case SC_ADD_BLOCK: {
+        SC_ADD_BLOCK_PACKET new_block;
+
+        memcpy(&new_block, packet, sizeof(new_block));
+
+        AsyncTask(ENamedThreads::GameThread, [this, new_block]()
+            {
+                ProcessBlockPacket(new_block);
+
+                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Block Packet x: %d, y: %d, z: %d"), new_block.ix, new_block.iy, new_block.iz));
+
+            });
+        break;
+    }
     default:
         break;
     }
+}
+
+void FRecvWorker::ProcessBlockPacket(const SC_ADD_BLOCK_PACKET& new_block)
+{
+    UWorld* World = Instance->GetWorld();
+    if (!World)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("World is null"));
+        return;
+    }
+
+    FName TargetTag = TEXT("BKEChunkBase");
+    TArray<AActor*> FoundActors;
+    UGameplayStatics::GetAllActorsWithTag(World, TargetTag, FoundActors);
+
+    ABKChunkBase* ChunkBase = nullptr;
+    for (AActor* Actor : FoundActors)
+    {
+        ChunkBase = Cast<ABKChunkBase>(Actor);
+        if (ChunkBase)
+        {
+            break;
+        }
+    }
+
+    if (!ChunkBase)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("ChunkBase with tag '%s' not found"), *TargetTag.ToString());
+        return;
+    }
+
+    BlockInfo block;
+    block.index.X = new_block.ix;
+    block.index.Y = new_block.iy;
+    block.index.Z = new_block.iz;
+    block.type = static_cast<BKEBlock>(new_block.blocktype);
+
+    // ChunkBase를 사용하여 ModifyVoxelQueue 호출
+    ChunkBase->ModifyVoxelQueue(block.index, block.type);
+
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Block Packet x: %d, y: %d, z: %d"), new_block.ix, new_block.iy, new_block.iz));
 }
 
 bool FRecvWorker::Init()
@@ -156,11 +213,11 @@ uint32 FRecvWorker::Run()
     while (recvRunning) {
         // 버퍼에 읽어올 데이터가 있는지 확인
         uint32 bHasPendingData = 0;
-        socket->HasPendingData(bHasPendingData);
+        c_Socket->HasPendingData(bHasPendingData);
 
         if (bHasPendingData > 0) {
             int32 BytesRead = 0;
-            socket->Recv(recv_buf, sizeof(recv_buf), BytesRead);
+            c_Socket->Recv(recv_buf, sizeof(recv_buf), BytesRead);
             MergePacket(recv_buf, BytesRead);     
         }
 
@@ -176,9 +233,9 @@ void FRecvWorker::Stop()
 
 // SendWorker
 
-FSendWorker::FSendWorker(FSocket* c_Socket, AblockersCharacter* Character) : socket(c_Socket), Character(Character)
+FSendWorker::FSendWorker(USGameInstance* Instance, AblockersCharacter* Character) : Instance(Instance), Character(Character)
 {
-    
+    c_Socket = Instance->Socket;
 }
 
 FSendWorker::~FSendWorker()
@@ -195,10 +252,6 @@ uint32 FSendWorker::Run()
 {
     //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("SendWorker Running Start")));
     //UPacketHeader Header;
-    CS_MOVE_PACKET new_pos;
-    FVector lastLocation;
-
-
 
     while (!Character->loginOk) {
         // 로그인 패킷 받기 전까지 대기
@@ -219,6 +272,7 @@ uint32 FSendWorker::Run()
 
             if (CurrentTime - LastSendTime >= 0.03)
             {
+                CS_MOVE_PACKET new_pos;
                 // 위치 및 회전 정보 패킷 구성
                 new_pos.type = CS_MOVE;
                 new_pos.size = sizeof(CS_MOVE_PACKET);
@@ -230,7 +284,7 @@ uint32 FSendWorker::Run()
                 new_pos.roll = CurrentRotation.Roll;
 
                 BytesSent = 0;
-                socket->Send((uint8*)&new_pos, sizeof(new_pos), BytesSent);
+                c_Socket->Send((uint8*)&new_pos, sizeof(new_pos), BytesSent);
 
                 LastSendTime = CurrentTime;
 
@@ -243,6 +297,20 @@ uint32 FSendWorker::Run()
             sendRunning = false;
         }
 
+        if (!Instance->Blocks.CheckEmpty()) { // 블록 큐가 비어있지 않으면 빼서 전송
+            BlockInfo block;
+            block = Instance->Blocks.DeQ();
+
+            CS_ADD_BLOCK_PACKET new_block;
+            new_block.size = sizeof(new_block);
+            new_block.type = CS_ADD_BLOCK;
+            new_block.ix = block.index.X;
+            new_block.iy = block.index.Y;
+            new_block.iz = block.index.Z;
+            new_block.blocktype = static_cast<int8>(block.type);
+
+            c_Socket->Send((uint8*)&new_block, sizeof(new_block), BytesSent);
+        }
         //FPlatformProcess::Sleep(0.01);
     }
 
