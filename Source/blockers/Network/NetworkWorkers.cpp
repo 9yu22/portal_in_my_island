@@ -2,7 +2,6 @@
 
 
 #include "NetworkWorkers.h"
-#include "BKChunkBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
@@ -137,19 +136,6 @@ void FRecvWorker::ProcessPacket(uint8* packet)
             });
         break;
     }
-    case SC_ADD_BLOCK:
-        //SC_ADD_BLOCK_PACKET new_block;
-        //memcpy(&new_block, packet, sizeof(new_block));
-        //
-        //AsyncTask(ENamedThreads::GameThread, [this, new_block]()
-        //    {
-        //        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Move Packet")));
-        //        
-        //        else
-        //            recvRunning = false;
-        //    });
-        //break;
-        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("%dRecv_Thread Recv Add_block Packet id: %d, x: %f, y: %f, z: %f"), th_num, , new_player.x, new_player.y, new_player.z));
     default:
         break;
     }
