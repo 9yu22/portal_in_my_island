@@ -125,8 +125,9 @@ void AblockersCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
 	health = FMath::Clamp<float>(health - DeltaTime * 3.0, 0, MaxHealth); //시간에 따라 줄어들도록 설정.
-	if (health < 0.f) {
-		health = 0;
+	if (health < 1.f) {
+		//health = 0;
+		CallRestartPlayer();
 	}
 }
 
