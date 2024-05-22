@@ -145,6 +145,7 @@ void AblockersCharacter::Fire()
 {
 	FVector BulletLocation = GetMesh()->GetSocketLocation("gun");
 	ABullet* bullet = GetWorld()->SpawnActor<ABullet>(bulletFactory, BulletLocation, firePosition->GetComponentRotation());
+	bulletNum -= 1;
 }
 
 void AblockersCharacter::Destroyed()

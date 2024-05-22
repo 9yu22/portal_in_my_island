@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "PracticeDestroyBlock.h"
+#include "../blockersCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -65,6 +66,16 @@ void ABullet::OnBulletOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 	if (enemy != nullptr)
 	{
 		OtherActor->Destroy();
+
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosionFX, GetActorLocation(), GetActorRotation());
+	}
+
+	AblockersCharacter* enemy2 = Cast<AblockersCharacter>(OtherActor);
+	
+	if (enemy2 != nullptr)
+	{
+		//OtherActor->Destroy();
+		enemy2->health -= 10;
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosionFX, GetActorLocation(), GetActorRotation());
 	}

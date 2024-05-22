@@ -96,5 +96,8 @@ public:
 	void UseItem(class UItem* Item);
 
 	float MaxHealth = 100.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "bulletNum")
+	int bulletNum = 100;
 };
 
