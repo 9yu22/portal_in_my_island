@@ -62,6 +62,7 @@ void ABullet::OnBulletOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
 {
 	APracticeDestroyBlock* enemy = Cast<APracticeDestroyBlock>(OtherActor);
+	AblockersCharacter* enemyCharacter = Cast<AblockersCharacter>(OtherActor);
 
 	if (enemy != nullptr)
 	{
@@ -69,14 +70,10 @@ void ABullet::OnBulletOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosionFX, GetActorLocation(), GetActorRotation());
 	}
-
-	AblockersCharacter* enemy2 = Cast<AblockersCharacter>(OtherActor);
-	
-	if (enemy2 != nullptr)
+	else if (enemyCharacter != nullptr)
 	{
-		//OtherActor->Destroy();
-		enemy2->health -= 10;
-
+		enemyCharacter->health -= 30.f;
+		UE_LOG(LogTemp, Warning, TEXT("enemyCharacter hit, new health: %f"), enemyCharacter->health);
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosionFX, GetActorLocation(), GetActorRotation());
 	}
 

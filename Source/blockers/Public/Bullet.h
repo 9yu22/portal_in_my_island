@@ -56,4 +56,7 @@ public:
 	void FunctionWithDelay(float delayTime);
 
 	void DestroyBullet();
+
+	//UFUNCTION()
+	//void OnBeginOverLap(class UPrimitiveComponent* HitComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,int32 OtherBodyIndex, bool bFromsweep, const FHitResult& SweepResult);
 };

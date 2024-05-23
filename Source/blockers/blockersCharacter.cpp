@@ -52,6 +52,9 @@ AblockersCharacter::AblockersCharacter()
 	FRotator NewRotation = FRotator(0.0f, -90.0f, 0.0f);
 	GetMesh()->SetRelativeRotation(NewRotation);
 
+	//boxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
+	//SetRootComponent(boxComp);
+	//boxComp->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
 		
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
