@@ -26,7 +26,7 @@ void AItemSpawner::Tick(float DeltaTime)
 
 	CurrTime += DeltaTime;
 
-	UE_LOG(LogTemp, Warning, TEXT("Tick..."));
+	//UE_LOG(LogTemp, Warning, TEXT("Tick..."));
 
 	if (CurrTime >= SpawnInterval)
 	{
@@ -51,11 +51,11 @@ void AItemSpawner::SpawnItem()
 
 		if (SpawnedActor)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Spawn"));
+			//UE_LOG(LogTemp, Warning, TEXT("Spawn"));
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("No Spawn"));
+			//UE_LOG(LogTemp, Warning, TEXT("No Spawn"));
 		}
 	}
 	else

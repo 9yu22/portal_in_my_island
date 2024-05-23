@@ -10,6 +10,7 @@
 
 class FastNoiseLite;
 class UProceduralMeshComponent;
+class ABKChunkWorld;
 
 UCLASS(ABSTRACT)
 class BLOCKERS_API ABKChunkBase : public AActor
@@ -29,6 +30,13 @@ class BLOCKERS_API ABKChunkBase : public AActor
 
 	UFUNCTION(BlueprintCallable, Category = "Chunk")
 	void ModifyVoxel(const FIntVector Position, const BKEBlock Block);
+
+	// Reference to the owning ChunkWorld
+	UPROPERTY()
+	ABKChunkWorld* OwningChunkWorld;
+
+	// Function to set the owning ChunkWorld
+	void SetOwningChunkWorld(ABKChunkWorld* NewOwner);
 
 	void ModifyVoxelQueue(const FIntVector Position, const BKEBlock Block);
 	void SetinstanceTag(FName NewTag);

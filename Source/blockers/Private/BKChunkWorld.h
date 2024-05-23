@@ -46,8 +46,14 @@ protected:
 private:
 	int ChunkCount;
 
-	TArray<AActor*> Chunks;		// 没农 包府 硅凯
-
 	void Generate3DWorld();
 	void Generate2DWorld();
+
+public:
+	TArray<AActor*> Chunks;		// 没农 包府 硅凯
+
+	// Function to find the ChunkWorld owning a specific ChunkBase
+	static ABKChunkWorld* FindOwningChunkWorld(ABKChunkBase* Chunk);
+
+	int32 GetChunkIndex(AActor* Chunk, FIntVector Position, BKEBlock Block);
 };

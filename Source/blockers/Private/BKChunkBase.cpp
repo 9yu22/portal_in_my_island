@@ -99,6 +99,12 @@ void ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
 	ApplyMesh();
 }
 
+void ABKChunkBase::SetOwningChunkWorld(ABKChunkWorld* NewOwner)
+{
+	// Chunk를 관리하는 Chunk World를 세팅
+	OwningChunkWorld = NewOwner;
+}
+
 void ABKChunkBase::ModifyVoxelQueue(const FIntVector Position, const BKEBlock Block)
 {
 	ModifyVoxelData(Position, Block);
