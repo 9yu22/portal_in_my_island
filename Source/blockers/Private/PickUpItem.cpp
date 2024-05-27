@@ -6,7 +6,7 @@
 // Sets default values
 APickUpItem::APickUpItem()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	//컴포넌트에 넣을 디폴트 값들을 설정함
@@ -15,15 +15,25 @@ APickUpItem::APickUpItem()
 
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
 	ItemMesh->SetupAttachment(RootComponent);
-	RotationRate = FRotator(0.0f, 180.0f, 0.0f);
+	RotationRate = FRotator(0.0f, 90.0f, 0.0f);
 	Speed = 1.0f;
+
+	BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollider"));
+	BoxCollider->SetGenerateOverlapEvents(true);
+	BoxCollider->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
+	BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &APickUpItem::OnOverlapBegin);
+	BoxCollider->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+	BoxCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	BoxCollider->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	BoxCollider->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 }
 
 // Called when the game starts or when spawned
 void APickUpItem::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
@@ -31,6 +41,18 @@ void APickUpItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	this->AddActorLocalRotation(this->RotationRate * DeltaTime * Speed);
+	AddActorLocalRotation(RotationRate * DeltaTime * Speed);
+}
+
+void APickUpItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	// OtherActor가 자신이 아닌지, NULL이 아닌지 체크한다
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr)) // 괄호 수정
+	{
+		FString pickup = FString::Printf(TEXT("Picked up: %s"), *GetName());
+		GEngine->AddOnScreenDebugMessage(1, 5, FColor::White, pickup);
+		Destroy();
+	}
+
 }
 

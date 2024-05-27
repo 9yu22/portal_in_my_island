@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/BoxComponent.h"
 #include "PickUpItem.generated.h"
 
 UCLASS()
@@ -35,7 +36,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pickup)
 	UStaticMeshComponent* ItemMesh;
 
-	//회전 스피드를 결정
+	// 회전 스피드를 결정
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pickup)
 	float Speed;
+
+	// 충돌체크를 할 Box Collider 와 Overlap 함수
+	UPROPERTY(VisibleAnywhere)
+	UBoxComponent* BoxCollider;
+
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, 
+		AActor* OtherActor, 
+		UPrimitiveComponent* OtherComp, 
+		int32 OtherBodyIndex, 
+		bool bFromSweep, const FHitResult& SweepResult);
+
 };
