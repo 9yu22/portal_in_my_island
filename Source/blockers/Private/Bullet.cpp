@@ -8,6 +8,8 @@
 #include "../blockersCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "GameFramework/SpringArmComponent.h"
+
 // Sets default values
 ABullet::ABullet()
 {
@@ -34,6 +36,19 @@ void ABullet::BeginPlay()
 
 	bulletDirection = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraRotation().Quaternion().GetForwardVector();
 
+	ACharacter* PlayerCharacter = Cast<ACharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (PlayerCharacter)
+	{
+		USpringArmComponent* SpringArm = PlayerCharacter->FindComponentByClass<USpringArmComponent>();
+		if (SpringArm)
+		{
+			// Get the spring arm length
+			float SpringArmLength = SpringArm->TargetArmLength;
+
+			startLocation = GetWorld()->GetFirstPlayerController()->PlayerCameraManager->GetCameraLocation() + bulletDirection * (SpringArmLength+100);
+		}
+	}
+
 	boxComp->OnComponentBeginOverlap;
 
 	boxComp->OnComponentBeginOverlap.AddDynamic(this, &ABullet::OnBulletOverlap);
@@ -46,11 +61,11 @@ void ABullet::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	
-	FVector startLocation = GetActorLocation() + bulletDirection * moveSpeed * DeltaTime;
+	startLocation += bulletDirection * moveSpeed * DeltaTime;
 
 	SetActorLocation(startLocation);
 
-	FVector endLocation = GetActorLocation() + bulletDirection * 100;
+	FVector endLocation = startLocation + bulletDirection * 100;
 
 	// LineTraceByChannel로 레이를 쏴서 충돌을 감지
 	bHit = GetWorld()->LineTraceSingleByChannel(HitResult, startLocation, endLocation, ECollisionChannel::ECC_Visibility);
