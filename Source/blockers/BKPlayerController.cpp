@@ -123,6 +123,9 @@ void ABKPlayerController::OnLeftClick(const FInputActionValue& Value)
 					// µð¹ö±ë¿ë: Chunk Index ºÒ·¯¿È
 					int32 ChunkIndex = OwningWorld->GetChunkIndex(HitChunk, LocalBlockPosition, BKEBlock::Air);
 					UE_LOG(LogTemp, Log, TEXT("chunk index: %d"), ChunkIndex);
+
+					// Modify Voxel
+					HitChunk->ModifyVoxel(LocalBlockPosition, BKEBlock::Air);
 				}
 			}
 		}

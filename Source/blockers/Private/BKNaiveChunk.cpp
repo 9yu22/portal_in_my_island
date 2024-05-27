@@ -43,30 +43,30 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 			for (int z = 0; z < Size; ++z)
 			{
 				auto distanceFromCenter = sqrt((x + Position.X) * (x + Position.X) + (y + Position.Y) * (y + Position.Y));
-				auto distanceFromPoint1 = sqrt((x + Position.X - 50) * (x + Position.X - 50) + (y + Position.Y - 50) * (y + Position.Y - 50));	// point: (50,50)
-				auto distanceFromPoint2 = sqrt((x + Position.X + 50) * (x + Position.X + 50) + (y + Position.Y - 50) * (y + Position.Y - 50));	// point: (-50,50)
-				auto distanceFromPoint3 = sqrt((x + Position.X - 50) * (x + Position.X - 50) + (y + Position.Y + 50) * (y + Position.Y + 50));	// point: (50,-50)
-				auto distanceFromPoint4 = sqrt((x + Position.X + 50) * (x + Position.X + 50) + (y + Position.Y + 50) * (y + Position.Y + 50));	// point: (-50,-50)
+				auto distanceFromPoint1 = sqrt((x + Position.X - 80) * (x + Position.X - 80) + (y + Position.Y - 80) * (y + Position.Y - 80));	// point: (80,80)
+				auto distanceFromPoint2 = sqrt((x + Position.X + 80) * (x + Position.X + 80) + (y + Position.Y - 80) * (y + Position.Y - 80));	// point: (-80,80)
+				auto distanceFromPoint3 = sqrt((x + Position.X - 80) * (x + Position.X - 80) + (y + Position.Y + 80) * (y + Position.Y + 80));	// point: (80,-80)
+				auto distanceFromPoint4 = sqrt((x + Position.X + 80) * (x + Position.X + 80) + (y + Position.Y + 80) * (y + Position.Y + 80));	// point: (-80,-80)
 
 				// z = 0
 				// point: (0,0) / radius: 40
 				if (z + Position.Z == 0 && distanceFromCenter < 40) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (50,50) / radius: 10
-				else if (z + Position.Z == 0 && distanceFromPoint1 < 10) {
+				// point: (80,80) / radius: 15
+				else if (z + Position.Z == 0 && distanceFromPoint1 < 15) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (-50,50) / radius: 10
-				else if (z + Position.Z == 0 && distanceFromPoint2 < 10) {
+				// point: (-80,80) / radius: 15
+				else if (z + Position.Z == 0 && distanceFromPoint2 < 15) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (50,-50) / radius: 10
-				else if (z + Position.Z == 0 && distanceFromPoint3 < 10) {
+				// point: (80,-80) / radius: 15
+				else if (z + Position.Z == 0 && distanceFromPoint3 < 15) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (-50,-50) / radius: 10
-				else if (z + Position.Z == 0 && distanceFromPoint4 < 10) {
+				// point: (-80,-80) / radius: 15
+				else if (z + Position.Z == 0 && distanceFromPoint4 < 15) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
 				// z = 1
@@ -74,20 +74,20 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				else if (z + Position.Z == 1 && distanceFromCenter < 30) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (50,50) / radius: 8
-				else if (z + Position.Z == 1 && distanceFromPoint1 < 8) {
+				// point: (80,80) / radius: 12
+				else if (z + Position.Z == 1 && distanceFromPoint1 < 12) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (-50,50) / radius: 8
-				else if (z + Position.Z == 1 && distanceFromPoint2 < 8) {
+				// point: (-80,80) / radius: 12
+				else if (z + Position.Z == 1 && distanceFromPoint2 < 12) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (50,-50) / radius: 8
-				else if (z + Position.Z == 1 && distanceFromPoint3 < 8) {
+				// point: (80,-80) / radius: 12
+				else if (z + Position.Z == 1 && distanceFromPoint3 < 12) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (-50,-50) / radius: 8
-				else if (z + Position.Z == 1 && distanceFromPoint4 < 8) {
+				// point: (-80,-80) / radius: 12
+				else if (z + Position.Z == 1 && distanceFromPoint4 < 12) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
 				// z = 10

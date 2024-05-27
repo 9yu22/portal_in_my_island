@@ -29,6 +29,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	FVector bulletDirection;
 
+	UPROPERTY(EditAnywhere)
+	FVector startLocation;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FHitResult HitResult;
 
