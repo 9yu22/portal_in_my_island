@@ -19,12 +19,12 @@ FIntVector UBKVoxelFunctionLibrary::WorldToLocalBlockPosition(const FVector& Pos
 	if (ChunkPosition.Y < 0) Result.Y--;
 	if (ChunkPosition.Z < 0) Result.Z--;
 
-	if (ChunkPosition.X == 0 && Result.X == 0 && Normal.X < 0)
-		Result.Y++;
+	/*if (ChunkPosition.X == 0 && Result.X == 0 && Normal.X < 0)
+		Result.Y++;*/
 	if (ChunkPosition.X < 0 && Result.X == 63 && Normal.X > 0)
 		Result.Y--;
-	if (ChunkPosition.Y == 0 && Result.Y == 0 && Normal.Y < 0)
-		Result.Z++;
+	/*if (ChunkPosition.Y == 0 && Result.Y == 0 && Normal.Y < 0)
+		Result.Z++;*/
 	if (ChunkPosition.Y < 0 && Result.Y == 63 && Normal.Y > 0)
 		Result.Z--;
 

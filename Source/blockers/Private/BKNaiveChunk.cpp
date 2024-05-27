@@ -188,7 +188,7 @@ bool ABKNaiveChunk::Check(const FVector Position) const
 {
 	if (Position.X >= Size || Position.Y >= Size || Position.X < 0 || Position.Y < 0 || Position.Z < 0) return true;
 	if (Position.Z >= Size) return true;
-	return Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)].block == BKEBlock::Air;
+	return Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)].block == BKEBlock::Air || Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)].block == BKEBlock::Stair;
 }
 
 void ABKNaiveChunk::CreateFace(const Block Block, const BKEDirection Direction, const FVector Position)
@@ -649,6 +649,9 @@ int ABKNaiveChunk::GetTextureIndex(BKEBlock Block, FVector Normal) const
 	switch (Block)
 	{
 	case BKEBlock::Stone:
+		return 1;
+		break;
+	case BKEBlock::Stair:
 		return 1;
 		break;
 	/*case BKEBlock::Grass:
