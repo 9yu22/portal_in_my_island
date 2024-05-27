@@ -147,6 +147,7 @@ void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 void AblockersCharacter::Fire()
 {
 	FVector BulletLocation = GetMesh()->GetSocketLocation("gun");
+	BulletLocation.X += 100.f;
 	ABullet* bullet = GetWorld()->SpawnActor<ABullet>(bulletFactory, BulletLocation, firePosition->GetComponentRotation());
 	bulletNum -= 1;
 }

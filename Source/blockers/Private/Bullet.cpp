@@ -48,7 +48,6 @@ void ABullet::Tick(float DeltaTime)
 	
 	FVector startLocation = GetActorLocation() + bulletDirection * moveSpeed * DeltaTime;
 
-
 	SetActorLocation(startLocation);
 
 	FVector endLocation = GetActorLocation() + bulletDirection * 100;
@@ -61,23 +60,24 @@ void ABullet::Tick(float DeltaTime)
 void ABullet::OnBulletOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
 {
-	APracticeDestroyBlock* enemy = Cast<APracticeDestroyBlock>(OtherActor);
+	//APracticeDestroyBlock* enemy = Cast<APracticeDestroyBlock>(OtherActor);
 	AblockersCharacter* enemyCharacter = Cast<AblockersCharacter>(OtherActor);
 
-	if (enemy != nullptr)
-	{
-		OtherActor->Destroy();
+	//if (enemy != nullptr)
+	//{
+	//	OtherActor->Destroy();
 
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosionFX, GetActorLocation(), GetActorRotation());
-	}
-	else if (enemyCharacter != nullptr)
+	//	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosionFX, GetActorLocation(), GetActorRotation());
+	//}
+	if (enemyCharacter != nullptr)
 	{
-		enemyCharacter->health -= 30.f;
-		UE_LOG(LogTemp, Warning, TEXT("enemyCharacter hit, new health: %f"), enemyCharacter->health);
+		//enemyCharacter->health -= 30.f;
+		UE_LOG(LogTemp, Warning, TEXT("enemyCharacter hit, -30 hp!!"));
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosionFX, GetActorLocation(), GetActorRotation());
+		DestroyBullet();
 	}
 
-	Destroy();
+	
 
 }
 
