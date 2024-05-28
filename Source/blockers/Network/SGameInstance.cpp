@@ -9,6 +9,11 @@
 #include "Kismet/GameplayStatics.h"
 #include "Misc/FileHelper.h"
 #include "HAL/PlatformFilemanager.h"
+#include "Protocol.h"
+
+USGameInstance::USGameInstance()
+{
+}
 
 void USGameInstance::ConnectToGameServer()
 {
@@ -50,6 +55,7 @@ void USGameInstance::ConnectToGameServer()
 
 		AblockersCharacter* Character = Cast<AblockersCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
 		if (Character) {
+			MyCharacter = Character;
 			FRecvWorker* RecvWorker = new FRecvWorker(this, Character);
 			FSendWorker* SendWorker = new FSendWorker(this, Character);
 			// 스레드 생성 및 시작
@@ -71,6 +77,22 @@ void USGameInstance::DisconnectFromGameServer()
 	}
 }
 
+USGameInstance* USGameInstance::GetMyInstance(UObject* WorldContextObject)
+{
+	if (!WorldContextObject)
+	{
+		return nullptr;
+	}
+
+	UWorld* World = WorldContextObject->GetWorld();
+	if (World)
+	{
+		return Cast<USGameInstance>(World->GetGameInstance());
+	}
+
+	return nullptr;
+}
+
 bool USGameInstance::SetIpAddress()
 {
 	FString IpAddressPath = FPaths::Combine(FPaths::ProjectDir(), TEXT("IpAddress.txt"));
@@ -81,6 +103,7 @@ bool USGameInstance::SetIpAddress()
 
 	return false;
 }
+
 
 //void US1GameInstance::HandleRecvPackets()
 //{

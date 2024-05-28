@@ -4,22 +4,27 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "ProcessQueue.h"
 #include "NetworkWorkers.h"
 //#include "S1.h"
 //#include "PacketSession.h"
 #include "../blockersCharacter.h"
-#include "ProcessQueue.h"
+//#include "Protocol.h"
 #include "SGameInstance.generated.h"
 
 /**
  *
  */
+
 UCLASS()
 class BLOCKERS_API USGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
 public:
+	USGameInstance();
+	//virtual ~USGameInstance();
+
 	UFUNCTION(BlueprintCallable)
 	void ConnectToGameServer();
 
@@ -31,15 +36,20 @@ public:
 
 	//void SendPacket(SendBufferRef SendBuffer);
 
-	bool SetIpAddress();
+	static USGameInstance* GetMyInstance(UObject* WorldContextObject); // static 함수는 객체 존재 없이 호출가능
 
+	bool SetIpAddress();
+	
 public:
 	FSocket* Socket;
 	//FString IpAddress = TEXT("127.0.0.1");
 	FString IpAddress;
 	int16 Port = 4040;
 
-	ProcessQueueBlock Blocks;
+	//ProcessQueueBlock Blocks;
+	AblockersCharacter* MyCharacter;
+	ProcessQueue<BlockInfo> BlockQueue;
+	ProcessQueue<AnimInfo> AnimQueue;
 
 	//TSharedPtr<class PacketSession> GameServerSession;
 	//TSharedPtr<class FRecvWorker> makeRecvThread;
