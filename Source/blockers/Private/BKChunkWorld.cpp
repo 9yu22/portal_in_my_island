@@ -4,13 +4,14 @@
 #include "BKChunkWorld.h"
 
 #include "BKChunkBase.h"
+#include "../Network/SGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABKChunkWorld::ABKChunkWorld()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 }
 
@@ -31,6 +32,19 @@ void ABKChunkWorld::BeginPlay()
 		throw std::invalid_argument("Invalid Generation Type");
 	}
 	UE_LOG(LogTemp, Warning, TEXT("%d Chunks Created"), ChunkCount);
+}
+
+void ABKChunkWorld::Tick(float DeltaTime)
+{
+	USGameInstance* instance = USGameInstance::GetMyInstance(this);
+	if (!instance->BlockQueue.CheckEmpty()) {
+		int BytesSent = 0;
+		BlockInfo block;
+		block = instance->BlockQueue.DeQ();
+		ABKChunkBase* chunk = Cast<ABKChunkBase>(Chunks[block.chunk_index]);
+		chunk->ProcessBlockQueue(block.index, block.type);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Recv Add Block / Chunk_index: %d, x: %d, y: %d z: %d"), block.chunk_index, block.index.X, block.index.Y, block.index.Z));
+	}
 }
 
 void ABKChunkWorld::Generate3DWorld()
