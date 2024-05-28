@@ -46,6 +46,21 @@ void ABKPlayerController::SetupInputComponent()
 
 }
 
+void ABKPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (APawn* controlledPawn = GetPawn())
+	{
+		FVector Velocity = controlledPawn->GetVelocity();
+		bool bIsMovingNow = !Velocity.IsNearlyZero();
+		if (!bIsMovingNow && Anim_type == static_cast<int8>(Anim::MOVE))// 움직이다 멈추면 패킷 전송
+		{
+			SendAnimation(static_cast<int8>(Anim::IDLE));
+		}
+	}
+}
+
 void ABKPlayerController::InputMove(const FInputActionValue& value)
 {
 	FVector2D inputAxis = value.Get<FVector2D>();
@@ -58,17 +73,35 @@ void ABKPlayerController::InputMove(const FInputActionValue& value)
 		controlledPawn->AddMovementInput(ForwardVector, inputAxis.Y);
 		controlledPawn->AddMovementInput(RightVector, inputAxis.X);
 	}
+	if (inputAxis.X == 0.0f && inputAxis.Y == 0.0f)
+	{
+		/*	if (Anim_type == static_cast<int8>(Anim::MOVE)) // 움직일 때만 불리므로 벡터가 0이 될 수가 없다.
+			{
+				SendAnimation(static_cast<int8>(Anim::IDLE));
+			}*/
+	}
+	else // 움직이지 않다가 움직이면 패킷 전송
+	{
+		if (Anim_type == static_cast<int8>(Anim::IDLE))
+		{
+			SendAnimation(static_cast<int8>(Anim::MOVE));
+
+		}
+	}
+	//UE_LOG(LogTemp, Log, TEXT("Executed Input Move"));
 }
 
 
 void ABKPlayerController::Jump(const FInputActionValue& Value)
 {
 	GetCharacter()->bPressedJump = true;
+	SendAnimation(static_cast<int8>(Anim::JUMP));
 }
 
 void ABKPlayerController::StopJumping(const FInputActionValue& Value)
 {
 	GetCharacter()->bPressedJump = false;
+	SendAnimation(static_cast<int8>(Anim::IDLE));
 }
 
 void ABKPlayerController::Look(const FInputActionValue& Value)
@@ -76,6 +109,33 @@ void ABKPlayerController::Look(const FInputActionValue& Value)
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 	GetCharacter()->AddControllerYawInput(LookAxisVector.X);
 	GetCharacter()->AddControllerPitchInput(LookAxisVector.Y);
+}
+
+AblockersCharacter* ABKPlayerController::GetMyCharacter() const
+{
+	return Cast<AblockersCharacter>(GetPawn());
+}
+
+void ABKPlayerController::SendAnimation(int8 anim_type)
+{
+	if (Anim_type != anim_type) {
+
+		USGameInstance* instance = USGameInstance::GetMyInstance(this);
+		//instance->GetMyInstance(this);
+		if (instance) {
+			int BytesSent = 0;
+			ANIM_PACKET p;
+			p.size = sizeof(ANIM_PACKET);
+			p.type = ANIM;
+			p.id = GetMyCharacter()->id;
+			p.anim_type = anim_type;
+			instance->Socket->Send((uint8*)&p, sizeof(p), BytesSent);
+		}
+		else
+			UE_LOG(LogTemp, Log, TEXT("Fail GetInstance"));
+		Anim_type = anim_type;
+	}
+
 }
 
 void ABKPlayerController::OnLeftClick(const FInputActionValue& Value)

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Network/SGameInstance.h"
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Controller.h"
@@ -40,6 +41,8 @@ protected:
 	// 입력을 준비하는 함수
 	virtual void SetupInputComponent() override;
 
+	virtual void Tick(float DeltaTime) override;
+
 	// 움직이라는 명령을 받음
 	UFUNCTION()
 	virtual void InputMove(const FInputActionValue& value);
@@ -58,6 +61,14 @@ protected:
 
 	UPROPERTY()
 	UInputMappingContext* DefaultMappingContext;
+
+	uint8 Anim_type = 0;
+
+	//// 컨트롤하는 캐릭터를 반환
+	AblockersCharacter* GetMyCharacter() const;
+
+	//// 입력 키를 전송하는 함수
+	void SendAnimation(int8 anim_type);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
