@@ -14,6 +14,9 @@ constexpr char SC_REMOVE_PLAYER = 4;
 constexpr char SC_MOVE_PLAYER = 5;
 constexpr char SC_ADD_BLOCK = 6;
 constexpr char CS_ADD_BLOCK = 7;
+constexpr char ANIM = 8;
+
+enum class Anim : char { IDLE, MOVE, JUMP };
 
 #pragma pack (push, 1)
 struct CS_LOGIN_PACKET {
@@ -61,6 +64,7 @@ struct SC_MOVE_PLAYER_PACKET {
 struct SC_ADD_BLOCK_PACKET {
     u_char size;
     char type;
+    char chunk_index;
     int ix, iy, iz;
     char blocktype;
 };
@@ -68,7 +72,15 @@ struct SC_ADD_BLOCK_PACKET {
 struct CS_ADD_BLOCK_PACKET {
     u_char size;
     char type;
+    char chunk_index;
     int ix, iy, iz;
     char blocktype;
+};
+
+struct ANIM_PACKET {
+    u_char size;
+    char type;
+    char id;
+    char anim_type;
 };
 #pragma pack (pop)

@@ -90,7 +90,8 @@ public:
 	}
 
 	void send_move_packet(int c_id);
-	void send_add_block_packet(int c_id, char* packet);
+	void send_add_block_packet(char* packet);
+	void send_anim_packet(char* packet);
 };
 
 array<SESSION, MAX_USER> clients;
@@ -111,11 +112,18 @@ void SESSION::send_move_packet(int c_id)
 	do_send(&p);
 }
 
-void SESSION::send_add_block_packet(int c_id, char* packet)
+void SESSION::send_add_block_packet(char* packet)
 {
 	SC_ADD_BLOCK_PACKET* p = reinterpret_cast<SC_ADD_BLOCK_PACKET*>(packet);
+	p->size = sizeof(SC_ADD_BLOCK_PACKET);
+	p->type = SC_ADD_BLOCK;
 	// 일단 받은 블록패킷 브로드캐스트
 	do_send(p);
+}
+
+void SESSION::send_anim_packet(char* packet)
+{
+	do_send(packet);
 }
 
 int get_new_client_id()
@@ -182,14 +190,25 @@ void process_packet(int c_id, char* packet)
 				pl.send_move_packet(c_id);
 		break;
 	}
-	case CS_ADD_BLOCK: // 블록은 클라,서버가 아직은 같은 패킷(처리 없이 그냥 브로드캐스트)
+	case CS_ADD_BLOCK: {
+		// 블록은 클라,서버가 아직은 같은 패킷(처리 없이 그냥 브로드캐스트)
 		CS_ADD_BLOCK_PACKET* p = reinterpret_cast<CS_ADD_BLOCK_PACKET*>(packet);
 		std::cout << "클라이언트 " << c_id << "x: " << p->ix << " y: " << p->iy << " z: " << p->iz << "위치에 블록 추가" << std::endl;
 		for (auto& pl : clients)
 			if (true == pl.in_use && pl._id != c_id)
-				pl.send_add_block_packet(c_id, packet);
+				pl.send_add_block_packet(packet);
 		break;
 	}
+	case ANIM: {
+		//std::cout << "클라이언트 " << c_id << " 애니메이션 변경" << std::endl;
+		for (auto& pl : clients)
+			if (true == pl.in_use && pl._id != c_id)
+				pl.send_anim_packet(packet);
+		break;
+	}
+	}
+
+	
 }
 
 void disconnect(int c_id)
