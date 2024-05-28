@@ -49,10 +49,16 @@ void APickUpItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 	// OtherActor가 자신이 아닌지, NULL이 아닌지 체크한다
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr)) // 괄호 수정
 	{
-		FString pickup = FString::Printf(TEXT("Picked up: %s"), *GetName());
-		GEngine->AddOnScreenDebugMessage(1, 5, FColor::White, pickup);
-		Destroy();
+		OnInteract();
+		
 	}
 
+}
+
+void APickUpItem::OnInteract()
+{
+	FString pickup = FString::Printf(TEXT("Picked up: %s"), *Name);
+	GEngine->AddOnScreenDebugMessage(1, 5, FColor::White, pickup);
+	Destroy();
 }
 
