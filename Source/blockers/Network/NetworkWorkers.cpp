@@ -5,6 +5,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "../Private/BKChunkBase.h"
 #include "Kismet/GameplayStatics.h"
+#include "Protocol.h"
+#include "ProcessQueue.h"
 
 int8 recv_th_count = 0;
 
@@ -142,60 +144,34 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         SC_ADD_BLOCK_PACKET new_block;
 
         memcpy(&new_block, packet, sizeof(new_block));
+        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Block Packet x: %d, y: %d, z: %d"), new_block.ix, new_block.iy, new_block.iz));
 
-        AsyncTask(ENamedThreads::GameThread, [this, new_block]()
-            {
-                ProcessBlockPacket(new_block);
+        BlockInfo block;
+        block.chunk_index = new_block.chunk_index;
+        block.index = { new_block.ix, new_block.iy, new_block.iz };
+        block.type = static_cast<BKEBlock>(new_block.blocktype);
 
-                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Block Packet x: %d, y: %d, z: %d"), new_block.ix, new_block.iy, new_block.iz));
+        Instance->BlockQueue.EnQ(block);
+        
+        break;
+    }
+    case ANIM: {
+        ANIM_PACKET new_anim;
 
-            });
+        memcpy(&new_anim, packet, sizeof(new_anim));
+        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Block Packet x: %d, y: %d, z: %d"), new_block.ix, new_block.iy, new_block.iz));
+
+        AnimInfo anim;
+        anim.id = new_anim.id;
+        anim.type = static_cast<Anim>(new_anim.anim_type);
+
+        Instance->AnimQueue.EnQ(anim);
+        UE_LOG(LogTemp, Warning, TEXT("Anim ENQ"));
         break;
     }
     default:
         break;
     }
-}
-
-void FRecvWorker::ProcessBlockPacket(const SC_ADD_BLOCK_PACKET& new_block)
-{
-    UWorld* World = Instance->GetWorld();
-    if (!World)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("World is null"));
-        return;
-    }
-
-    FName TargetTag = TEXT("BKEChunkBase");
-    TArray<AActor*> FoundActors;
-    UGameplayStatics::GetAllActorsWithTag(World, TargetTag, FoundActors);
-
-    ABKChunkBase* ChunkBase = nullptr;
-    for (AActor* Actor : FoundActors)
-    {
-        ChunkBase = Cast<ABKChunkBase>(Actor);
-        if (ChunkBase)
-        {
-            break;
-        }
-    }
-
-    if (!ChunkBase)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("ChunkBase with tag '%s' not found"), *TargetTag.ToString());
-        return;
-    }
-
-    BlockInfo block;
-    block.index.X = new_block.ix;
-    block.index.Y = new_block.iy;
-    block.index.Z = new_block.iz;
-    block.type = static_cast<BKEBlock>(new_block.blocktype);
-
-    // ChunkBase를 사용하여 ModifyVoxelQueue 호출
-    ChunkBase->ModifyVoxelQueue(block.index, block.type);
-
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Block Packet x: %d, y: %d, z: %d"), new_block.ix, new_block.iy, new_block.iz));
 }
 
 bool FRecvWorker::Init()
@@ -218,6 +194,7 @@ uint32 FRecvWorker::Run()
         if (bHasPendingData > 0) {
             int32 BytesRead = 0;
             c_Socket->Recv(recv_buf, sizeof(recv_buf), BytesRead);
+            //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Pavket Recv")));
             MergePacket(recv_buf, BytesRead);     
         }
 
@@ -297,20 +274,6 @@ uint32 FSendWorker::Run()
             sendRunning = false;
         }
 
-        if (!Instance->Blocks.CheckEmpty()) { // 블록 큐가 비어있지 않으면 빼서 전송
-            BlockInfo block;
-            block = Instance->Blocks.DeQ();
-
-            CS_ADD_BLOCK_PACKET new_block;
-            new_block.size = sizeof(new_block);
-            new_block.type = CS_ADD_BLOCK;
-            new_block.ix = block.index.X;
-            new_block.iy = block.index.Y;
-            new_block.iz = block.index.Z;
-            new_block.blocktype = static_cast<int8>(block.type);
-
-            c_Socket->Send((uint8*)&new_block, sizeof(new_block), BytesSent);
-        }
         //FPlatformProcess::Sleep(0.01);
     }
 
