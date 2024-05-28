@@ -56,7 +56,7 @@ void ABKPlayerController::Tick(float DeltaTime)
 		bool bIsMovingNow = !Velocity.IsNearlyZero();
 		if (!bIsMovingNow && Anim_type == static_cast<int8>(Anim::MOVE))// 움직이다 멈추면 패킷 전송
 		{
-			SendAnimation(static_cast<int8>(Anim::IDLE));
+			//SendAnimation(static_cast<int8>(Anim::IDLE));
 		}
 	}
 }
@@ -73,35 +73,35 @@ void ABKPlayerController::InputMove(const FInputActionValue& value)
 		controlledPawn->AddMovementInput(ForwardVector, inputAxis.Y);
 		controlledPawn->AddMovementInput(RightVector, inputAxis.X);
 	}
-	if (inputAxis.X == 0.0f && inputAxis.Y == 0.0f)
-	{
-		/*	if (Anim_type == static_cast<int8>(Anim::MOVE)) // 움직일 때만 불리므로 벡터가 0이 될 수가 없다.
-			{
-				SendAnimation(static_cast<int8>(Anim::IDLE));
-			}*/
-	}
-	else // 움직이지 않다가 움직이면 패킷 전송
-	{
-		if (Anim_type == static_cast<int8>(Anim::IDLE))
-		{
-			SendAnimation(static_cast<int8>(Anim::MOVE));
+	//if (inputAxis.X == 0.0f && inputAxis.Y == 0.0f)
+	//{
+	//	/*	if (Anim_type == static_cast<int8>(Anim::MOVE)) // 움직일 때만 불리므로 벡터가 0이 될 수가 없다.
+	//		{
+	//			SendAnimation(static_cast<int8>(Anim::IDLE));
+	//		}*/
+	//}
+	//else // 움직이지 않다가 움직이면 패킷 전송
+	//{
+	//	if (Anim_type == static_cast<int8>(Anim::IDLE))
+	//	{
+	//		//SendAnimation(static_cast<int8>(Anim::MOVE));
 
-		}
-	}
-	//UE_LOG(LogTemp, Log, TEXT("Executed Input Move"));
+	//	}
+	//}
+	////UE_LOG(LogTemp, Log, TEXT("Executed Input Move"));
 }
 
 
 void ABKPlayerController::Jump(const FInputActionValue& Value)
 {
 	GetCharacter()->bPressedJump = true;
-	SendAnimation(static_cast<int8>(Anim::JUMP));
+	//SendAnimation(static_cast<int8>(Anim::JUMP));
 }
 
 void ABKPlayerController::StopJumping(const FInputActionValue& Value)
 {
 	GetCharacter()->bPressedJump = false;
-	SendAnimation(static_cast<int8>(Anim::IDLE));
+	//SendAnimation(static_cast<int8>(Anim::IDLE));
 }
 
 void ABKPlayerController::Look(const FInputActionValue& Value)
