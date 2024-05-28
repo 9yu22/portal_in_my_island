@@ -38,8 +38,9 @@ class BLOCKERS_API ABKChunkBase : public AActor
 	// Function to set the owning ChunkWorld
 	void SetOwningChunkWorld(ABKChunkWorld* NewOwner);
 
-	void ModifyVoxelQueue(const FIntVector Position, const BKEBlock Block);
+	void ProcessBlockQueue(const FIntVector Position, const BKEBlock Block);
 	void SetinstanceTag(FName NewTag);
+	int8 GetMyChunkIndex() const;
 
 protected:
 	// Called when the game starts or when spawned
