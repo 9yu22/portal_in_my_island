@@ -24,7 +24,7 @@ APickUpItem::APickUpItem()
 	BoxCollider->SetGenerateOverlapEvents(true);
 	BoxCollider->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
 	BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &APickUpItem::OnOverlapBegin);
-	BoxCollider->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	BoxCollider->SetupAttachment(RootComponent);
 
 	BoxCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	BoxCollider->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
