@@ -1,3 +1,5 @@
+#pragma once
+
 #define BUFSIZE = 256;
 
 constexpr char TEST = 100;
@@ -12,6 +14,9 @@ constexpr char SC_REMOVE_PLAYER = 4;
 constexpr char SC_MOVE_PLAYER = 5;
 constexpr char SC_ADD_BLOCK = 6;
 constexpr char CS_ADD_BLOCK = 7;
+constexpr char ANIM = 8;
+
+enum class Anim : int8 { IDLE, MOVE, JUMP };
 
 #pragma pack (push, 1)
 struct CS_LOGIN_PACKET {
@@ -59,6 +64,7 @@ struct SC_MOVE_PLAYER_PACKET {
 struct SC_ADD_BLOCK_PACKET {
     uint8 size;
     int8 type;
+    int8 chunk_index;
     int32 ix, iy, iz;
     int8 blocktype;
 };
@@ -66,7 +72,16 @@ struct SC_ADD_BLOCK_PACKET {
 struct CS_ADD_BLOCK_PACKET {
     uint8 size;
     int8 type;
+    int8 chunk_index;
     int32 ix, iy, iz;
     int8 blocktype;
 };
+
+struct ANIM_PACKET {
+    uint8 size;
+    int8 type;
+    int8 id;
+    int8 anim_type;
+};
+
 #pragma pack (pop)
