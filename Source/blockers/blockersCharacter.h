@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../blockers/Public/PickUpItem.h"
 #include "Logging/LogMacros.h"
 #include "GameFramework/Character.h"
 #include "blockersCharacter.generated.h"
@@ -99,5 +100,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "bulletNum")
 	int bulletNum = 100;
+
+	/*pickup inventory*/
+private:
+	TArray<APickUpItem*> _inventory;
+public:
+	void AddToInventory(APickUpItem* actor);
+
+	UFUNCTION(BlueprintCallable)
+	void PrintInventory();
+
 };
 

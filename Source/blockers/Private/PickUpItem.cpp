@@ -2,6 +2,8 @@
 
 
 #include "PickUpItem.h"
+#include "Kismet/GameplayStatics.h"
+#include "../blockersCharacter.h"
 
 // Sets default values
 APickUpItem::APickUpItem()
@@ -58,7 +60,27 @@ void APickUpItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 void APickUpItem::OnInteract()
 {
 	FString pickup = FString::Printf(TEXT("Picked up: %s"), *Name);
-	GEngine->AddOnScreenDebugMessage(1, 5, FColor::White, pickup);
-	Destroy();
+	//GEngine->AddOnScreenDebugMessage(1, 5, FColor::White, pickup);
+	//Destroy();
+
+	AblockersCharacter* player = Cast<AblockersCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+
+	if (player)
+	{
+		Show(false);
+		player->AddToInventory(this);
+	}
+	GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, *pickup);
 }
 
+void APickUpItem::Show(bool visible)
+{
+	ECollisionEnabled::Type collision = visible ?
+		ECollisionEnabled::QueryAndPhysics :
+		ECollisionEnabled::NoCollision;
+
+	SetActorTickEnabled(visible);
+	ItemMesh->SetVisibility(visible);
+	ItemMesh->SetCollisionEnabled(collision);
+	BoxCollider->SetCollisionEnabled(collision);
+}

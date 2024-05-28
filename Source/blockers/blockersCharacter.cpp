@@ -191,3 +191,22 @@ void AblockersCharacter::UseItem(UItem* Item)
 		Item->OnUse(this); //BP EVENT
 	}
 }
+
+void AblockersCharacter::AddToInventory(APickUpItem* actor)
+{
+	_inventory.Add(actor);
+}
+
+void AblockersCharacter::PrintInventory()
+{
+	FString sInventory = "";
+
+	for (APickUpItem* actor : _inventory)
+	{
+		sInventory.Append(actor->Name);
+		sInventory.Append(" | ");
+	}
+
+	GEngine->AddOnScreenDebugMessage(1, 3, FColor::White, *sInventory);
+}
+

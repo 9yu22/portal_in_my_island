@@ -56,4 +56,7 @@ public:
 
 	virtual void OnInteract();
 
+protected:
+	virtual void Show(bool visible);
+
 };
