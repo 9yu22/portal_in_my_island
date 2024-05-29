@@ -59,8 +59,8 @@ void USGameInstance::ConnectToGameServer()
 			FRecvWorker* RecvWorker = new FRecvWorker(this, Character);
 			FSendWorker* SendWorker = new FSendWorker(this, Character);
 			// 스레드 생성 및 시작
-			FRunnableThread* RecvThread = FRunnableThread::Create(RecvWorker, TEXT("RecvWorkerThread"), 0, TPri_Normal);
-			FRunnableThread* SendThread = FRunnableThread::Create(SendWorker, TEXT("SendWorkerThread"), 0, TPri_Normal);
+			RecvThread = FRunnableThread::Create(RecvWorker, TEXT("RecvWorkerThread"), 0, TPri_Normal);
+			SendThread = FRunnableThread::Create(SendWorker, TEXT("SendWorkerThread"), 0, TPri_Normal);
 		}
 	}
 	else {
@@ -70,6 +70,20 @@ void USGameInstance::ConnectToGameServer()
 
 void USGameInstance::DisconnectFromGameServer()
 {
+	if (RecvThread)
+	{
+		RecvThread->Kill(true);
+		delete RecvThread;
+		RecvThread = nullptr;
+	}
+
+	if (SendThread)
+	{
+		SendThread->Kill(true);
+		delete SendThread;
+		SendThread = nullptr;
+	}
+
 	if (Socket) {
 		ISocketSubsystem* SocketSubsystem = ISocketSubsystem::Get();
 		SocketSubsystem->DestroySocket(Socket);
@@ -102,6 +116,15 @@ bool USGameInstance::SetIpAddress()
 		return true;
 
 	return false;
+}
+
+void USGameInstance::Shutdown()
+{
+	// 부모 클래스의 Shutdown 호출
+	Super::Shutdown();
+
+	// 게임 종료 시 서버 연결 해제
+	DisconnectFromGameServer();
 }
 
 

@@ -39,6 +39,9 @@ public:
 	static USGameInstance* GetMyInstance(UObject* WorldContextObject); // static 함수는 객체 존재 없이 호출가능
 
 	bool SetIpAddress();
+
+protected:
+	virtual void Shutdown() override;
 	
 public:
 	FSocket* Socket;
@@ -50,6 +53,9 @@ public:
 	AblockersCharacter* MyCharacter;
 	ProcessQueue<BlockInfo> BlockQueue;
 	ProcessQueue<AnimInfo> AnimQueue;
+
+	FRunnableThread* RecvThread;
+	FRunnableThread* SendThread;
 
 	//TSharedPtr<class PacketSession> GameServerSession;
 	//TSharedPtr<class FRecvWorker> makeRecvThread;
