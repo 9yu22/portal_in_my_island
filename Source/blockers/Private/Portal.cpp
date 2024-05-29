@@ -38,16 +38,34 @@ void APortal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+    if (Portalhealth < 1)
+    {
+        UGameplayStatics::OpenLevel(this, FName("End"));
+    }
+
 }
 
 void APortal::OnBeginOverLap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromsweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->ActorHasTag("Test")) //이게 캐릭터여야함
-	{
-		Portalhealth -= 10.f;
-		if (Portalhealth < 1) {
-			UGameplayStatics::OpenLevel(this, "End");
-		}
-	}
+ 
+    if (OtherActor)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("OtherActor is valid"));
+        if (OtherActor->ActorHasTag("Test"))
+        {
+            UE_LOG(LogTemp, Warning, TEXT("OtherActor has 'Test' tag"));
+            Portalhealth -= 10.f;
+            
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("OtherActor does not have 'Test' tag"));
+        }
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("OtherActor is null"));
+    }
+
 }
 
