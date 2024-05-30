@@ -20,14 +20,14 @@ AblockersGameMode::AblockersGameMode()
 	}
 
 	// set default controller to our Blueprinted controller
-	static ConstructorHelpers::FClassFinder<APlayerController> PlayerControllerBPClass(TEXT("/Game/Blockers/Blueprints/BP_PlayerController"));
+	static ConstructorHelpers::FClassFinder<APlayerController> PlayerControllerBPClass(TEXT("/Game/Blockers/Blueprints/Game/BP_PlayerController"));
 	if (PlayerControllerBPClass.Class != NULL)
 	{
 		PlayerControllerClass = PlayerControllerBPClass.Class;
 	}
 
 	// Set default HUD class to our Blueprinted HUD
-	static ConstructorHelpers::FClassFinder<AHUD> HUDBPClass(TEXT("/Game/Blockers/Blueprints/BlockersHUD"));
+	static ConstructorHelpers::FClassFinder<AHUD> HUDBPClass(TEXT("/Game/Blockers/Blueprints/Game/BlockersHUD"));
 	if (HUDBPClass.Succeeded())
 	{
 		// Assign the found HUD class
