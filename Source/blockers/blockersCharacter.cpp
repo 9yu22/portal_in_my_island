@@ -195,7 +195,9 @@ void AblockersCharacter::UseItem(UItem* Item)
 
 void AblockersCharacter::AddToInventory(APickUpItem* actor)
 {
+	UE_LOG(LogTemp, Warning, TEXT("init size: %d"), _inventory.Num());
 	_inventory.Add(actor);
+	UE_LOG(LogTemp, Warning, TEXT("Inventory size: %d"), _inventory.Num());
 }
 
 void AblockersCharacter::UpdateInventory()
