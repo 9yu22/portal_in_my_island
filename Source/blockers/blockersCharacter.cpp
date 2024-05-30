@@ -28,6 +28,7 @@
 #include "Bullet.h"
 #include "HealthBarWidget.h"
 
+
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 
@@ -197,9 +198,9 @@ void AblockersCharacter::AddToInventory(APickUpItem* actor)
 	_inventory.Add(actor);
 }
 
-void AblockersCharacter::PrintInventory()
+void AblockersCharacter::UpdateInventory()
 {
-	FString sInventory = "";
+	/*FString sInventory = "";
 
 	for (APickUpItem* actor : _inventory)
 	{
@@ -207,6 +208,9 @@ void AblockersCharacter::PrintInventory()
 		sInventory.Append(" | ");
 	}
 
-	GEngine->AddOnScreenDebugMessage(1, 3, FColor::White, *sInventory);
+	GEngine->AddOnScreenDebugMessage(1, 3, FColor::White, *sInventory);*/
+
+	OnUpdateInventory.Broadcast(_inventory);
 }
+
 

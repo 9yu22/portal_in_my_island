@@ -51,8 +51,12 @@ public:
 		int32 OtherBodyIndex, 
 		bool bFromSweep, const FHitResult& SweepResult);
 
-	UPROPERTY(EditAnywhere)
+public: 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pickup)
 	FString Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pickup)
+	UTexture2D* Image;
 
 	virtual void OnInteract();
 
