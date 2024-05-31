@@ -182,11 +182,12 @@ void ABKPlayerController::OnLeftClick(const FInputActionValue& Value)
 					FIntVector LocalBlockPosition = UBKVoxelFunctionLibrary::WorldToLocalBlockPosition(BlockWorldPosition, HitResult.Normal, 64);
 
 					// µð¹ö±ë¿ë: Chunk Index ºÒ·¯¿È
-					int32 ChunkIndex = OwningWorld->GetChunkIndex(HitChunk, LocalBlockPosition, BKEBlock::Air);
-					UE_LOG(LogTemp, Log, TEXT("chunk index: %d"), ChunkIndex);
+					/*int32 ChunkIndex = OwningWorld->GetChunkIndex(HitChunk, LocalBlockPosition, BKEBlock::Air);
+					UE_LOG(LogTemp, Log, TEXT("chunk index: %d"), ChunkIndex);*/
 
 					// Modify Voxel
-					HitChunk->ModifyVoxel(LocalBlockPosition, BKEBlock::Air);
+					//HitChunk->ModifyVoxel(LocalBlockPosition, BKEBlock::Air);
+					HitChunk->SendModifiedVoxel(HitResult.Location, HitResult.Normal, LocalBlockPosition, BKEBlock::Air);
 
 					// BP_CollapsibleBlock ½ºÆù
 					FIntVector SpawnLocationInt = UBKVoxelFunctionLibrary::GetBlockWorldPostion(BlockWorldPosition, HitResult.Normal, 64);

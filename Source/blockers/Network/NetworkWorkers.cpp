@@ -155,6 +155,25 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         
         break;
     }
+
+    case SC_REMOVE_BLOCK: {
+        SC_REMOVE_BLOCK_PACKET remove_block;
+
+        memcpy(&remove_block, packet, sizeof(remove_block));
+        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Block Packet x: %d, y: %d, z: %d"), new_block.ix, new_block.iy, new_block.iz));
+
+        BlockInfo block;
+        block.chunk_index = remove_block.chunk_index;
+        block.index = { remove_block.ix, remove_block.iy, remove_block.iz };
+        block.world_index = { remove_block.wx, remove_block.wy, remove_block.wz };
+        block.normal = { remove_block.nx, remove_block.ny, remove_block.nz };
+        block.type = static_cast<BKEBlock>(remove_block.blocktype);
+
+        Instance->BlockQueue.EnQ(block);
+
+        break;
+    }
+
     case ANIM: {
         ANIM_PACKET new_anim;
 

@@ -3,6 +3,8 @@
 
 #include "BKChunkBase.h"
 #include "BKChunkWorld.h"
+#include "BKVoxelFunctionLibrary.h"	// for localBlockPosition
+#include "CollapsibleBlockComponent.h"	// for collapsible Block
 
 #include "Voxel/BKEnum.h"
 #include "ProceduralMeshComponent.h"
@@ -46,7 +48,6 @@ void ABKChunkBase::BeginPlay()
 
 	ApplyMesh();
 
-	//SetinstanceTag("BKChunkBase");
 }
 
 void ABKChunkBase::GenerateHeightMap()
@@ -78,28 +79,6 @@ void ABKChunkBase::ClearMesh()
 
 void ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
 {
-	//if (Position.X >= Size || Position.Y >= Size || Position.Z >= Size || Position.X < 0 || Position.Y < 0 || Position.Z < 0) return Position;
-	//UE_LOG(LogTemp, Warning, TEXT("Return My Chunk Index %d"), index);
-
-	USGameInstance* instance = USGameInstance::GetMyInstance(this);
-	if (instance)
-	{
-		int BytesSent = 0;
-		int8 index = GetMyChunkIndex();
-		CS_ADD_BLOCK_PACKET new_block;
-		new_block.chunk_index = index;
-	    new_block.size = sizeof(new_block);
-	    new_block.type = CS_ADD_BLOCK;
-	    new_block.ix = Position.X;
-	    new_block.iy = Position.Y;
-	    new_block.iz = Position.Z;
-		BKEBlock block = Block;
-		new_block.blocktype = static_cast<int8>(block);
-
-		instance->Socket->Send((uint8*)&new_block, sizeof(new_block), BytesSent);
-		//UE_LOG(LogTemp, Warning, TEXT("Send Block"));
-	}
-
 	// 서버 연결 안되어도 블록 설치는 가능하게 일단 아래 코드는 유지
 	ModifyVoxelData(Position, Block);
 
@@ -110,28 +89,155 @@ void ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
 	ApplyMesh();
 }
 
+void ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const BKEBlock Block)
+{
+	// 조건에 따라 일부 인자는 안쓰인다. 함수를 합쳐놔서 이런 구조로 되어있다.
+
+	USGameInstance* instance = USGameInstance::GetMyInstance(this);
+	if (instance) {
+		int BytesSent = 0;
+		if (Block != BKEBlock::Air) // 블록 추가에는 인덱스와 블록 타입만 쓰인다.
+		{
+			int8 index = GetMyChunkIndex();
+			CS_ADD_BLOCK_PACKET new_block;
+			new_block.chunk_index = index;
+			new_block.size = sizeof(new_block);
+			new_block.type = CS_ADD_BLOCK;
+
+			new_block.ix = Position.X;
+			new_block.iy = Position.Y;
+			new_block.iz = Position.Z;
+			BKEBlock block = Block;
+			new_block.blocktype = static_cast<int8>(block);
+
+			instance->Socket->Send((uint8*)&new_block, sizeof(new_block), BytesSent);
+			//UE_LOG(LogTemp, Warning, TEXT("Send Block"));
+
+			//ModifyVoxel(Position, Block);
+		}
+
+		else { // 블록 제거에는 월드 좌표와 월드 노멀, 블록 타입만 쓰인다. 인덱스는 패킷으로 받아온 월드 값을 클라에서 계산하도록 해 네트워크 부하를 줄인다.
+			int8 index = GetMyChunkIndex();
+			CS_REMOVE_BLOCK_PACKET remove_block;
+
+			remove_block.chunk_index = index;
+			remove_block.size = sizeof(remove_block);
+			remove_block.type = CS_REMOVE_BLOCK;
+
+			remove_block.ix = Position.X;
+			remove_block.iy = Position.Y;
+			remove_block.iz = Position.Z;
+
+			remove_block.wx = World_Position.X;
+			remove_block.wy = World_Position.Y;
+			remove_block.wz = World_Position.Z;
+
+			remove_block.nx = World_Normal.X;
+			remove_block.ny = World_Normal.Y;
+			remove_block.nz = World_Normal.Z;
+
+			BKEBlock block = Block;
+			remove_block.blocktype = static_cast<int8>(block);
+
+			instance->Socket->Send((uint8*)&remove_block, sizeof(remove_block), BytesSent);
+			//UE_LOG(LogTemp, Warning, TEXT("Send Block"));
+
+			//ModifyVoxel(Position, Block);
+		}
+	}
+	ModifyVoxel(Position, Block);
+	
+}
+
 void ABKChunkBase::SetOwningChunkWorld(ABKChunkWorld* NewOwner)
 {
 	// Chunk를 관리하는 Chunk World를 세팅
 	OwningChunkWorld = NewOwner;
 }
 
-void ABKChunkBase::ProcessBlockQueue(const FIntVector Position, const BKEBlock Block)
+void ABKChunkBase::ProcessBlock(const BlockInfo& Block)
 {
-	ModifyVoxelData(Position, Block);
+	ModifyVoxelData(Block.index, Block.type);
 
 	ClearMesh();
 
 	GenerateMesh();
 
 	ApplyMesh();
+
+	if (Block.type == BKEBlock::Air) {
+		//여기에 블록 파괴 이펙트 함수 추가
+		CreateBlockDestroyEffect(Block);
+	}
 }
 
-void ABKChunkBase::SetinstanceTag(FName NewTag)
+void ABKChunkBase::CreateBlockDestroyEffect(const BlockInfo& Block) // 블록이 사라진 자리에 엑터 스폰 및 파괴 이펙트 생성->컨트롤러 코드 가져옴
 {
-	if (!NewTag.IsNone())
+	// 이미 자기 자신 청크에 대한 함수이다. 청크를 얻어올 이유가 없다. this를 넘겨야 하나?-> 자기 자신에 대한 청크 월드를 가져온다.
+	ABKChunkWorld* OwningWorld = ABKChunkWorld::FindOwningChunkWorld(this);
+	if (OwningWorld)
 	{
-		Tags.AddUnique(NewTag);
+		//UE_LOG(LogTemp, Log, TEXT("World Hit!"));
+
+		// Block의 월드 위치
+		FVector BlockWorldPosition = Block.world_index - Block.normal;
+
+		//FIntVector LocalBlockPosition = UBKVoxelFunctionLibrary::WorldToLocalBlockPosition(Block.world_index, Block.normal, 64);
+		//// 디버깅용: Chunk Index 불러옴
+		//int32 ChunkIndex = this->GetMyChunkIndex();
+		//UE_LOG(LogTemp, Log, TEXT("chunk index: %d"), ChunkIndex);
+
+		// Modify Voxel
+		//ModifyVoxel(LocalBlockPosition, Block.type);
+
+		// BP_CollapsibleBlock 스폰
+		FIntVector SpawnLocationInt = UBKVoxelFunctionLibrary::GetBlockWorldPostion(BlockWorldPosition, Block.normal, 64);
+		FVector SpawnLocationV = FVector(static_cast<float>(SpawnLocationInt.X), static_cast<float>(SpawnLocationInt.Y), static_cast<float>(SpawnLocationInt.Z));
+		FRotator SpawnRotation = FRotator::ZeroRotator; // 기본 회전값 사용
+
+		UClass* CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock.BP_CollapsibleBlock_C"));
+		if (CollapsibleBlockClass)
+		{
+			FActorSpawnParameters SpawnParams;
+			AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(CollapsibleBlockClass, SpawnLocationV, SpawnRotation);
+
+			if (SpawnedActor)
+			{
+				// CollapsibleBlockComponent 추가
+				UClass* CollapsibleBlockComponentClass = UCollapsibleBlockComponent::StaticClass();
+				UActorComponent* CollapsibleComponent = SpawnedActor->AddComponentByClass(CollapsibleBlockComponentClass, false, FTransform::Identity, false);
+
+				if (CollapsibleComponent)
+				{
+					UE_LOG(LogTemp, Log, TEXT("CollapsibleBlockComponent Added"));
+
+					UCollapsibleBlockComponent* CollapsibleBlockComponent = SpawnedActor->FindComponentByClass<UCollapsibleBlockComponent>();
+
+					if (CollapsibleBlockComponent)
+					{
+						CollapsibleBlockComponent->DestroyActorWithDelay(3.0f);
+
+						UClass* BombClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_Bomb.BP_Bomb_C"));
+						if (BombClass)
+						{
+							AActor* SpawnedBomb = GetWorld()->SpawnActor<AActor>(BombClass, Block.world_index, SpawnRotation);
+						}
+					}
+					else
+					{
+						UE_LOG(LogTemp, Warning, TEXT("UCollapsibleBlockComponent is NOT found"));
+					}
+				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("CollapsibleBlockComponent Failed"));
+				}
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("BP_CollapsibleBlock Class Can't Be Loaded!"));
+		}
 	}
 }
 
@@ -142,7 +248,7 @@ int8 ABKChunkBase::GetMyChunkIndex() const
 	if (ChunkWorld)
 	{
 		// ChunkWorld의 Chunks 배열을 순회하며 현재 청크의 인덱스를 찾음
-		for (int32 Index = 0; Index < ChunkWorld->Chunks.Num(); ++Index)
+		for (int8 Index = 0; Index < ChunkWorld->Chunks.Num(); ++Index)
 		{
 			if (ChunkWorld->Chunks[Index] == this)
 			{
