@@ -22,11 +22,13 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 
+#include "BKPlayerController.h"
 #include "../blockers/Public/InventoryComponent.h"
 #include "../blockers/Public/Item.h"
 #include "blockersGameMode.h"
 #include "Bullet.h"
 #include "HealthBarWidget.h"
+
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -121,6 +123,7 @@ void AblockersCharacter::BeginPlay()
 
 	//UHealthBarWidget* HealthBar = Cast<UHealthBarWidget>(HealthWidgetComp->GetUserWidgetObject());
 	//HealthBar->SetOwnerCharacter(this);
+
 }
 
 void AblockersCharacter::Tick(float DeltaTime) {
@@ -194,12 +197,14 @@ void AblockersCharacter::UseItem(UItem* Item)
 
 void AblockersCharacter::AddToInventory(APickUpItem* actor)
 {
+	UE_LOG(LogTemp, Warning, TEXT("init size: %d"), _inventory.Num());
 	_inventory.Add(actor);
+	UE_LOG(LogTemp, Warning, TEXT("Inventory size: %d"), _inventory.Num());
 }
 
-void AblockersCharacter::PrintInventory()
+void AblockersCharacter::UpdateInventory()
 {
-	FString sInventory = "";
+	/*FString sInventory = "";
 
 	for (APickUpItem* actor : _inventory)
 	{
@@ -207,6 +212,9 @@ void AblockersCharacter::PrintInventory()
 		sInventory.Append(" | ");
 	}
 
-	GEngine->AddOnScreenDebugMessage(1, 3, FColor::White, *sInventory);
+	GEngine->AddOnScreenDebugMessage(1, 3, FColor::White, *sInventory);*/
+
+	OnUpdateInventory.Broadcast(_inventory);
 }
+
 
