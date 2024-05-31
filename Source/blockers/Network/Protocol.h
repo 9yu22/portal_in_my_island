@@ -15,6 +15,8 @@ constexpr char SC_MOVE_PLAYER = 5;
 constexpr char SC_ADD_BLOCK = 6;
 constexpr char CS_ADD_BLOCK = 7;
 constexpr char ANIM = 8;
+constexpr char SC_REMOVE_BLOCK = 9;
+constexpr char CS_REMOVE_BLOCK = 10;
 
 enum class Anim : int8 { IDLE, MOVE, JUMP };
 
@@ -74,6 +76,26 @@ struct CS_ADD_BLOCK_PACKET {
     int8 type;
     int8 chunk_index;
     int32 ix, iy, iz;
+    int8 blocktype;
+};
+
+struct SC_REMOVE_BLOCK_PACKET {
+    uint8 size;
+    int8 type;
+    int8 chunk_index;
+    int32 ix, iy, iz;
+    float wx, wy, wz; // 히트된 부분의 월드 좌표 벡터
+    float nx, ny, nz; // 히트된 부분의 노멀 벡터
+    int8 blocktype;
+};
+
+struct CS_REMOVE_BLOCK_PACKET {
+    uint8 size;
+    int8 type;
+    int8 chunk_index;
+    int32 ix, iy, iz;
+    float wx, wy, wz; // 히트된 부분의 월드 좌표 벡터
+    float nx, ny, nz; // 히트된 부분의 노멀 벡터
     int8 blocktype;
 };
 
