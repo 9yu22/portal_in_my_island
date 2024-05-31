@@ -22,6 +22,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 
+#include "BKPlayerController.h"
 #include "../blockers/Public/InventoryComponent.h"
 #include "../blockers/Public/Item.h"
 #include "blockersGameMode.h"
@@ -122,6 +123,7 @@ void AblockersCharacter::BeginPlay()
 
 	//UHealthBarWidget* HealthBar = Cast<UHealthBarWidget>(HealthWidgetComp->GetUserWidgetObject());
 	//HealthBar->SetOwnerCharacter(this);
+
 }
 
 void AblockersCharacter::Tick(float DeltaTime) {
