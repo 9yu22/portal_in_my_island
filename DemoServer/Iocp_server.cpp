@@ -91,6 +91,7 @@ public:
 
 	void send_move_packet(int c_id);
 	void send_add_block_packet(char* packet);
+	void send_remove_block_packet(char* packet);
 	void send_anim_packet(char* packet);
 };
 
@@ -117,6 +118,15 @@ void SESSION::send_add_block_packet(char* packet)
 	SC_ADD_BLOCK_PACKET* p = reinterpret_cast<SC_ADD_BLOCK_PACKET*>(packet);
 	p->size = sizeof(SC_ADD_BLOCK_PACKET);
 	p->type = SC_ADD_BLOCK;
+	// 일단 받은 블록패킷 브로드캐스트
+	do_send(p);
+}
+
+void SESSION::send_remove_block_packet(char* packet)
+{
+	SC_REMOVE_BLOCK_PACKET* p = reinterpret_cast<SC_REMOVE_BLOCK_PACKET*>(packet);
+	p->size = sizeof(SC_REMOVE_BLOCK_PACKET);
+	p->type = SC_REMOVE_BLOCK;
 	// 일단 받은 블록패킷 브로드캐스트
 	do_send(p);
 }
@@ -197,6 +207,14 @@ void process_packet(int c_id, char* packet)
 		for (auto& pl : clients)
 			if (true == pl.in_use && pl._id != c_id)
 				pl.send_add_block_packet(packet);
+		break;
+	}
+	case CS_REMOVE_BLOCK: {
+		// 블록은 클라,서버가 아직은 같은 패킷(처리 없이 그냥 브로드캐스트)
+		CS_REMOVE_BLOCK_PACKET* p = reinterpret_cast<CS_REMOVE_BLOCK_PACKET*>(packet);
+		for (auto& pl : clients)
+			if (true == pl.in_use && pl._id != c_id)
+				pl.send_remove_block_packet(packet);
 		break;
 	}
 	case ANIM: {
