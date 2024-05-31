@@ -6,6 +6,7 @@
 #include "Voxel/ChunkMeshData.h"
 #include "Voxel/BKEnum.h"
 #include "GameFramework/Actor.h"
+#include "../Network/ProcessQueue.h"
 #include "BKChunkBase.generated.h"
 
 class FastNoiseLite;
@@ -31,6 +32,9 @@ class BLOCKERS_API ABKChunkBase : public AActor
 	UFUNCTION(BlueprintCallable, Category = "Chunk")
 	void ModifyVoxel(const FIntVector Position, const BKEBlock Block);
 
+	UFUNCTION(BlueprintCallable, Category = "Chunk")
+	void SendModifiedVoxel(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const BKEBlock Block);
+
 	// Reference to the owning ChunkWorld
 	UPROPERTY()
 	ABKChunkWorld* OwningChunkWorld;
@@ -38,8 +42,8 @@ class BLOCKERS_API ABKChunkBase : public AActor
 	// Function to set the owning ChunkWorld
 	void SetOwningChunkWorld(ABKChunkWorld* NewOwner);
 
-	void ProcessBlockQueue(const FIntVector Position, const BKEBlock Block);
-	void SetinstanceTag(FName NewTag);
+	void ProcessBlock(const BlockInfo& Block);
+	void CreateBlockDestroyEffect(const BlockInfo& Block);
 	int8 GetMyChunkIndex() const;
 
 protected:

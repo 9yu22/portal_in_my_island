@@ -28,8 +28,11 @@
 struct BlockInfo {
     int8 chunk_index;
     FIntVector index;
+    FVector world_index; // 블록 제거에만 사용
+    FVector normal; // 블록 제거에만 사용
     BKEBlock type;
 };
+// 블록 큐를 추가와 제거로 분리하는것은 비효율적이라 생각해서 하나에 넣어놓고 타입을 판별해서 결정
 
 struct AnimInfo {
     int8 id;

@@ -4,6 +4,7 @@
 #include "BKChunkWorld.h"
 
 #include "BKChunkBase.h"
+
 #include "../Network/SGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -42,7 +43,7 @@ void ABKChunkWorld::Tick(float DeltaTime)
 		BlockInfo block;
 		block = instance->BlockQueue.DeQ();
 		ABKChunkBase* chunk = Cast<ABKChunkBase>(Chunks[block.chunk_index]);
-		chunk->ProcessBlockQueue(block.index, block.type);
+		chunk->ProcessBlock(block);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Recv Add Block / Chunk_index: %d, x: %d, y: %d z: %d"), block.chunk_index, block.index.X, block.index.Y, block.index.Z));
 	}
 }
@@ -133,26 +134,26 @@ ABKChunkWorld* ABKChunkWorld::FindOwningChunkWorld(ABKChunkBase* Chunk)
 	return Chunk ? Chunk->OwningChunkWorld : nullptr;
 }
 
-int32 ABKChunkWorld::GetChunkIndex(AActor* Chunk, FIntVector Position, BKEBlock Block)
-{
-	// 배열을 순회하면서 Chunk를 찾는다
-	for (int32 Index = 0; Index < Chunks.Num(); ++Index)
-	{
-		if (Chunks[Index] == Chunk)
-		{
-			// Chunk를 참조하기 위한 Index,
-			// Modify Voxle에 필요한 인자 Position과 Block을 이용해서 서버 구현하면 될 듯!!
-			//
-
-
-
-
-
-			return Index; // Chunk를 찾으면 해당 인덱스를 반환
-		}
-	}
-	return INDEX_NONE; // Chunk가 배열에 없으면 INDEX_NONE 반환
-}
+//int32 ABKChunkWorld::GetChunkIndex(AActor* Chunk, FIntVector Position, BKEBlock Block)
+//{
+//	// 배열을 순회하면서 Chunk를 찾는다
+//	for (int32 Index = 0; Index < Chunks.Num(); ++Index)
+//	{
+//		if (Chunks[Index] == Chunk)
+//		{
+//			// Chunk를 참조하기 위한 Index,
+//			// Modify Voxle에 필요한 인자 Position과 Block을 이용해서 서버 구현하면 될 듯!!
+//			//
+//
+//
+//
+//
+//
+//			return Index; // Chunk를 찾으면 해당 인덱스를 반환
+//		}
+//	}
+//	return INDEX_NONE; // Chunk가 배열에 없으면 INDEX_NONE 반환
+//}
 
 AActor* ABKChunkWorld::GetAdjacentActor(const AActor* ChunkActor, const FVector Normal)
 {
