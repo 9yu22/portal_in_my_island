@@ -25,7 +25,9 @@ void APortal::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	GetSphereComponent()->OnComponentBeginOverlap.AddDynamic(this, &APortal::OnBeginOverLap);
+
+    GetSphereComponent()->OnComponentBeginOverlap.AddDynamic(this, &APortal::OnBeginOverLap);
+
 	if (PortalHpWidgetClass != nullptr)
 	{
 		PortalHpWidget = CreateWidget(GetWorld(), PortalHpWidgetClass);
@@ -38,7 +40,7 @@ void APortal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-    if (Portalhealth < 1)
+    if (Portalhealth == 0)
     {
         UGameplayStatics::OpenLevel(this, FName("End"));
     }
@@ -53,6 +55,7 @@ void APortal::OnBeginOverLap(UPrimitiveComponent* HitComp, AActor* OtherActor, U
         UE_LOG(LogTemp, Warning, TEXT("OtherActor is valid"));
         if (OtherActor->ActorHasTag("Test"))
         {
+
             UE_LOG(LogTemp, Warning, TEXT("OtherActor has 'Test' tag"));
             Portalhealth -= 10.f;
             
