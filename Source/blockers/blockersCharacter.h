@@ -115,5 +115,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Pickup")
 	FUpdateInventoryDelegate OnUpdateInventory;
 
+	/*ground speed*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Movement")
+	float groundSpeed;
 };
 

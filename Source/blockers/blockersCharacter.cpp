@@ -135,6 +135,9 @@ void AblockersCharacter::Tick(float DeltaTime) {
 		//health = 0;
 		CallRestartPlayer();
 	}*/
+
+	// update ground speed
+	groundSpeed = GetCharacterMovement()->Velocity.Size2D();
 }
 
 void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
