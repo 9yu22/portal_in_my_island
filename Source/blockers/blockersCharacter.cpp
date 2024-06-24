@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "blockersCharacter.h"
-
+#include "../Network/SGameInstance.h"
 
 #include "Kismet/GameplayStatics.h"
 #include "Engine/LocalPlayer.h"
@@ -119,6 +119,9 @@ void AblockersCharacter::BeginPlay()
 			Players.Add(Character);
 		}
 	}
+
+	PacketLocation = GetActorLocation();
+	PacketRotation = GetActorRotation();
 	//UE_LOG(LogTemp, Warning, TEXT("Number of characters in PlayerSet: %d"), PlayerSet.Num());
 
 	//UHealthBarWidget* HealthBar = Cast<UHealthBarWidget>(HealthWidgetComp->GetUserWidgetObject());
@@ -130,6 +133,11 @@ void AblockersCharacter::Tick(float DeltaTime) {
 
 	Super::Tick(DeltaTime);
 
+	SendMovePacketTime += DeltaTime;
+	if (IsSelf == true && SendMovePacketTime >= 0.1f) {
+		SendMovePacket();
+	}
+
 	health = FMath::Clamp<float>(health - DeltaTime, 0, MaxHealth); //시간에 따라 줄어들도록 설정.
 	/*if (health < 1.f) {
 		//health = 0;
@@ -138,6 +146,10 @@ void AblockersCharacter::Tick(float DeltaTime) {
 
 	// update ground speed
 	groundSpeed = GetCharacterMovement()->Velocity.Size2D();
+	
+	if (IsSelf == false)
+		InterpolateCharacter(PacketLocation, PacketRotation, DeltaTime);
+
 }
 
 void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -147,6 +159,46 @@ void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 	//Sets up an input key action to call Restart Player.
 	PlayerInputComponent->BindAction("Restart", IE_Pressed, this, &AblockersCharacter::CallRestartPlayer);
+}
+
+void AblockersCharacter::InterpolateCharacter(FVector NewLocation, FRotator NewRotation, float DeltaTime)
+{
+	FVector CurrentLocation = GetActorLocation();
+	FRotator CurrentRotation = GetActorRotation();
+
+	// 이동 속도 가져오기
+	float InterpolationSpeed = GetCharacterMovement()->MaxWalkSpeed;
+
+	// 다음 위치 계산
+	FVector InterpolatedLocation = FMath::VInterpConstantTo(CurrentLocation, PacketLocation, DeltaTime, InterpolationSpeed);
+	FRotator InterpolatedRotation = FMath::RInterpConstantTo(CurrentRotation, PacketRotation, DeltaTime, InterpolationSpeed);
+
+	SetActorLocation(InterpolatedLocation);
+	SetActorRotation(InterpolatedRotation);
+}
+
+void AblockersCharacter::SendMovePacket()
+{
+	USGameInstance* instance = USGameInstance::GetMyInstance(this);
+	if (instance) {
+		CS_MOVE_PACKET new_pos;            
+		FVector CurrentLocation = GetActorLocation();
+		FRotator CurrentRotation = GetActorRotation();
+
+		new_pos.type = CS_MOVE;
+		new_pos.size = sizeof(CS_MOVE_PACKET);
+		new_pos.x = CurrentLocation.X;
+		new_pos.y = CurrentLocation.Y;
+		new_pos.z = CurrentLocation.Z;
+		new_pos.pitch = CurrentRotation.Pitch;
+		new_pos.yaw = CurrentRotation.Yaw;
+		new_pos.roll = CurrentRotation.Roll;
+
+		int BytesSent = 0;
+		instance->Socket->Send((uint8*)&new_pos, sizeof(new_pos), BytesSent);
+	}
+	else
+		UE_LOG(LogTemp, Log, TEXT("Fail GetInstance"));
 }
 
 //마우스 왼쪽 버튼 입력 처리 함수

@@ -73,6 +73,14 @@ public:
 	TArray<AblockersCharacter*> Players;
 	bool loginOk = false;
 
+	// 캐릭터 위치를 보정해주는 로직을 포함한 함수
+	FVector PacketLocation;
+	FRotator PacketRotation;
+	float SendMovePacketTime = 0.f;
+	bool IsSelf = false;
+	void InterpolateCharacter(FVector NewLocation, FRotator NewRotation, float DeltaTime);
+	void SendMovePacket();
+
 	//bullet
 private:
 	void Fire();

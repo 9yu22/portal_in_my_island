@@ -70,6 +70,8 @@ void FRecvWorker::ProcessPacket(uint8* packet)
                             p->id = info.id;
                             Character->id = info.id;
                             p->SetActorLocation(NewLocation);
+                            p->IsSelf = true;
+                            
                             //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Set Login Info id: %d, x: %f, y: %f, z: %f"), info.id, info.x, info.y, info.z));
                             break;
                         }
@@ -99,8 +101,9 @@ void FRecvWorker::ProcessPacket(uint8* packet)
                 {
                     for (auto& p : Character->Players) {
                         if (p->id == new_pos.id && Character->id != new_pos.id) {
-                            p->SetActorLocation(NewLocation);
-                            p->SetActorRotation(NewRotation);
+                            //p->SetActorLocation(NewLocation);
+                            p->PacketLocation = NewLocation;
+                            p->PacketRotation = NewRotation;
                             break;
                         }
                     }
@@ -126,6 +129,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
                         if (p->id < 0) {
                             p->id = new_player.id;
                             p->SetActorLocation(NewLocation);
+                            p->PacketLocation = NewLocation;
                             UCharacterMovementComponent* MovementComponent = p->GetCharacterMovement();
                             MovementComponent->GravityScale = 0.0f;  // 중력을 0으로 설정
 
@@ -257,44 +261,44 @@ uint32 FSendWorker::Run()
        
     double LastSendTime = FPlatformTime::Seconds();
 
-    while (sendRunning)
-    {
-        if (IsValid(Character))
-        {
-            CurrentLocation = Character->GetActorLocation();
-            CurrentRotation = Character->GetActorRotation();
+    //while (sendRunning)
+    //{
+    //    if (IsValid(Character))
+    //    {
+    //        CurrentLocation = Character->GetActorLocation();
+    //        CurrentRotation = Character->GetActorRotation();
 
-            double CurrentTime = FPlatformTime::Seconds();
+    //        double CurrentTime = FPlatformTime::Seconds();
 
-            if (CurrentTime - LastSendTime >= 0.03)
-            {
-                CS_MOVE_PACKET new_pos;
-                // 위치 및 회전 정보 패킷 구성
-                new_pos.type = CS_MOVE;
-                new_pos.size = sizeof(CS_MOVE_PACKET);
-                new_pos.x = CurrentLocation.X;
-                new_pos.y = CurrentLocation.Y;
-                new_pos.z = CurrentLocation.Z;
-                new_pos.pitch = CurrentRotation.Pitch;
-                new_pos.yaw = CurrentRotation.Yaw;
-                new_pos.roll = CurrentRotation.Roll;
+    //        if (CurrentTime - LastSendTime >= 0.1)
+    //        {
+    //            CS_MOVE_PACKET new_pos;
+    //            // 위치 및 회전 정보 패킷 구성
+    //            new_pos.type = CS_MOVE;
+    //            new_pos.size = sizeof(CS_MOVE_PACKET);
+    //            new_pos.x = CurrentLocation.X;
+    //            new_pos.y = CurrentLocation.Y;
+    //            new_pos.z = CurrentLocation.Z;
+    //            new_pos.pitch = CurrentRotation.Pitch;
+    //            new_pos.yaw = CurrentRotation.Yaw;
+    //            new_pos.roll = CurrentRotation.Roll;
 
-                BytesSent = 0;
-                c_Socket->Send((uint8*)&new_pos, sizeof(new_pos), BytesSent);
+    //            BytesSent = 0;
+    //            c_Socket->Send((uint8*)&new_pos, sizeof(new_pos), BytesSent);
 
-                LastSendTime = CurrentTime;
+    //            LastSendTime = CurrentTime;
 
-                // 디버그 메시지 출력
-                //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Send My Move Packet, x: %f, y: %f, z: %f"), new_pos.x, new_pos.y, new_pos.z));
-            }
-        }
-        else
-        {
-            sendRunning = false;
-        }
+    //            // 디버그 메시지 출력
+    //            //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Send My Move Packet, x: %f, y: %f, z: %f"), new_pos.x, new_pos.y, new_pos.z));
+    //        }
+    //    }
+    //    else
+    //    {
+    //        sendRunning = false;
+    //    }
 
-        //FPlatformProcess::Sleep(0.01);
-    }
+    //    //FPlatformProcess::Sleep(0.01);
+    //}
 
     return 0;
 }
