@@ -76,4 +76,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FHitResult HitResult;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	bool bShift = true;
+
+	FVector prevLocation;
 };

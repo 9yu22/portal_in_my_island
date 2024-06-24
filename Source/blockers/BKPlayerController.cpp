@@ -72,23 +72,31 @@ void ABKPlayerController::InputMove(const FInputActionValue& value)
 
 		controlledPawn->AddMovementInput(ForwardVector, inputAxis.Y);
 		controlledPawn->AddMovementInput(RightVector, inputAxis.X);
-	}
-	//if (inputAxis.X == 0.0f && inputAxis.Y == 0.0f)
-	//{
-	//	/*	if (Anim_type == static_cast<int8>(Anim::MOVE)) // 움직일 때만 불리므로 벡터가 0이 될 수가 없다.
-	//		{
-	//			SendAnimation(static_cast<int8>(Anim::IDLE));
-	//		}*/
-	//}
-	//else // 움직이지 않다가 움직이면 패킷 전송
-	//{
-	//	if (Anim_type == static_cast<int8>(Anim::IDLE))
-	//	{
-	//		//SendAnimation(static_cast<int8>(Anim::MOVE));
 
-	//	}
-	//}
-	////UE_LOG(LogTemp, Log, TEXT("Executed Input Move"));
+		bool isFalling = GetCharacter()->GetCharacterMovement()->IsFalling();
+
+		if (bShift && !isFalling)
+		{
+			if (prevLocation.Z == -100)
+			{
+				prevLocation = GetCharacter()->GetActorLocation();
+			}
+
+			if (GetCharacter()->GetActorLocation().Z < prevLocation.Z)
+			{
+				GetCharacter()->SetActorLocation(prevLocation);
+			}
+			else
+			{
+				
+			}
+			prevLocation = GetCharacter()->GetActorLocation();
+		}
+		else if (bShift && isFalling)
+		{
+			prevLocation = {-100, -100, -100};
+		}
+	}
 }
 
 
