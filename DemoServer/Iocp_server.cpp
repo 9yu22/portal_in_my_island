@@ -293,7 +293,7 @@ int main()
 			int client_id = get_new_client_id();
 			if (client_id != -1) {
 				clients[client_id].in_use = true;
-				clients[client_id].x = 900.f + 100 * client_id;
+				clients[client_id].x = 900.f - 300 * client_id;
 				clients[client_id].y = 1600.f;
 				clients[client_id].z = 1000.f;
 				clients[client_id]._id = client_id;
