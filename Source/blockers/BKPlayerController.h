@@ -78,7 +78,7 @@ public:
 	FHitResult HitResult;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
-	bool bShift = true;
+	bool bShift = false;
 
 	FVector prevLocation;
 };

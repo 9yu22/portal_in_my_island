@@ -67,8 +67,14 @@ void ABKPlayerController::InputMove(const FInputActionValue& value)
 
 	if (APawn* controlledPawn = GetPawn())
 	{
-		FVector ForwardVector = UKismetMathLibrary::GetForwardVector(GetControlRotation());
-		FVector RightVector = UKismetMathLibrary::GetRightVector(GetControlRotation());
+		// 컨트롤러의 회전값을 가져옵니다
+		FRotator Rotation = GetControlRotation();
+
+		// pitch를 0으로 설정하여 수정합니다
+		FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		FVector ForwardVector = UKismetMathLibrary::GetForwardVector(YawRotation);
+		FVector RightVector = UKismetMathLibrary::GetRightVector(YawRotation);
 
 		controlledPawn->AddMovementInput(ForwardVector, inputAxis.Y);
 		controlledPawn->AddMovementInput(RightVector, inputAxis.X);
@@ -95,6 +101,10 @@ void ABKPlayerController::InputMove(const FInputActionValue& value)
 		else if (bShift && isFalling)
 		{
 			prevLocation = {-100, -100, -100};
+		}
+		else
+		{
+			prevLocation = GetCharacter()->GetActorLocation();
 		}
 	}
 }
