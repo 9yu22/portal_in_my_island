@@ -256,9 +256,22 @@ void AblockersCharacter::UseItem(UItem* Item)
 
 void AblockersCharacter::AddToInventory(APickUpItem* actor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("init size: %d"), _inventory.Num());
-	_inventory.Add(actor);
-	UE_LOG(LogTemp, Warning, TEXT("Inventory size: %d"), _inventory.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("init size: %d"), _inventory.Num());
+	int8 foundIndex = -2;
+	for (int8 i = 0; i < _inventory.Num(); i++) {
+		if (_inventory[i]->Name == actor->Name) {
+			foundIndex = i;
+			break;
+		}
+	}
+
+	if (foundIndex != -2) {
+		_inventory[foundIndex]->amount += actor->amount;
+	}
+	else {
+		_inventory.Add(actor);
+	}
+	//UE_LOG(LogTemp, Warning, TEXT("Inventory size: %d"), _inventory.Num());
 }
 
 void AblockersCharacter::UpdateInventory()

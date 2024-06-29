@@ -58,6 +58,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pickup)
 	UTexture2D* Image;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pickup)
+	int32 amount;
+
 	virtual void OnInteract();
 
 protected:
