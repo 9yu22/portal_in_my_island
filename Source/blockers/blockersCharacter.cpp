@@ -144,12 +144,16 @@ void AblockersCharacter::Tick(float DeltaTime) {
 		CallRestartPlayer();
 	}*/
 
-	// update ground speed
-	groundSpeed = GetCharacterMovement()->Velocity.Size2D();
+	// 현재 위치와 이전 위치를 사용하여 속도를 계산
+	FVector CurrentLocation = GetActorLocation();
+	FVector Velocity = (CurrentLocation - PrevLocation) / DeltaTime;
+	CurrSpeed = Velocity.Size();
+
+	// 이전 위치를 업데이트
+	PrevLocation = CurrentLocation;
 	
 	if (IsSelf == false)
 		InterpolateCharacter(PacketLocation, PacketRotation, DeltaTime);
-
 }
 
 void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

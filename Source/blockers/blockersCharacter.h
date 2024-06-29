@@ -123,8 +123,15 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Pickup")
 	FUpdateInventoryDelegate OnUpdateInventory;
 
-	/*ground speed*/
+	/*character info*/
+public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Movement")
-	float groundSpeed;
+	FVector PrevLocation;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Movement")
+	FVector CurrLocation;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Movement")
+	float CurrSpeed;
 };
 
