@@ -98,6 +98,7 @@ AblockersCharacter::AblockersCharacter()
 
 	health = MaxHealth;
 
+
 	Inventory = CreateDefaultSubobject<UInventoryComponent>("Inventory");
 	Inventory->Capacity = 20; //you can input 20 items
 
@@ -138,11 +139,10 @@ void AblockersCharacter::Tick(float DeltaTime) {
 		SendMovePacket();
 	}
 
-	health = FMath::Clamp<float>(health - DeltaTime, 0, MaxHealth); //시간에 따라 줄어들도록 설정.
-	/*if (health < 1.f) {
-		//health = 0;
-		CallRestartPlayer();
-	}*/
+	health = FMath::Clamp<float>(health - DeltaTime*0.5, 0, MaxHealth); //시간에 따라 줄어들도록 설정.
+	if (health < 1.f) {
+		health = MaxHealth;
+	}
 
 	// 현재 위치와 이전 위치를 사용하여 속도를 계산
 	FVector CurrentLocation = GetActorLocation();
@@ -160,9 +160,6 @@ void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Hello"));
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AblockersCharacter::Fire);
-
-	//Sets up an input key action to call Restart Player.
-	PlayerInputComponent->BindAction("Restart", IE_Pressed, this, &AblockersCharacter::CallRestartPlayer);
 }
 
 void AblockersCharacter::InterpolateCharacter(FVector NewLocation, FRotator NewRotation, float DeltaTime)
@@ -212,38 +209,6 @@ void AblockersCharacter::Fire()
 	BulletLocation.X += 100.f;
 	ABullet* bullet = GetWorld()->SpawnActor<ABullet>(bulletFactory, BulletLocation, firePosition->GetComponentRotation());
 	bulletNum -= 1;
-}
-
-void AblockersCharacter::Destroyed()
-{
-	Super::Destroyed();
-
-	// Example to bind to OnPlayerDied event in GameMode.
-	if (UWorld* World = GetWorld())
-	{
-		if (AblockersGameMode* GameMode = Cast<AblockersGameMode>(World->GetAuthGameMode()))
-		{
-			GameMode->GetOnPlayerDied().Broadcast(this);
-		}
-	}
-}
-
-void AblockersCharacter::CallRestartPlayer()
-{
-	//Get a reference to the Pawn Controller.
-	AController* CortollerRef = GetController();
-
-	//Destroy the Player.
-	Destroy();
-
-	//Get the World and GameMode in the world to invoke its restart player function.
-	if (UWorld* World = GetWorld())
-	{
-		if (AblockersGameMode* GameMode = Cast<AblockersGameMode>(World->GetAuthGameMode()))
-		{
-			GameMode->RestartPlayer(CortollerRef);
-		}
-	}
 }
 
 void AblockersCharacter::UseItem(UItem* Item)

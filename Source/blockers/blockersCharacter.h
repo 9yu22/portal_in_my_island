@@ -85,11 +85,6 @@ public:
 private:
 	void Fire();
 
-	//Respawn
-protected:
-	virtual void Destroyed();
-	void CallRestartPlayer();
-
 	//HP & HealthBar
 public:
 

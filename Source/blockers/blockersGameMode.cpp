@@ -63,15 +63,7 @@ void AblockersGameMode::BeginPlay()
 }
 
 
-
-void AblockersGameMode::RestartPlayer(AController* NewPlayer)
-{
-	Super::RestartPlayer(NewPlayer);
-
-}
-
 void AblockersGameMode::PlayerDied(ACharacter* Character)
 {
 	AController* CharacterController = Character -> GetController();
-	RestartPlayer(CharacterController);
 }
