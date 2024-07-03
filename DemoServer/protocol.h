@@ -18,6 +18,11 @@ constexpr char ANIM = 8;
 constexpr char SC_REMOVE_BLOCK = 9;
 constexpr char CS_REMOVE_BLOCK = 10;
 
+constexpr char SC_ADD_ITEM = 11;
+
+constexpr char SC_REMOVE_ITEM = 12;
+constexpr char CS_REMOVE_ITEM = 13;
+
 enum class Anim : char { IDLE, MOVE, JUMP };
 
 #pragma pack (push, 1)
@@ -104,5 +109,12 @@ struct ANIM_PACKET {
     char type;
     char id;
     char anim_type;
+};
+
+struct SC_ADD_ITEM_PACKET {
+    u_char size;
+    char type;
+    char item_type;
+    float x, y, z;
 };
 #pragma pack (pop)

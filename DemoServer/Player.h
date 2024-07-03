@@ -1,14 +1,15 @@
 #pragma once
-class player
+#include <array>
+#include "GameObject.h"
+#include "Item.h"
+class Player : public GameObject
 {
 public:
-	//short id;
-	float x, y, z;
+	int id;
+	std::array<Item, 1> player_items;
 
-	player();
-	~player();
-
-	void UpdateLocation(float x, float y, float z);
-
+public:
+	Player();
+	~Player();
 };
 
