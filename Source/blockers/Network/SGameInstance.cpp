@@ -13,6 +13,7 @@
 
 USGameInstance::USGameInstance()
 {
+	Socket = nullptr;
 }
 
 void USGameInstance::ConnectToGameServer()
@@ -65,6 +66,7 @@ void USGameInstance::ConnectToGameServer()
 	}
 	else {
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Connection Failed")));
+		Socket = nullptr;
 	}
 }
 

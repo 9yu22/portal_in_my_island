@@ -133,27 +133,32 @@ void AblockersCharacter::Tick(float DeltaTime) {
 
 	Super::Tick(DeltaTime);
 
-	SendMovePacketTime += DeltaTime;
-	if (IsSelf == true && SendMovePacketTime >= 0.1f) {
-		SendMovePacket();
-	}
-
 	health = FMath::Clamp<float>(health - DeltaTime, 0, MaxHealth); //시간에 따라 줄어들도록 설정.
 	/*if (health < 1.f) {
 		//health = 0;
 		CallRestartPlayer();
 	}*/
 
-	// 현재 위치와 이전 위치를 사용하여 속도를 계산
-	FVector CurrentLocation = GetActorLocation();
-	FVector Velocity = (CurrentLocation - PrevLocation) / DeltaTime;
-	CurrSpeed = Velocity.Size();
+	USGameInstance* instance = USGameInstance::GetMyInstance(this);
 
-	// 이전 위치를 업데이트
-	PrevLocation = CurrentLocation;
-	
-	if (IsSelf == false)
-		InterpolateCharacter(PacketLocation, PacketRotation, DeltaTime);
+	if (instance->Socket != nullptr) {
+		SendMovePacketTime += DeltaTime;
+		if (IsSelf == true && SendMovePacketTime >= 0.1f) {
+			SendMovePacket();
+		}
+
+		if (IsSelf == false) {
+			// 현재 위치와 이전 위치를 사용하여 속도를 계산
+			FVector CurrentLocation = GetActorLocation();
+			FVector Velocity = (CurrentLocation - PrevLocation) / DeltaTime;
+			CurrSpeed = Velocity.Size();
+
+			// 이전 위치를 업데이트
+			PrevLocation = CurrentLocation;
+
+			InterpolateCharacter(PacketLocation, PacketRotation, DeltaTime);
+		}
+	}	
 }
 
 void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
