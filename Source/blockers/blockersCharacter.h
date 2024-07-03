@@ -113,6 +113,9 @@ public:
 	void AddToInventory(APickUpItem* actor);
 
 	UFUNCTION(BlueprintCallable)
+	void RemoveItemCPP(FString itemName);
+
+	UFUNCTION(BlueprintCallable)
 	void UpdateInventory();
 
 	UPROPERTY(BlueprintAssignable, Category = "Pickup")

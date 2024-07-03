@@ -239,6 +239,20 @@ void AblockersCharacter::AddToInventory(APickUpItem* actor)
 	//UE_LOG(LogTemp, Warning, TEXT("Inventory size: %d"), _inventory.Num());
 }
 
+void AblockersCharacter::RemoveItemCPP(FString itemName)
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *itemName);
+	int8 foundIndex = -2;
+	for (int8 i = 0; i < _inventory.Num(); i++) {
+		if (_inventory[i]->Name == *itemName) {
+			_inventory[i]->amount -= 1;
+			UE_LOG(LogTemp, Warning, TEXT("remove Item"));
+			break;
+		}
+	}
+	
+}
+
 void AblockersCharacter::UpdateInventory()
 {
 	/*FString sInventory = "";
