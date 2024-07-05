@@ -45,7 +45,7 @@ void AItemSpawner::SpawnItem()
 		FRotator SpawnRotation = GetActorRotation();
 
 		// Spawn the actor
-		AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(ItemToSpawn, SpawnLocation, SpawnRotation);
+		APickUpItem* SpawnedActor = GetWorld()->SpawnActor<APickUpItem>(ItemToSpawn, SpawnLocation, SpawnRotation);
 
 		//UE_LOG(LogTemp, Warning, TEXT("SpawnLocation: %s, SpawnRotation: %s"), *SpawnLocation.ToString(), *SpawnRotation.ToString());
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "PickUpItem.h"
 #include "ItemSpawner.generated.h"
 
 UCLASS()
@@ -26,7 +27,7 @@ public:
 	void SpawnItem();
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
-	TSubclassOf<AActor> ItemToSpawn;
+	TSubclassOf<APickUpItem> ItemToSpawn;
 
 private:
 	float CurrTime;

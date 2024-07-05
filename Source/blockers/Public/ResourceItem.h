@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "PickUpItem.h"
-#include "PickUpDia.generated.h"
+#include "ResourceItem.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BLOCKERS_API APickUpDia : public APickUpItem
+class BLOCKERS_API AResourceItem : public APickUpItem
 {
 	GENERATED_BODY()
 	

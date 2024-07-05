@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "PickUpItem.h"
-#include "PickUpRuby.generated.h"
+#include "PickaxItem.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BLOCKERS_API APickUpRuby : public APickUpItem
+class BLOCKERS_API APickaxItem : public APickUpItem
 {
 	GENERATED_BODY()
 	
