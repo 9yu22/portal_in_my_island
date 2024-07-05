@@ -85,11 +85,6 @@ public:
 private:
 	void Fire();
 
-	//Respawn
-protected:
-	virtual void Destroyed();
-	void CallRestartPlayer();
-
 	//HP & HealthBar
 public:
 
@@ -116,6 +111,9 @@ public:
 	TArray<APickUpItem*> _inventory;
 
 	void AddToInventory(APickUpItem* actor);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveItemCPP(FString itemName);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateInventory();

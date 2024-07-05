@@ -21,8 +21,6 @@ public:
 	AblockersGameMode();
 
 	const FOnPlayerDiedSignature& GetOnPlayerDied() const { return OnPlayerDied; }
-	virtual void RestartPlayer(AController* NewPlayer) override; //TRY TO RESPAWN
-
 
 protected:
 	virtual void BeginPlay()override;
