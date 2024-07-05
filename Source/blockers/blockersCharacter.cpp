@@ -148,17 +148,17 @@ void AblockersCharacter::Tick(float DeltaTime) {
 		}
 
 		if (IsSelf == false) {
-			// 현재 위치와 이전 위치를 사용하여 속도를 계산
-			FVector CurrentLocation = GetActorLocation();
-			FVector Velocity = (CurrentLocation - PrevLocation) / DeltaTime;
-			CurrSpeed = Velocity.Size();
-
-			// 이전 위치를 업데이트
-			PrevLocation = CurrentLocation;
-
 			InterpolateCharacter(PacketLocation, PacketRotation, DeltaTime);
 		}
 	}	
+
+	// 현재 위치와 이전 위치를 사용하여 속도를 계산
+	FVector CurrentLocation = GetActorLocation();
+	FVector Velocity = (CurrentLocation - PrevLocation) / DeltaTime;
+	CurrSpeed = Velocity.Size();
+
+	// 이전 위치를 업데이트
+	PrevLocation = CurrentLocation;
 }
 
 void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
