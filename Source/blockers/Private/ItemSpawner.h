@@ -7,6 +7,19 @@
 #include "PickUpItem.h"
 #include "ItemSpawner.generated.h"
 
+USTRUCT(BlueprintType)
+struct FSpawnableItem {
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	TSubclassOf<APickUpItem> ItemToSpawn;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	float SpawnSecond;
+
+	float CurrTime;
+};
+
 UCLASS()
 class AItemSpawner : public AActor
 {
@@ -20,18 +33,18 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+private:
+	
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SpawnItem();
+	void SpawnItem(const int32 index);
 
-	UPROPERTY(EditAnywhere, Category = "Spawning")
-	TSubclassOf<APickUpItem> ItemToSpawn;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TArray<FSpawnableItem> ItemArray;
 
 private:
-	float CurrTime;
-
-	UPROPERTY(EditAnywhere, Category = "Spawning")
-	float SpawnInterval;
+	
 };
