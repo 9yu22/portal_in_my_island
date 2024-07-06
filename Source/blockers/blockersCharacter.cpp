@@ -133,11 +133,15 @@ void AblockersCharacter::Tick(float DeltaTime) {
 
 	Super::Tick(DeltaTime);
 
-	health = FMath::Clamp<float>(health - DeltaTime, 0, MaxHealth); //시간에 따라 줄어들도록 설정.
-	/*if (health < 1.f) {
-		//health = 0;
-		CallRestartPlayer();
-	}*/
+	SendMovePacketTime += DeltaTime;
+	if (IsSelf == true && SendMovePacketTime >= 0.1f) {
+		SendMovePacket();
+	}
+
+	health = FMath::Clamp<float>(health - DeltaTime * 0.5, 0, MaxHealth); //시간에 따라 줄어들도록 설정.
+	if (health < 1.f) {
+		health = MaxHealth;
+	}
 
 	USGameInstance* instance = USGameInstance::GetMyInstance(this);
 
@@ -166,8 +170,6 @@ void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	//UE_LOG(LogTemp, Warning, TEXT("Hello"));
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AblockersCharacter::Fire);
 
-	//Sets up an input key action to call Restart Player.
-	PlayerInputComponent->BindAction("Restart", IE_Pressed, this, &AblockersCharacter::CallRestartPlayer);
 }
 
 void AblockersCharacter::InterpolateCharacter(FVector NewLocation, FRotator NewRotation, float DeltaTime)
@@ -219,38 +221,6 @@ void AblockersCharacter::Fire()
 	bulletNum -= 1;
 }
 
-void AblockersCharacter::Destroyed()
-{
-	Super::Destroyed();
-
-	// Example to bind to OnPlayerDied event in GameMode.
-	if (UWorld* World = GetWorld())
-	{
-		if (AblockersGameMode* GameMode = Cast<AblockersGameMode>(World->GetAuthGameMode()))
-		{
-			GameMode->GetOnPlayerDied().Broadcast(this);
-		}
-	}
-}
-
-void AblockersCharacter::CallRestartPlayer()
-{
-	//Get a reference to the Pawn Controller.
-	AController* CortollerRef = GetController();
-
-	//Destroy the Player.
-	Destroy();
-
-	//Get the World and GameMode in the world to invoke its restart player function.
-	if (UWorld* World = GetWorld())
-	{
-		if (AblockersGameMode* GameMode = Cast<AblockersGameMode>(World->GetAuthGameMode()))
-		{
-			GameMode->RestartPlayer(CortollerRef);
-		}
-	}
-}
-
 void AblockersCharacter::UseItem(UItem* Item)
 {
 	if (Item) {
@@ -277,6 +247,20 @@ void AblockersCharacter::AddToInventory(APickUpItem* actor)
 		_inventory.Add(actor);
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Inventory size: %d"), _inventory.Num());
+}
+
+void AblockersCharacter::RemoveItemCPP(FString itemName)
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *itemName);
+	int8 foundIndex = -2;
+	for (int8 i = 0; i < _inventory.Num(); i++) {
+		if (_inventory[i]->Name == *itemName) {
+			_inventory[i]->amount -= 1;
+			UE_LOG(LogTemp, Warning, TEXT("remove Item"));
+			break;
+		}
+	}
+
 }
 
 void AblockersCharacter::UpdateInventory()
