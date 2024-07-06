@@ -15,8 +15,7 @@ AItemSpawner::AItemSpawner()
 void AItemSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	SpawnItem();
+
 }
 
 // Called every frame
@@ -24,28 +23,29 @@ void AItemSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	CurrTime += DeltaTime;
-
-	//UE_LOG(LogTemp, Warning, TEXT("Tick..."));
-
-	if (CurrTime >= SpawnInterval)
+	for (int32 i = 0; i < ItemArray.Num(); ++i)
 	{
-		SpawnItem();
+		ItemArray[i].CurrTime += DeltaTime;
 
-		CurrTime -= SpawnInterval;
+		if (ItemArray[i].CurrTime >= ItemArray[i].SpawnSecond)
+		{
+			SpawnItem(i);
+
+			ItemArray[i].CurrTime -= ItemArray[i].SpawnSecond;
+		}
 	}
 }
 
-void AItemSpawner::SpawnItem()
+void AItemSpawner::SpawnItem(const int32 index)
 {
-	if (ItemToSpawn)
+	if (ItemArray[index].ItemToSpawn)
 	{
 		// Get the current location and rotation of the spawner
 		FVector SpawnLocation = GetActorLocation();
 		FRotator SpawnRotation = GetActorRotation();
 
 		// Spawn the actor
-		AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(ItemToSpawn, SpawnLocation, SpawnRotation);
+		APickUpItem* SpawnedActor = GetWorld()->SpawnActor<APickUpItem>(ItemArray[index].ItemToSpawn, SpawnLocation, SpawnRotation);
 
 		//UE_LOG(LogTemp, Warning, TEXT("SpawnLocation: %s, SpawnRotation: %s"), *SpawnLocation.ToString(), *SpawnRotation.ToString());
 

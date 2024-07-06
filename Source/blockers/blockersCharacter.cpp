@@ -90,14 +90,13 @@ AblockersCharacter::AblockersCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
-	//ï¿½Ñ±ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ú½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+	//ÃÑ±¸ Ç¥½Ã ÄÄÆ÷³ÍÆ®¸¦ »ý¼ºÇÏ°í ¹Ú½º ÄÄÆ÷³ÍÆ®ÀÇ ÀÚ½ÄÄÄÆ÷³ÍÆ®·Î ¼³Á¤ÇÑ´Ù.
 	firePosition = CreateDefaultSubobject<UArrowComponent>(TEXT("Fire Position"));
 
 	//HealthWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
 	//HealthWidgetComp->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 	health = MaxHealth;
-
 
 	Inventory = CreateDefaultSubobject<UInventoryComponent>("Inventory");
 	Inventory->Capacity = 20; //you can input 20 items
@@ -134,15 +133,11 @@ void AblockersCharacter::Tick(float DeltaTime) {
 
 	Super::Tick(DeltaTime);
 
-	SendMovePacketTime += DeltaTime;
-	if (IsSelf == true && SendMovePacketTime >= 0.1f) {
-		SendMovePacket();
-	}
-
-	health = FMath::Clamp<float>(health - DeltaTime*0.5, 0, MaxHealth); //ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¾ï¿½éµµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
-	if (health < 1.f) {
-		health = MaxHealth;
-	}
+	health = FMath::Clamp<float>(health - DeltaTime, 0, MaxHealth); //½Ã°£¿¡ µû¶ó ÁÙ¾îµéµµ·Ï ¼³Á¤.
+	/*if (health < 1.f) {
+		//health = 0;
+		CallRestartPlayer();
+	}*/
 
 	USGameInstance* instance = USGameInstance::GetMyInstance(this);
 
@@ -153,23 +148,26 @@ void AblockersCharacter::Tick(float DeltaTime) {
 		}
 
 		if (IsSelf == false) {
-			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½Óµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
-			FVector CurrentLocation = GetActorLocation();
-			FVector Velocity = (CurrentLocation - PrevLocation) / DeltaTime;
-			CurrSpeed = Velocity.Size();
-
-			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
-			PrevLocation = CurrentLocation;
-
 			InterpolateCharacter(PacketLocation, PacketRotation, DeltaTime);
 		}
 	}	
+
+	// ÇöÀç À§Ä¡¿Í ÀÌÀü À§Ä¡¸¦ »ç¿ëÇÏ¿© ¼Óµµ¸¦ °è»ê
+	FVector CurrentLocation = GetActorLocation();
+	FVector Velocity = (CurrentLocation - PrevLocation) / DeltaTime;
+	CurrSpeed = Velocity.Size();
+
+	// ÀÌÀü À§Ä¡¸¦ ¾÷µ¥ÀÌÆ®
+	PrevLocation = CurrentLocation;
 }
 
 void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Hello"));
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AblockersCharacter::Fire);
+
+	//Sets up an input key action to call Restart Player.
+	PlayerInputComponent->BindAction("Restart", IE_Pressed, this, &AblockersCharacter::CallRestartPlayer);
 }
 
 void AblockersCharacter::InterpolateCharacter(FVector NewLocation, FRotator NewRotation, float DeltaTime)
@@ -177,10 +175,10 @@ void AblockersCharacter::InterpolateCharacter(FVector NewLocation, FRotator NewR
 	FVector CurrentLocation = GetActorLocation();
 	FRotator CurrentRotation = GetActorRotation();
 
-	// ï¿½Ìµï¿½ ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// ÀÌµ¿ ¼Óµµ °¡Á®¿À±â
 	float InterpolationSpeed = GetCharacterMovement()->MaxWalkSpeed;
 
-	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½
+	// ´ÙÀ½ À§Ä¡ °è»ê
 	FVector InterpolatedLocation = FMath::VInterpConstantTo(CurrentLocation, PacketLocation, DeltaTime, InterpolationSpeed);
 	FRotator InterpolatedRotation = FMath::RInterpConstantTo(CurrentRotation, PacketRotation, DeltaTime, InterpolationSpeed);
 
@@ -212,13 +210,45 @@ void AblockersCharacter::SendMovePacket()
 		UE_LOG(LogTemp, Log, TEXT("Fail GetInstance"));
 }
 
-//ï¿½ï¿½ï¿½ì½º ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ° ï¿½Ô·ï¿½ Ã³ï¿½ï¿½ ï¿½Ô¼ï¿½
+//¸¶¿ì½º ¿ÞÂÊ ¹öÆ° ÀÔ·Â Ã³¸® ÇÔ¼ö
 void AblockersCharacter::Fire()
 {
 	FVector BulletLocation = GetMesh()->GetSocketLocation("gun");
 	BulletLocation.X += 100.f;
 	ABullet* bullet = GetWorld()->SpawnActor<ABullet>(bulletFactory, BulletLocation, firePosition->GetComponentRotation());
 	bulletNum -= 1;
+}
+
+void AblockersCharacter::Destroyed()
+{
+	Super::Destroyed();
+
+	// Example to bind to OnPlayerDied event in GameMode.
+	if (UWorld* World = GetWorld())
+	{
+		if (AblockersGameMode* GameMode = Cast<AblockersGameMode>(World->GetAuthGameMode()))
+		{
+			GameMode->GetOnPlayerDied().Broadcast(this);
+		}
+	}
+}
+
+void AblockersCharacter::CallRestartPlayer()
+{
+	//Get a reference to the Pawn Controller.
+	AController* CortollerRef = GetController();
+
+	//Destroy the Player.
+	Destroy();
+
+	//Get the World and GameMode in the world to invoke its restart player function.
+	if (UWorld* World = GetWorld())
+	{
+		if (AblockersGameMode* GameMode = Cast<AblockersGameMode>(World->GetAuthGameMode()))
+		{
+			GameMode->RestartPlayer(CortollerRef);
+		}
+	}
 }
 
 void AblockersCharacter::UseItem(UItem* Item)
@@ -247,20 +277,6 @@ void AblockersCharacter::AddToInventory(APickUpItem* actor)
 		_inventory.Add(actor);
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Inventory size: %d"), _inventory.Num());
-}
-
-void AblockersCharacter::RemoveItemCPP(FString itemName)
-{
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *itemName);
-	int8 foundIndex = -2;
-	for (int8 i = 0; i < _inventory.Num(); i++) {
-		if (_inventory[i]->Name == *itemName) {
-			_inventory[i]->amount -= 1;
-			UE_LOG(LogTemp, Warning, TEXT("remove Item"));
-			break;
-		}
-	}
-	
 }
 
 void AblockersCharacter::UpdateInventory()
