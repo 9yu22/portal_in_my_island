@@ -278,4 +278,8 @@ void AblockersCharacter::UpdateInventory()
 	OnUpdateInventory.Broadcast(_inventory);
 }
 
+void AblockersCharacter::DropItem(FString itemName)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Drop %s"), *itemName);
 
+}
