@@ -666,3 +666,29 @@ int ABKNaiveChunk::GetTextureIndex(BKEBlock Block, FVector Normal) const
 		break;
 	}
 }
+
+void ABKNaiveChunk::GetMapList()
+{
+	FString FilePath = FPaths::ProjectDir() / TEXT("Blockers_map.txt");
+
+	for (int i = 0; i < Blocks.Num(); ++i) {
+		if (Blocks[i].block != BKEBlock::Air) {
+			FIntVector temp = FindBlockindex(i);
+			int blocktype = static_cast<int>(Blocks[i].block);
+			int chunk_index = static_cast<int>(GetMyChunkIndex());
+			//UE_LOG(LogTemp, Warning, TEXT("Chunk: %d, X: %d, Y: %d, Z: %d, BlockType: %d"), chunk_index, temp.X, temp.Y, temp.Z, blocktype);
+			FString Line = FString::Printf(TEXT("%d %d %d %d %d\n"), chunk_index, temp.X, temp.Y, temp.Z, blocktype);  // 저장할 값을 공백으로 구분하여 문자열로 변환
+			FFileHelper::SaveStringToFile(Line, *FilePath, FFileHelper::EEncodingOptions::AutoDetect, &IFileManager::Get(), FILEWRITE_Append);
+		}
+	}
+}
+
+FIntVector ABKNaiveChunk::FindBlockindex(int k)
+{
+	int32 z = k / (64 * 64);
+	k = k % (64 * 64);
+	int32 y = k / 64;
+	int32 x = k % 64;
+
+	return FIntVector(x, y, z);
+}

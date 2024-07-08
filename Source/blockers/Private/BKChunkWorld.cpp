@@ -4,6 +4,7 @@
 #include "BKChunkWorld.h"
 
 #include "BKChunkBase.h"
+#include "BKNaiveChunk.h"
 
 #include "../Network/SGameInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -72,16 +73,21 @@ void ABKChunkWorld::Generate3DWorld()
 				chunk->Frequency = Frequency;
 				chunk->Material = Material;
 				chunk->Size = Size;
-				chunk->SetOwningChunkWorld(this);
+				chunk->SetOwningChunkWorld(this); // 청크베이스의 부모로 월드를 연결
 
 				UGameplayStatics::FinishSpawningActor(chunk, transform);
 
 				Chunks.Add(chunk);
 
+				// 맵 인덱스 출력을 위한 코드
+			/*	int index = chunk->GetMyChunkIndex();
+				ABKNaiveChunk* chunkNaive = Cast<ABKNaiveChunk>(chunk);
+				chunkNaive->GetMapList();*/
+
 				// 디버깅용
-				//FTransform actorTransform = chunk->GetTransform();
-				//FVector actorLocation = actorTransform.GetLocation();
-				//UE_LOG(LogTemp, Warning, TEXT("Add Chunk Location: (%f, %f, %f)"), actorLocation.X, actorLocation.Y, actorLocation.Z);
+				FTransform actorTransform = chunk->GetTransform();
+				FVector actorLocation = actorTransform.GetLocation();
+				UE_LOG(LogTemp, Warning, TEXT("Add Chunk Location: (%f, %f, %f)"), actorLocation.X, actorLocation.Y, actorLocation.Z);
 
 
 				ChunkCount++;

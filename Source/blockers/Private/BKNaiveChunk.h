@@ -28,14 +28,20 @@ class ABKNaiveChunk final : public ABKChunkBase
 	virtual void GenerateMesh() override;
 	virtual void ModifyVoxelData(const FIntVector Position, BKEBlock Block) override;
 
-private:
 	struct Block {
 		BKEBlock block;
 		BKEDirection backDir;
 	};
 
+public:
 	TArray<Block> Blocks;
 	TArray<FIntVector> splitBlocks;	// 쪼개지는 블록 자체의 좌표를 저장하는 배열
+
+	// 맵 정보를 알아내 서버에 파일로 저장하기 위해 만든 두 함수
+	void GetMapList();
+	FIntVector FindBlockindex(int index);
+
+private:
 
 	int splitBlockNum = 10;			// splitBlockNum x splitBlockNum x splitBlockNum로 쪼개짐
 	const FVector BlockVertexData[8] = {
