@@ -5,7 +5,7 @@
 class Player : public GameObject
 {
 public:
-	int id;
+	short id;
 	std::array<Item, 1> player_items;
 
 public:
