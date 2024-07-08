@@ -1,3 +1,5 @@
+#pragma once
+
 constexpr int PORT_NUM = 4040;
 constexpr int BUF_SIZE = 256; 
 constexpr int NAME_SIZE = 20;
@@ -18,12 +20,17 @@ constexpr char ANIM = 8;
 constexpr char SC_REMOVE_BLOCK = 9;
 constexpr char CS_REMOVE_BLOCK = 10;
 
-constexpr char SC_ADD_ITEM = 11;
-
-constexpr char SC_REMOVE_ITEM = 12;
-constexpr char CS_REMOVE_ITEM = 13;
+constexpr char SC_CHANGE_HP = 11;
+constexpr char CS_CHANGE_HP = 12;
 
 enum class Anim : char { IDLE, MOVE, JUMP };
+
+enum class BKEBlock : char
+{
+    Null, Air, Stone, Dirt, Grass, Amethyst, Stair
+};
+
+typedef unsigned char u_char;
 
 #pragma pack (push, 1)
 struct CS_LOGIN_PACKET {
@@ -111,10 +118,18 @@ struct ANIM_PACKET {
     char anim_type;
 };
 
-struct SC_ADD_ITEM_PACKET {
+struct CS_CHANGE_HP_PACKET {
     u_char size;
     char type;
-    char item_type;
-    float x, y, z;
+    //int8 id;
+    char hit_id;
 };
+
+struct SC_CHANGE_HP_PACKET {
+    u_char size;
+    char type;
+    char id;
+    int hp;
+};
+
 #pragma pack (pop)

@@ -3,6 +3,7 @@
 #include <WS2tcpip.h>
 #include <MSWSock.h>
 #include "protocol.h"
+#include "Map.h"
 
 #pragma comment(lib, "WS2_32.lib")
 #pragma comment(lib, "MSWSock.lib")
@@ -41,6 +42,7 @@ class SESSION {
 public:
 	bool in_use;
 	int _id;
+	int hp;
 	SOCKET _socket;
 	float	x, y, z;
 	float pitch, yaw, roll;
@@ -54,6 +56,7 @@ public:
 		x = 0;
 		y = 0;
 		z = 0;
+		hp = 100;
 		//_name[0] = 0;
 		_prev_remain = 0;
 	}
@@ -92,10 +95,11 @@ public:
 	void send_move_packet(int c_id);
 	void send_add_block_packet(char* packet);
 	void send_remove_block_packet(char* packet);
-	void send_anim_packet(char* packet);
+	void send_hp_packet(int hit_id);
 };
 
 array<SESSION, MAX_USER> clients;
+Map map;
 
 void SESSION::send_move_packet(int c_id)
 {
@@ -118,7 +122,6 @@ void SESSION::send_add_block_packet(char* packet)
 	SC_ADD_BLOCK_PACKET* p = reinterpret_cast<SC_ADD_BLOCK_PACKET*>(packet);
 	p->size = sizeof(SC_ADD_BLOCK_PACKET);
 	p->type = SC_ADD_BLOCK;
-	// 일단 받은 블록패킷 브로드캐스트
 	do_send(p);
 }
 
@@ -127,13 +130,17 @@ void SESSION::send_remove_block_packet(char* packet)
 	SC_REMOVE_BLOCK_PACKET* p = reinterpret_cast<SC_REMOVE_BLOCK_PACKET*>(packet);
 	p->size = sizeof(SC_REMOVE_BLOCK_PACKET);
 	p->type = SC_REMOVE_BLOCK;
-	// 일단 받은 블록패킷 브로드캐스트
 	do_send(p);
 }
 
-void SESSION::send_anim_packet(char* packet)
+void SESSION::send_hp_packet(int hit_id)
 {
-	do_send(packet);
+	SC_CHANGE_HP_PACKET p;
+	p.size = sizeof(SC_CHANGE_HP_PACKET);
+	p.type = SC_CHANGE_HP;
+	p.hp = clients[hit_id].hp;
+	p.id = hit_id;
+	do_send(&p);
 }
 
 int get_new_client_id()
@@ -201,27 +208,30 @@ void process_packet(int c_id, char* packet)
 		break;
 	}
 	case CS_ADD_BLOCK: {
-		// 블록은 클라,서버가 아직은 같은 패킷(처리 없이 그냥 브로드캐스트)
 		CS_ADD_BLOCK_PACKET* p = reinterpret_cast<CS_ADD_BLOCK_PACKET*>(packet);
-		std::cout << "클라이언트 " << c_id << "x: " << p->ix << " y: " << p->iy << " z: " << p->iz << "위치에 블록 추가" << std::endl;
-		for (auto& pl : clients)
-			if (true == pl.in_use && pl._id != c_id)
-				pl.send_add_block_packet(packet);
+		if (map.AddBlockToMap(p)) {
+			for (auto& pl : clients)
+				if (true == pl.in_use)
+					pl.send_add_block_packet(packet);
+		}
+			
 		break;
 	}
 	case CS_REMOVE_BLOCK: {
-		// 블록은 클라,서버가 아직은 같은 패킷(처리 없이 그냥 브로드캐스트)
 		CS_REMOVE_BLOCK_PACKET* p = reinterpret_cast<CS_REMOVE_BLOCK_PACKET*>(packet);
-		for (auto& pl : clients)
-			if (true == pl.in_use && pl._id != c_id)
-				pl.send_remove_block_packet(packet);
+		if (map.RemoveBlockToMap(p)) {
+			for (auto& pl : clients)
+				if (true == pl.in_use)
+					pl.send_remove_block_packet(packet);
+		}		
+				
 		break;
 	}
-	case ANIM: {
-		//std::cout << "클라이언트 " << c_id << " 애니메이션 변경" << std::endl;
-		for (auto& pl : clients)
-			if (true == pl.in_use && pl._id != c_id)
-				pl.send_anim_packet(packet);
+
+	case CS_CHANGE_HP: {
+		CS_CHANGE_HP_PACKET* p = reinterpret_cast<CS_CHANGE_HP_PACKET*>(packet);
+		clients[p->hit_id].hp -= 20;		
+		clients[p->hit_id].send_hp_packet(p->hit_id);
 		break;
 	}
 	}
