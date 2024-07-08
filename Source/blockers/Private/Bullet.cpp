@@ -6,6 +6,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "PracticeDestroyBlock.h"
 #include "../blockersCharacter.h"
+#include "../Network/SGameInstance.h"
+#include "../Network/Protocol.h"
 #include "Kismet/GameplayStatics.h"
 
 #include "GameFramework/SpringArmComponent.h"
@@ -87,7 +89,17 @@ void ABullet::OnBulletOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 	if (enemyCharacter != nullptr)
 	{
 		//enemyCharacter->health -= 30.f;
-		UE_LOG(LogTemp, Warning, TEXT("enemyCharacter hit, -30 hp!!"));
+		USGameInstance* instance = USGameInstance::GetMyInstance(this);
+		if (instance && instance->Socket != nullptr) {
+			CS_CHANGE_HP_PACKET p;
+			p.size = sizeof(p);
+			p.type = CS_CHANGE_HP;
+			p.hit_id = enemyCharacter->id;
+
+			int BytesSent = 0;
+			instance->Socket->Send((uint8*)&p, sizeof(p), BytesSent);
+		}
+		//UE_LOG(LogTemp, Warning, TEXT("enemyCharacter hit, -30 hp!!"));
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosionFX, GetActorLocation(), GetActorRotation());
 		DestroyBullet();
 	}
