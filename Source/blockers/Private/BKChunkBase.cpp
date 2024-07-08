@@ -94,7 +94,7 @@ void ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector
 	// 조건에 따라 일부 인자는 안쓰인다. 함수를 합쳐놔서 이런 구조로 되어있다.
 
 	USGameInstance* instance = USGameInstance::GetMyInstance(this);
-	if (instance) {
+	if (instance && instance->Socket != nullptr) {
 		int BytesSent = 0;
 		if (Block != BKEBlock::Air) // 블록 추가에는 인덱스와 블록 타입만 쓰인다.
 		{
@@ -145,8 +145,9 @@ void ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector
 			//ModifyVoxel(Position, Block);
 		}
 	}
-	ModifyVoxel(Position, Block);
-	
+	else {
+		ModifyVoxel(Position, Block);
+	}
 }
 
 void ABKChunkBase::SetOwningChunkWorld(ABKChunkWorld* NewOwner)
