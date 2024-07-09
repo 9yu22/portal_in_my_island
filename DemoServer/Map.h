@@ -32,9 +32,9 @@ public:
 	bool AddBlockToMap(CS_ADD_BLOCK_PACKET* packet);
 	bool RemoveBlockToMap(CS_REMOVE_BLOCK_PACKET* packet);
 	void ReadMapData();
-	int calculateIndex(int chunk_index, int x, int y, int z);
+	int calculateIndex(int x, int y, int z);
 
 public:
-	std::vector<Block> block_map;
+	std::vector<std::vector<Block>> block_map;
 };
 
