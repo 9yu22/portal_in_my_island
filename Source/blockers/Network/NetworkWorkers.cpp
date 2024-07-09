@@ -25,14 +25,14 @@ void FRecvWorker::RecvPacket()
 
 }
 
-void FRecvWorker::MergePacket(uint8* buffer, uint16 recvPacketSize) // 패킷 조립
+void FRecvWorker::MergePacket(uint8* buffer, int32 recvPacketSize) // 패킷 조립
 {
     uint8* ptr = buffer;
     static size_t real_packet_size = 0;
     static size_t saved_packet_size = 0;
     static uint8 packet_buffer[256];
 
-    while (0 != recvPacketSize) {
+    while (0 < recvPacketSize) {
         if (0 == real_packet_size) real_packet_size = ptr[0];
         if (recvPacketSize + saved_packet_size >= real_packet_size) { // 패킷 처리가 가능한 만큼 버퍼에 패킷이 있다면
             memcpy(packet_buffer + saved_packet_size, ptr, real_packet_size - saved_packet_size); // ptr[0] 만큼만(실제 처리할 패킷 크기만큼) 넘겨 처리
