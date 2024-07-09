@@ -209,21 +209,27 @@ void process_packet(int c_id, char* packet)
 	}
 	case CS_ADD_BLOCK: {
 		CS_ADD_BLOCK_PACKET* p = reinterpret_cast<CS_ADD_BLOCK_PACKET*>(packet);
-		if (map.AddBlockToMap(p)) {
-			for (auto& pl : clients)
-				if (true == pl.in_use)
-					pl.send_add_block_packet(packet);
-		}
+		//if (map.AddBlockToMap(p)) {
+		//	for (auto& pl : clients)
+		//		if (true == pl.in_use)
+		//			pl.send_add_block_packet(packet);
+		//}
+		for (auto& pl : clients)
+			if (true == pl.in_use && pl._id != c_id)
+				pl.send_add_block_packet(packet);
 			
 		break;
 	}
 	case CS_REMOVE_BLOCK: {
 		CS_REMOVE_BLOCK_PACKET* p = reinterpret_cast<CS_REMOVE_BLOCK_PACKET*>(packet);
-		if (map.RemoveBlockToMap(p)) {
+		/*if (map.RemoveBlockToMap(p)) {
 			for (auto& pl : clients)
 				if (true == pl.in_use)
 					pl.send_remove_block_packet(packet);
-		}		
+		}		*/
+		for (auto& pl : clients)
+			if (true == pl.in_use && pl._id != c_id)
+				pl.send_remove_block_packet(packet);
 				
 		break;
 	}
