@@ -116,9 +116,6 @@ public:
 	void RemoveItemCPP(FString itemName);
 
 	UFUNCTION(BlueprintCallable)
-	void DropItem(FString itemName);
-
-	UFUNCTION(BlueprintCallable)
 	void UpdateInventory();
 
 	UPROPERTY(BlueprintAssignable, Category = "Pickup")
