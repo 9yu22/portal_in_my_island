@@ -232,35 +232,55 @@ void AblockersCharacter::UseItem(UItem* Item)
 void AblockersCharacter::AddToInventory(APickUpItem* actor)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("init size: %d"), _inventory.Num());
-	int8 foundIndex = -2;
-	for (int8 i = 0; i < _inventory.Num(); i++) {
-		if (_inventory[i]->Name == actor->Name) {
-			foundIndex = i;
-			break;
-		}
-	}
-
-	if (foundIndex != -2) {
-		_inventory[foundIndex]->amount += actor->amount;
+	int32 ItemIndex = CheckInventory(actor->Name);
+	if (ItemIndex != -2) {
+		ItemInventory[ItemIndex]->amount += actor->amount;
 	}
 	else {
-		_inventory.Add(actor);
+		ItemInventory.Add(actor);
+		/*int32 EmptyIndex = FindEmptySlot();
+		if (EmptyIndex != -1) {
+			ItemInventory.Add(actor);
+		}*/
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Inventory size: %d"), _inventory.Num());
 }
 
-void AblockersCharacter::RemoveItemCPP(FString itemName)
+void AblockersCharacter::RemoveFromInventory(FString itemName)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *itemName);
-	int8 foundIndex = -2;
-	for (int8 i = 0; i < _inventory.Num(); i++) {
-		if (_inventory[i]->Name == *itemName) {
-			_inventory[i]->amount -= 1;
-			UE_LOG(LogTemp, Warning, TEXT("remove Item"));
-			break;
+	int32 ItemIndex = CheckInventory(itemName);
+	if (ItemIndex != -2) {
+		ItemInventory[ItemIndex]->amount -= 1;
+
+		if (ItemInventory[ItemIndex]->amount == 0)
+		{
+			ItemInventory.RemoveAt(ItemIndex);
 		}
 	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("cannot buy"));
+	}
+}
 
+int32 AblockersCharacter::CheckInventory(FString itemName)
+{
+	for (int32 i = 0; i < ItemInventory.Num(); ++i) {
+		if (ItemInventory[i]->Name == *itemName) {
+			return i;
+		}
+	}
+	return -2;
+}
+
+int32 AblockersCharacter::FindEmptySlot()
+{
+	for (int32 i = 0; i < ItemInventory.Num(); ++i)
+	{
+		if (ItemInventory[i]->Name == "") {
+			return i;
+		}
+	}
+	return -1;
 }
 
 void AblockersCharacter::UpdateInventory()
@@ -275,7 +295,7 @@ void AblockersCharacter::UpdateInventory()
 
 	GEngine->AddOnScreenDebugMessage(1, 3, FColor::White, *sInventory);*/
 
-	OnUpdateInventory.Broadcast(_inventory);
+	OnUpdateInventory.Broadcast(ItemInventory);
 }
 
 

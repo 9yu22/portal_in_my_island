@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "../blockers/Public/PickUpItem.h"
+#include "TInvenArray.h"
 #include "Logging/LogMacros.h"
 #include "Delegates/DelegateCombinations.h"
 #include "GameFramework/Character.h"
@@ -108,12 +109,17 @@ public:
 
 	/*pickup inventory*/
 public:
-	TArray<APickUpItem*> _inventory;
-
-	void AddToInventory(APickUpItem* actor);
+	TArray<APickUpItem*> ItemInventory;
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveItemCPP(FString itemName);
+	void AddToInventory(APickUpItem* actor);
+
+	int32 CheckInventory(FString itemName);
+
+	int32 FindEmptySlot();
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveFromInventory(FString itemName);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateInventory();
