@@ -145,9 +145,10 @@ void ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector
 			//ModifyVoxel(Position, Block);
 		}
 	}
-	else {
-		ModifyVoxel(Position, Block);
-	}
+	//if(instance->Socket == nullptr) {
+	//	ModifyVoxel(Position, Block);
+	//}
+	ModifyVoxel(Position, Block);
 }
 
 void ABKChunkBase::SetOwningChunkWorld(ABKChunkWorld* NewOwner)

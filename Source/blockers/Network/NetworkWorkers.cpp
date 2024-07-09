@@ -148,7 +148,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         SC_ADD_BLOCK_PACKET new_block;
 
         memcpy(&new_block, packet, sizeof(new_block));
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Block Packet chunk index:%d, x: %d, y: %d, z: %d"),new_block.chunk_index, new_block.ix, new_block.iy, new_block.iz));
+        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Block Packet chunk index:%d, x: %d, y: %d, z: %d"),new_block.chunk_index, new_block.ix, new_block.iy, new_block.iz));
 
         BlockInfo block;
         block.chunk_index = new_block.chunk_index;
@@ -193,7 +193,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         break;
     }
     case SC_CHANGE_HP:
-        SC_CHANGE_HP_PACKET new_hp;
+        /*SC_CHANGE_HP_PACKET new_hp;
         
         memcpy(&new_hp, packet, sizeof(new_hp));
         AsyncTask(ENamedThreads::GameThread, [this, new_hp]()
@@ -208,7 +208,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
                     }
 
                 }
-            });
+            });*/
         break;
     default:
         break;

@@ -45,7 +45,7 @@ void ABKChunkWorld::Tick(float DeltaTime)
 		block = instance->BlockQueue.DeQ();
 		ABKChunkBase* chunk = Cast<ABKChunkBase>(Chunks[block.chunk_index]);
 		chunk->ProcessBlock(block);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Recv Add Block / Chunk_index: %d, x: %d, y: %d z: %d"), block.chunk_index, block.index.X, block.index.Y, block.index.Z));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Recv Add Block / Chunk_index: %d, x: %d, y: %d z: %d"), block.chunk_index, block.index.X, block.index.Y, block.index.Z));
 	}
 }
 
