@@ -7,12 +7,13 @@ struct WorldLocation {
 class GameObject
 {
 public:
-	WorldLocation pos;
+	WorldLocation location;
 
 public:
 	GameObject();
 	~GameObject();
-	WorldLocation GetWorldLocation(WorldLocation pos) { return pos; }
+	WorldLocation GetWorldLocation(WorldLocation location) { return location; }
 	void SetWorldLocation(WorldLocation new_pos);
+	void SetWorldLocation(float new_x, float new_y, float new_z);
 };
 

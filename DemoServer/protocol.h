@@ -23,6 +23,8 @@ constexpr char CS_REMOVE_BLOCK = 10;
 constexpr char SC_CHANGE_HP = 11;
 constexpr char CS_CHANGE_HP = 12;
 
+enum OP_TYPE { OP_ACCEPT, OP_RECV, OP_SEND };
+
 enum class Anim : char { IDLE, MOVE, JUMP };
 
 enum class BKEBlock : char
@@ -122,7 +124,7 @@ struct CS_CHANGE_HP_PACKET {
     u_char size;
     char type;
     //int8 id;
-    char hit_id;
+    char hit_player_id;
 };
 
 struct SC_CHANGE_HP_PACKET {
