@@ -13,6 +13,12 @@ Map::~Map()
 
 bool Map::AddBlockToMap(CS_ADD_BLOCK_PACKET* packet)
 {
+    if (packet->chunk_index < 0) {
+        std::cout << "잘못된 블록 추가 패킷" << std::endl;
+        std::cout << "Invalid Packet... Chunk Index" << packet->chunk_index << "x:" << packet->ix << "y: " << packet->iy << "z: " << packet->iz << std::endl;
+        return false;
+    }
+
     if (packet->blocktype != static_cast<int>(BKEBlock::Air) && packet->chunk_index >= 0) {
         int index = calculateIndex(packet->ix, packet->iy, packet->iz);
         if (block_map[packet->chunk_index][index].blockType == static_cast<int>(BKEBlock::Air)) {
@@ -26,10 +32,16 @@ bool Map::AddBlockToMap(CS_ADD_BLOCK_PACKET* packet)
 
 bool Map::RemoveBlockToMap(CS_REMOVE_BLOCK_PACKET* packet)
 {
+    if (packet->chunk_index < 0) {
+        std::cout << "잘못된 블록 삭제 패킷" << std::endl;
+        std::cout << "Invalid Packet... Chunk Index" << packet->chunk_index << "x:" << packet->ix << "y: " << packet->iy << "z: " << packet->iz << std::endl;
+        return false;
+    }
+
     if (packet->blocktype == static_cast<int>(BKEBlock::Air) && packet->chunk_index >= 0) {
         int index = calculateIndex(packet->ix, packet->iy, packet->iz);
-        if (block_map[index][packet->chunk_index].blockType != static_cast<int>(BKEBlock::Air)) {
-            block_map[index][packet->chunk_index].blockType = packet->blocktype;
+        if (block_map[packet->chunk_index][index].blockType != static_cast<int>(BKEBlock::Air)) {
+            block_map[packet->chunk_index][index].blockType = packet->blocktype;
             //std::cout << "x: " << packet->ix << " y: " << packet->iy << " z: " << packet->iz << "위치에 블록 추가" << std::endl;
             return true;
         }
@@ -51,12 +63,18 @@ void Map::ReadMapData()
     int blockType;
     int blockCount = 0;
     int crossIndex = 0;
+    int outOfIndex = 0;
 
     while (file >> chunk_index >> x >> y >> z >> blockType) {
         int index = calculateIndex(x, y, z);
 
         Block temp;
         temp.blockType = blockType;
+
+     /*   if (index * chunk_index < 0) {
+            outOfIndex++;
+            continue;
+        }     */     
 
         if (block_map[chunk_index][index].blockType == static_cast<int>(BKEBlock::Air)) {
             block_map[chunk_index][index] = temp;
@@ -67,6 +85,7 @@ void Map::ReadMapData()
     }
     std::cout << "생성된 맵 블록 수: " << blockCount << std::endl;
     //std::cout << "중복 생성된 맵 블록 수: " << crossIndex << std::endl;
+    //std::cout << "잘못 생성된 맵 블록 수: " << crossIndex << std::endl;
     file.close();
 }
 
