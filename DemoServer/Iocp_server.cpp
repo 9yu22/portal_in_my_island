@@ -233,8 +233,9 @@ void process_packet(int c_id, char* packet)
 
 	case CS_CHANGE_HP: {
 		CS_CHANGE_HP_PACKET* p = reinterpret_cast<CS_CHANGE_HP_PACKET*>(packet);
-		clients[p->hit_player_id].m_player.m_hp -= 20;		
-		clients[p->hit_player_id].send_hp_packet(p->hit_player_id);
+		clients[p->hit_player_id].m_player.m_hp -= 20;
+		std::cout << "클라이언트 " << p->hit_player_id << " 공격당함, 남은 hp: " << clients[p->hit_player_id].m_player.m_hp << std::endl;
+		clients[p->hit_player_id].send_hp_packet(clients[p->hit_player_id].m_player);
 		break;
 	}
 	}

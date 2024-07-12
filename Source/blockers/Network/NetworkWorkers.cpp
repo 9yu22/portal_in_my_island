@@ -196,13 +196,15 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         SC_CHANGE_HP_PACKET new_hp;
         
         memcpy(&new_hp, packet, sizeof(new_hp));
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("RecvThread.. Recv My New Hp Packet My Id:%d, Hp: %d"), new_hp.id, new_hp.hp));
         AsyncTask(ENamedThreads::GameThread, [this, new_hp]()
             {
                 if (IsValid(Character)) {
                     for (auto& p : Character->Players) {
                         if (p->id == new_hp.id) {
                             p->health = new_hp.hp;
-
+                            Character->health= new_hp.hp;
+                            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("RecvThread.. Recv My New Hp Packet My Id:%d, Hp: %d"), new_hp.id, new_hp.hp));
                             break;
                         }
                     }

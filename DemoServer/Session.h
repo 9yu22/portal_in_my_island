@@ -51,6 +51,6 @@ public:
 	void send_move_packet(Player player);
 	void send_add_block_packet(char* packet);
 	void send_remove_block_packet(char* packet);
-	void send_hp_packet(int hit_id);
+	void send_hp_packet(Player player);
 };
 

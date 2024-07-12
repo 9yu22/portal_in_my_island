@@ -71,7 +71,12 @@ void Session::send_remove_block_packet(char* packet)
 	do_send(p);
 }
 
-void Session::send_hp_packet(int hit_id)
+void Session::send_hp_packet(Player player)
 {
-
+	SC_CHANGE_HP_PACKET p;
+	p.size = sizeof(SC_CHANGE_HP_PACKET);
+	p.type = SC_CHANGE_HP;
+	p.hp = player.m_hp;
+	p.id = player.m_id;
+	do_send(&p);
 }
