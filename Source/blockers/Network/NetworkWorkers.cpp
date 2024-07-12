@@ -155,7 +155,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         block.index = { new_block.ix, new_block.iy, new_block.iz };
         block.type = static_cast<BKEBlock>(new_block.blocktype);
 
-        Instance->BlockQueue.EnQ(block);
+        Instance->BlockQueue.Enqueue(block);
         
         break;
     }
@@ -173,7 +173,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         block.normal = { remove_block.nx, remove_block.ny, remove_block.nz };
         block.type = static_cast<BKEBlock>(remove_block.blocktype);
 
-        Instance->BlockQueue.EnQ(block);
+        Instance->BlockQueue.Enqueue(block);
 
         break;
     }
@@ -188,12 +188,12 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         anim.id = new_anim.id;
         anim.type = static_cast<Anim>(new_anim.anim_type);
 
-        Instance->AnimQueue.EnQ(anim);
+        Instance->AnimQueue.Enqueue(anim);
         UE_LOG(LogTemp, Warning, TEXT("Anim ENQ"));
         break;
     }
     case SC_CHANGE_HP:
-        /*SC_CHANGE_HP_PACKET new_hp;
+        SC_CHANGE_HP_PACKET new_hp;
         
         memcpy(&new_hp, packet, sizeof(new_hp));
         AsyncTask(ENamedThreads::GameThread, [this, new_hp]()
@@ -208,7 +208,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
                     }
 
                 }
-            });*/
+            });
         break;
     default:
         break;

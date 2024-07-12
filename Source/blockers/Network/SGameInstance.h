@@ -51,8 +51,8 @@ public:
 
 	//ProcessQueueBlock Blocks;
 	AblockersCharacter* MyCharacter;
-	ProcessQueue<BlockInfo> BlockQueue;
-	ProcessQueue<AnimInfo> AnimQueue;
+	TQueue<BlockInfo> BlockQueue;
+	TQueue<AnimInfo> AnimQueue;
 
 	FRunnableThread* RecvThread;
 	FRunnableThread* SendThread;

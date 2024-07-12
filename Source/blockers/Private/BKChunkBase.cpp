@@ -145,10 +145,10 @@ void ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector
 			//ModifyVoxel(Position, Block);
 		}
 	}
-	//if(instance->Socket == nullptr) {
-	//	ModifyVoxel(Position, Block);
-	//}
-	ModifyVoxel(Position, Block);
+	if(instance->Socket == nullptr) {
+		ModifyVoxel(Position, Block);
+	}
+	//ModifyVoxel(Position, Block);
 }
 
 void ABKChunkBase::SetOwningChunkWorld(ABKChunkWorld* NewOwner)
@@ -167,10 +167,10 @@ void ABKChunkBase::ProcessBlock(const BlockInfo& Block)
 
 	ApplyMesh();
 
-	if (Block.type == BKEBlock::Air) {
-		//여기에 블록 파괴 이펙트 함수 추가
-		CreateBlockDestroyEffect(Block);
-	}
+	//if (Block.type == BKEBlock::Air) {
+	//	//여기에 블록 파괴 이펙트 함수 추가
+	//	CreateBlockDestroyEffect(Block);
+	//}
 }
 
 void ABKChunkBase::CreateBlockDestroyEffect(const BlockInfo& Block) // 블록이 사라진 자리에 엑터 스폰 및 파괴 이펙트 생성->컨트롤러 코드 가져옴

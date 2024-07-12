@@ -39,10 +39,10 @@ void ABKChunkWorld::BeginPlay()
 void ABKChunkWorld::Tick(float DeltaTime)
 {
 	USGameInstance* instance = USGameInstance::GetMyInstance(this);
-	if (!instance->BlockQueue.CheckEmpty()) {
+	if (!instance->BlockQueue.IsEmpty()) {
 		int BytesSent = 0;
 		BlockInfo block;
-		block = instance->BlockQueue.DeQ();
+		instance->BlockQueue.Dequeue(block);
 		ABKChunkBase* chunk = Cast<ABKChunkBase>(Chunks[block.chunk_index]);
 		chunk->ProcessBlock(block);
 		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Recv Add Block / Chunk_index: %d, x: %d, y: %d z: %d"), block.chunk_index, block.index.X, block.index.Y, block.index.Z));
