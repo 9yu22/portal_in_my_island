@@ -33,14 +33,14 @@
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 
-AblockersCharacter::AblockersCharacter() 
+AblockersCharacter::AblockersCharacter()
 {
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_blockers(TEXT("/Game/Blockers/Blueprints/Character/CharacterSkeletalMesh.CharacterSkeletalMesh"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_blockers(TEXT("/Game/NPC_Character_Four/Meshes/SM_NPC_Character_Four.SM_NPC_Character_Four"));
 	if (SK_blockers.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(SK_blockers.Object);
 	}
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimBPClass(TEXT("/Game/Blockers/Blueprints/Character/CharacterAnimBP.CharacterAnimBP_C"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimBPClass(TEXT("/Game/NPC_Character_Four/Animations/Demo/ThirdPerson_AnimBP.ThirdPerson_AnimBP_C"));
 	if (AnimBPClass.Succeeded()) {
 		UE_LOG(LogTemp, Warning, TEXT("Animation OK"));
 		GetMesh()->SetAnimInstanceClass(AnimBPClass.Class);
@@ -50,7 +50,7 @@ AblockersCharacter::AblockersCharacter()
 	}
 
 	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -86.0f));
-	GetMesh()->SetWorldScale3D(FVector(0.3f, 0.3f, 0.3f));
+	GetMesh()->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
 	FRotator NewRotation = FRotator(0.0f, -90.0f, 0.0f);
 	GetMesh()->SetRelativeRotation(NewRotation);
 
