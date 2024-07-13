@@ -21,16 +21,17 @@ class ABKNaiveChunk final : public ABKChunkBase
 {
 	GENERATED_BODY()
 
-	protected:
+protected:
 	virtual void Setup() override;
 	virtual void Generate2DHeightMap(FVector Position) override;
 	virtual void Generate3DHeightMap(FVector Position) override;
 	virtual void GenerateMesh() override;
-	virtual void ModifyVoxelData(const FIntVector Position, BKEBlock Block) override;
+	virtual bool ModifyVoxelData(const FIntVector Position, BKEBlock Block) override;
 
 	struct Block {
 		BKEBlock block;
 		BKEDirection backDir;
+		bool isCollapsible;
 	};
 
 public:
@@ -42,7 +43,6 @@ public:
 	FIntVector FindBlockindex(int index);
 
 private:
-
 	int splitBlockNum = 10;			// splitBlockNum x splitBlockNum x splitBlockNum·Î ÂÉ°³Áü
 	const FVector BlockVertexData[8] = {
 		FVector(100,100,100),

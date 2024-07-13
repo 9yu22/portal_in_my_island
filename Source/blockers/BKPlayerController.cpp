@@ -205,55 +205,58 @@ void ABKPlayerController::OnLeftClick(const FInputActionValue& Value)
 
 					// Modify Voxel
 					//HitChunk->ModifyVoxel(LocalBlockPosition, BKEBlock::Air);
-					HitChunk->SendModifiedVoxel(HitResult.Location, HitResult.Normal, LocalBlockPosition, BKEBlock::Air);
+					bool removingSuccess = HitChunk->SendModifiedVoxel(HitResult.Location, HitResult.Normal, LocalBlockPosition, BKEBlock::Air);
 
-					// BP_CollapsibleBlock 스폰
-					FIntVector SpawnLocationInt = UBKVoxelFunctionLibrary::GetBlockWorldPostion(BlockWorldPosition, HitResult.Normal, 64);
-					FVector SpawnLocationV = FVector(static_cast<float>(SpawnLocationInt.X), static_cast<float>(SpawnLocationInt.Y), static_cast<float>(SpawnLocationInt.Z));
-					FRotator SpawnRotation = FRotator::ZeroRotator;		// 기본 회전값 사용
-
-					UClass* CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock.BP_CollapsibleBlock_C"));
-					if (CollapsibleBlockClass)
+					if (removingSuccess)
 					{
-						FActorSpawnParameters SpawnParams;
-						AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(CollapsibleBlockClass, SpawnLocationV, SpawnRotation);
+						// BP_CollapsibleBlock 스폰
+						FIntVector SpawnLocationInt = UBKVoxelFunctionLibrary::GetBlockWorldPostion(BlockWorldPosition, HitResult.Normal, 64);
+						FVector SpawnLocationV = FVector(static_cast<float>(SpawnLocationInt.X), static_cast<float>(SpawnLocationInt.Y), static_cast<float>(SpawnLocationInt.Z));
+						FRotator SpawnRotation = FRotator::ZeroRotator;		// 기본 회전값 사용
 
-						if (SpawnedActor)
+						UClass* CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock.BP_CollapsibleBlock_C"));
+						if (CollapsibleBlockClass)
 						{
-							// CollapsibleBlockComponent 추가
-							UClass* CollapsibleBlockComponentClass = UCollapsibleBlockComponent::StaticClass();
-							UActorComponent* CollapsibleComponent = SpawnedActor->AddComponentByClass(CollapsibleBlockComponentClass, false, FTransform::Identity, false);
+							FActorSpawnParameters SpawnParams;
+							AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(CollapsibleBlockClass, SpawnLocationV, SpawnRotation);
 
-							if (CollapsibleComponent)
+							if (SpawnedActor)
 							{
-								UE_LOG(LogTemp, Log, TEXT("CollapsibleBlockComponent Added"));
+								// CollapsibleBlockComponent 추가
+								UClass* CollapsibleBlockComponentClass = UCollapsibleBlockComponent::StaticClass();
+								UActorComponent* CollapsibleComponent = SpawnedActor->AddComponentByClass(CollapsibleBlockComponentClass, false, FTransform::Identity, false);
 
-								UCollapsibleBlockComponent* CollapsibleBlockComponent = SpawnedActor->FindComponentByClass<UCollapsibleBlockComponent>();
-
-								if (CollapsibleBlockComponent)
+								if (CollapsibleComponent)
 								{
-									CollapsibleBlockComponent->DestroyActorWithDelay(3.0f);
+									UE_LOG(LogTemp, Log, TEXT("CollapsibleBlockComponent Added"));
 
-									UClass* BombClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_Bomb.BP_Bomb_C"));
-									if (BombClass)
+									UCollapsibleBlockComponent* CollapsibleBlockComponent = SpawnedActor->FindComponentByClass<UCollapsibleBlockComponent>();
+
+									if (CollapsibleBlockComponent)
 									{
-										AActor* SpawnedBomb = GetWorld()->SpawnActor<AActor>(BombClass, HitResult.ImpactPoint, SpawnRotation);
+										CollapsibleBlockComponent->DestroyActorWithDelay(3.0f);
+
+										UClass* BombClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_Bomb.BP_Bomb_C"));
+										if (BombClass)
+										{
+											AActor* SpawnedBomb = GetWorld()->SpawnActor<AActor>(BombClass, HitResult.ImpactPoint, SpawnRotation);
+										}
+									}
+									else
+									{
+										UE_LOG(LogTemp, Warning, TEXT("UCollapsibleBlockComponent is NOT found"));
 									}
 								}
 								else
 								{
-									UE_LOG(LogTemp, Warning, TEXT("UCollapsibleBlockComponent is NOT found"));
+									UE_LOG(LogTemp, Warning, TEXT("CollapsibleBlockComponent Failed"));
 								}
 							}
-							else
-							{
-								UE_LOG(LogTemp, Warning, TEXT("CollapsibleBlockComponent Failed"));
-							}
 						}
-					}
-					else
-					{
-						UE_LOG(LogTemp, Warning, TEXT("BP_CollapsibleBlock Class Can't Be Loaded!"));
+						else
+						{
+							UE_LOG(LogTemp, Warning, TEXT("BP_CollapsibleBlock Class Can't Be Loaded!"));
+						}
 					}
 				}
 			}

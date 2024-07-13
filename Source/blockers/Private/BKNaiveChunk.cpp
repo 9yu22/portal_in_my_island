@@ -43,30 +43,43 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 			for (int z = 0; z < Size; ++z)
 			{
 				auto distanceFromCenter = sqrt((x + Position.X) * (x + Position.X) + (y + Position.Y) * (y + Position.Y));
-				auto distanceFromPoint1 = sqrt((x + Position.X - 80) * (x + Position.X - 80) + (y + Position.Y - 80) * (y + Position.Y - 80));	// point: (80,80)
-				auto distanceFromPoint2 = sqrt((x + Position.X + 80) * (x + Position.X + 80) + (y + Position.Y - 80) * (y + Position.Y - 80));	// point: (-80,80)
-				auto distanceFromPoint3 = sqrt((x + Position.X - 80) * (x + Position.X - 80) + (y + Position.Y + 80) * (y + Position.Y + 80));	// point: (80,-80)
-				auto distanceFromPoint4 = sqrt((x + Position.X + 80) * (x + Position.X + 80) + (y + Position.Y + 80) * (y + Position.Y + 80));	// point: (-80,-80)
+				auto distanceFromPoint1 = sqrt((x + Position.X - 110) * (x + Position.X - 110) + (y + Position.Y - 110) * (y + Position.Y - 110));	// point: (110,110)
+				auto distanceFromPoint2 = sqrt((x + Position.X + 110) * (x + Position.X + 110) + (y + Position.Y - 110) * (y + Position.Y - 110));	// point: (-110,110)
+				auto distanceFromPoint3 = sqrt((x + Position.X - 110) * (x + Position.X - 110) + (y + Position.Y + 110) * (y + Position.Y + 110));	// point: (110,-110)
+				auto distanceFromPoint4 = sqrt((x + Position.X + 110) * (x + Position.X + 110) + (y + Position.Y + 110) * (y + Position.Y + 110));	// point: (-110,-110)
+
+				auto distanceFromPoint5 = sqrt((x + Position.X) * (x + Position.X) + (y + Position.Y - 70) * (y + Position.Y - 70));	// point: (0, 70)
+				auto distanceFromPoint6 = sqrt((x + Position.X) * (x + Position.X) + (y + Position.Y + 70) * (y + Position.Y + 70));	// point: (0, -70)
+				auto distanceFromPoint7 = sqrt((x + Position.X - 70) * (x + Position.X - 70) + (y + Position.Y) * (y + Position.Y));	// point: (70, 0)
+				auto distanceFromPoint8 = sqrt((x + Position.X + 70) * (x + Position.X + 70) + (y + Position.Y) * (y + Position.Y));	// point: (-70, 0)
+
+				auto distanceFromPoint9 = sqrt((x + Position.X - 20) * (x + Position.X - 20) + (y + Position.Y - 20) * (y + Position.Y - 20));	// point: (20,20)
+				auto distanceFromPoint10 = sqrt((x + Position.X + 20) * (x + Position.X + 20) + (y + Position.Y - 20) * (y + Position.Y - 20));	// point: (-20,20)
+				auto distanceFromPoint11 = sqrt((x + Position.X - 20) * (x + Position.X - 20) + (y + Position.Y + 20) * (y + Position.Y + 20));	// point: (20,-20)
+				auto distanceFromPoint12 = sqrt((x + Position.X + 20) * (x + Position.X + 20) + (y + Position.Y + 20) * (y + Position.Y + 20));	// point: (-20,-20)
+
+				// 기본 맵은 부술 수 없음.
+				Blocks[GetBlockIndex(x, y, z)].isCollapsible = false;
 
 				// z = 0
-				// point: (0,0) / radius: 40
-				if (z + Position.Z == 0 && distanceFromCenter < 40) {
+				// point: (0,0) / radius: 65
+				if (z + Position.Z == 0 && distanceFromCenter < 65) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (80,80) / radius: 15
-				else if (z + Position.Z == 0 && distanceFromPoint1 < 15) {
+				// point: (110,110) / radius: 20
+				else if (z + Position.Z == 0 && distanceFromPoint1 < 20) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (-80,80) / radius: 15
-				else if (z + Position.Z == 0 && distanceFromPoint2 < 15) {
+				// point: (-110,110) / radius: 20
+				else if (z + Position.Z == 0 && distanceFromPoint2 < 20) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (80,-80) / radius: 15
-				else if (z + Position.Z == 0 && distanceFromPoint3 < 15) {
+				// point: (110,-110) / radius: 20
+				else if (z + Position.Z == 0 && distanceFromPoint3 < 20) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (-80,-80) / radius: 15
-				else if (z + Position.Z == 0 && distanceFromPoint4 < 15) {
+				// point: (-110,-110) / radius: 20
+				else if (z + Position.Z == 0 && distanceFromPoint4 < 20) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
 				// z = 1
@@ -74,63 +87,210 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				else if (z + Position.Z == 1 && distanceFromCenter < 30) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (80,80) / radius: 12
-				else if (z + Position.Z == 1 && distanceFromPoint1 < 12) {
+				// point: (110,110) / radius: 17
+				else if (z + Position.Z == 1 && distanceFromPoint1 < 17) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (-80,80) / radius: 12
-				else if (z + Position.Z == 1 && distanceFromPoint2 < 12) {
+				// point: (-110,110) / radius: 17
+				else if (z + Position.Z == 1 && distanceFromPoint2 < 17) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (80,-80) / radius: 12
-				else if (z + Position.Z == 1 && distanceFromPoint3 < 12) {
+				// point: (110,-110) / radius: 17
+				else if (z + Position.Z == 1 && distanceFromPoint3 < 17) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// point: (-80,-80) / radius: 12
-				else if (z + Position.Z == 1 && distanceFromPoint4 < 12) {
+				// point: (-110,-110) / radius: 17
+				else if (z + Position.Z == 1 && distanceFromPoint4 < 17) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
-				// z = 10
-				// point: (0,0) / radius: 20~30
-				else if (z + Position.Z == 10 && distanceFromCenter > 20 && distanceFromCenter < 30) {
+				// z = 15
+				// point: (0,0) / radius: 30~50
+				else if (z + Position.Z == 15 && distanceFromCenter > 30 && distanceFromCenter < 50) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
 				// 계단
 				// Forward
-				else if (x + Position.X == z + Position.Z + 10 && y + Position.Y >= -1 && y + Position.Y <= 1 && z + Position.Z > 0 && z + Position.Z < 10) {
+				else if (x + Position.X == z + Position.Z + 15 && y + Position.Y >= -1 && y + Position.Y <= 1 && z + Position.Z > 0 && z + Position.Z < 15) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stair;
 					Blocks[GetBlockIndex(x, y, z)].backDir = BKEDirection::Forward;
 				}
-				else if (x + Position.X == z + Position.Z + 11 && y + Position.Y == 0 && z + Position.Z == 9) {
+				else if (x + Position.X == z + Position.Z + 16 && y + Position.Y == 0 && z + Position.Z == 14) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 					Blocks[GetBlockIndex(x, y, z)].backDir = BKEDirection::Forward;
 				}
 				// Back
-				else if (x + Position.X == -(z + Position.Z + 10) && y + Position.Y >= -1 && y + Position.Y <= 1 && z + Position.Z > 0 && z + Position.Z < 10) {
+				else if (x + Position.X == -(z + Position.Z + 15) && y + Position.Y >= -1 && y + Position.Y <= 1 && z + Position.Z > 0 && z + Position.Z < 15) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stair;
 					Blocks[GetBlockIndex(x, y, z)].backDir = BKEDirection::Back;
 				}
-				else if (x + Position.X == -(z + Position.Z + 11) && y + Position.Y == 0 && z + Position.Z == 9) {
+				else if (x + Position.X == -(z + Position.Z + 16) && y + Position.Y == 0 && z + Position.Z == 14) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 					Blocks[GetBlockIndex(x, y, z)].backDir = BKEDirection::Forward;
 				}
 				// Right
-				else if (x + Position.X >= -1 && x + Position.X <= 1 && y + Position.Y == z + Position.Z + 10 && z + Position.Z > 0 && z + Position.Z < 10) {
+				else if (x + Position.X >= -1 && x + Position.X <= 1 && y + Position.Y == z + Position.Z + 15 && z + Position.Z > 0 && z + Position.Z < 15) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stair;
 					Blocks[GetBlockIndex(x, y, z)].backDir = BKEDirection::Right;
 				}
-				else if (x + Position.X == 0 && y + Position.Y == z + Position.Z + 11 && z + Position.Z == 9) {
+				else if (x + Position.X == 0 && y + Position.Y == z + Position.Z + 16 && z + Position.Z == 14) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 					Blocks[GetBlockIndex(x, y, z)].backDir = BKEDirection::Forward;
 				}
 				// Left
-				else if (x + Position.X >= -1 && x + Position.X <= 1 && y + Position.Y == -(z + Position.Z + 10) && z + Position.Z > 0 && z + Position.Z < 10) {
+				else if (x + Position.X >= -1 && x + Position.X <= 1 && y + Position.Y == -(z + Position.Z + 15) && z + Position.Z > 0 && z + Position.Z < 15) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stair;
 					Blocks[GetBlockIndex(x, y, z)].backDir = BKEDirection::Left;
 				}
-				else if (x + Position.X == 0 && y + Position.Y == -(z + Position.Z + 11) && z + Position.Z == 9) {
+				else if (x + Position.X == 0 && y + Position.Y == -(z + Position.Z + 16) && z + Position.Z == 14) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 					Blocks[GetBlockIndex(x, y, z)].backDir = BKEDirection::Forward;
+				}
+				// *** 중앙섬 꾸미기 *** //
+				// 바깥쪽 언덕 4개
+				// point: (0,70) / radius: 35
+				else if (z + Position.Z == 0 && distanceFromPoint5 < 35) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (0,-70) / radius: 35
+				else if (z + Position.Z == 0 && distanceFromPoint6 < 35) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (70,0) / radius: 35
+				else if (z + Position.Z == 0 && distanceFromPoint7 < 35) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (-70,0) / radius: 35
+				else if (z + Position.Z == 0 && distanceFromPoint8 < 35) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (0,70) / radius: 25
+				else if (z + Position.Z == 1 && distanceFromPoint5 < 25) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (0,-70) / radius: 25
+				else if (z + Position.Z == 1 && distanceFromPoint6 < 25) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (70,0) / radius: 25
+				else if (z + Position.Z == 1 && distanceFromPoint7 < 25) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (-70,0) / radius: 25
+				else if (z + Position.Z == 1 && distanceFromPoint8 < 25) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (0,70) / radius: 21
+				else if (z + Position.Z == 2 && distanceFromPoint5 < 21) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (0,-70) / radius: 21
+				else if (z + Position.Z == 2 && distanceFromPoint6 < 21) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (70,0) / radius: 21
+				else if (z + Position.Z == 2 && distanceFromPoint7 < 21) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (-70,0) / radius: 21
+				else if (z + Position.Z == 2 && distanceFromPoint8 < 21) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (0,70) / radius: 17
+				else if (z + Position.Z == 3 && distanceFromPoint5 < 17) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (0,-70) / radius: 17
+				else if (z + Position.Z == 3 && distanceFromPoint6 < 17) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (70,0) / radius: 17
+				else if (z + Position.Z == 3 && distanceFromPoint7 < 17) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (-70,0) / radius: 17
+				else if (z + Position.Z == 3 && distanceFromPoint8 < 17) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// 중앙쪽 언덕 4개
+				// point: (0,70) / radius: 20
+				else if (z + Position.Z == 1 && distanceFromPoint9 < 20) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (0,-70) / radius: 20
+				else if (z + Position.Z == 1 && distanceFromPoint10 < 20) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (70,0) / radius: 20
+				else if (z + Position.Z == 1 && distanceFromPoint11 < 20) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (-70,0) / radius: 20
+				else if (z + Position.Z == 1 && distanceFromPoint12 < 20) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (20,20) / radius: 17
+				else if (z + Position.Z == 2 && distanceFromPoint9 < 17) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (-20,20) / radius: 17
+				else if (z + Position.Z == 2 && distanceFromPoint10 < 17) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (20,-20) / radius: 17
+				else if (z + Position.Z == 2 && distanceFromPoint11 < 17) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (-20,-20) / radius: 17
+				else if (z + Position.Z == 2 && distanceFromPoint12 < 17) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (20,20) / radius: 14
+				else if (z + Position.Z == 3 && distanceFromPoint9 < 14) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (-20,20) / radius: 14
+				else if (z + Position.Z == 3 && distanceFromPoint10 < 14) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (20,-20) / radius: 14
+				else if (z + Position.Z == 3 && distanceFromPoint11 < 14) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (-20,-20) / radius: 14
+				else if (z + Position.Z == 3 && distanceFromPoint12 < 14) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (20,20) / radius: 11
+				else if (z + Position.Z == 4 && distanceFromPoint9 < 11) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (-20,20) / radius: 11
+				else if (z + Position.Z == 4 && distanceFromPoint10 < 11) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (20,-20) / radius: 11
+				else if (z + Position.Z == 4 && distanceFromPoint11 < 11) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (-20,-20) / radius: 11
+				else if (z + Position.Z == 4 && distanceFromPoint12 < 11) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (20,20) / radius: 7
+				else if (z + Position.Z == 5 && distanceFromPoint9 < 7) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (-20,20) / radius: 7
+				else if (z + Position.Z == 5 && distanceFromPoint10 < 7) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (20,-20) / radius: 7
+				else if (z + Position.Z == 5 && distanceFromPoint11 < 7) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+				}
+				// point: (-20,-20) / radius: 7
+				else if (z + Position.Z == 5 && distanceFromPoint12 < 7) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
 				}
 				else {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Air;
@@ -627,11 +787,24 @@ FVector ABKNaiveChunk::GetNormal(const BKEDirection Direction) const
 	}
 }
 
-void ABKNaiveChunk::ModifyVoxelData(const FIntVector Position, const BKEBlock Block)
+bool ABKNaiveChunk::ModifyVoxelData(const FIntVector Position, const BKEBlock Block)
 {
 	const int Index = GetBlockIndex(Position.X, Position.Y, Position.Z);
 
-	Blocks[Index].block = Block;
+	// 삭제하려 했지만 삭제할 수 없는 블록이면 패스
+	if (Block == BKEBlock::Air) {
+		if (Blocks[Index].isCollapsible == false) { return false; }
+		else {
+			Blocks[Index].block = Block;
+			return true;
+		}
+	}
+	else {
+		Blocks[Index].isCollapsible = true;
+		Blocks[Index].block = Block;
+		return true;
+	}
+	return false;
 }
 
 int ABKNaiveChunk::GetBlockIndex(const int X, const int Y, const int Z) const
