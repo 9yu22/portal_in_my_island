@@ -26,57 +26,70 @@ void Session::do_send(void* packet)
 	WSASend(m_socket, &sdata->_wsabuf, 1, 0, 0, &sdata->_over, 0);
 }
 
-void Session::send_login_info_packet()
+void Session::send_login_player_packet()
 {
-	SC_LOGIN_INFO_PACKET p;
-	p.id = m_player.m_id;
-	p.size = sizeof(SC_LOGIN_INFO_PACKET);
-	p.type = SC_LOGIN_INFO;
-	p.x = m_player.location.x;
-	p.y = m_player.location.y;
-	p.z = m_player.location.z;
+	SC_LOGIN_INFO_PACKET login_player;
+	login_player.id = m_player.m_id;
+	login_player.size = sizeof(SC_LOGIN_INFO_PACKET);
+	login_player.type = SC_LOGIN_INFO;
+	login_player.x = m_player.location.x;
+	login_player.y = m_player.location.y;
+	login_player.z = m_player.location.z;
 	//std::cout << "id: " << p.id << " x:" << p.x << " y: " << p.y << " z: " << p.z << " 로그인 패킷 전송" << std::endl;
-	do_send(&p);
+	do_send(&login_player);
 }
 
-void Session::send_move_packet(Player player)
+void Session::send_move_player_packet(Player player)
 {
-	SC_MOVE_PLAYER_PACKET p;
-	p.id = player.m_id;
-	p.size = sizeof(SC_MOVE_PLAYER_PACKET);
-	p.type = SC_MOVE_PLAYER;
-	p.x = player.location.x;
-	p.y = player.location.y;
-	p.z = player.location.z;
-	p.pitch = player.m_rotation.pitch;
-	p.yaw = player.m_rotation.yaw;
-	p.roll = player.m_rotation.roll;
+	SC_MOVE_PLAYER_PACKET move_player;
+	move_player.id = player.m_id;
+	move_player.size = sizeof(SC_MOVE_PLAYER_PACKET);
+	move_player.type = SC_MOVE_PLAYER;
+	move_player.x = player.location.x;
+	move_player.y = player.location.y;
+	move_player.z = player.location.z;
+	move_player.pitch = player.m_rotation.pitch;
+	move_player.yaw = player.m_rotation.yaw;
+	move_player.roll = player.m_rotation.roll;
 	//std::cout << "클라이언트 " << c_id << "x:" << p.x << " y : " << p.y << " z : " << p.z << " 무브 패킷 전송" << std::endl << std::endl;
-	do_send(&p);
+	do_send(&move_player);
+}
+
+void Session::send_add_player_packet(Player player)
+{
+	SC_ADD_PLAYER_PACKET add_player;
+	add_player.id = player.m_id;
+	//strcpy_s(add_packet.name, p->name);
+	add_player.size = sizeof(add_player);
+	add_player.type = SC_ADD_PLAYER;
+	add_player.x = player.location.x;
+	add_player.y = player.location.y;
+	add_player.z = player.location.z;
+	do_send(&add_player);
 }
 
 void Session::send_add_block_packet(char* packet)
 {
-	SC_ADD_BLOCK_PACKET* p = reinterpret_cast<SC_ADD_BLOCK_PACKET*>(packet);
-	p->size = sizeof(SC_ADD_BLOCK_PACKET);
-	p->type = SC_ADD_BLOCK;
-	do_send(p);
+	SC_ADD_BLOCK_PACKET* add_block = reinterpret_cast<SC_ADD_BLOCK_PACKET*>(packet);
+	add_block->size = sizeof(SC_ADD_BLOCK_PACKET);
+	add_block->type = SC_ADD_BLOCK;
+	do_send(add_block);
 }
 
 void Session::send_remove_block_packet(char* packet)
 {
-	SC_REMOVE_BLOCK_PACKET* p = reinterpret_cast<SC_REMOVE_BLOCK_PACKET*>(packet);
-	p->size = sizeof(SC_REMOVE_BLOCK_PACKET);
-	p->type = SC_REMOVE_BLOCK;
-	do_send(p);
+	SC_REMOVE_BLOCK_PACKET* remove_block = reinterpret_cast<SC_REMOVE_BLOCK_PACKET*>(packet);
+	remove_block->size = sizeof(SC_REMOVE_BLOCK_PACKET);
+	remove_block->type = SC_REMOVE_BLOCK;
+	do_send(remove_block);
 }
 
 void Session::send_hp_packet(Player player)
 {
-	SC_CHANGE_HP_PACKET p;
-	p.size = sizeof(SC_CHANGE_HP_PACKET);
-	p.type = SC_CHANGE_HP;
-	p.hp = player.m_hp;
-	p.id = player.m_id;
-	do_send(&p);
+	SC_CHANGE_HP_PACKET change_hp;
+	change_hp.size = sizeof(SC_CHANGE_HP_PACKET);
+	change_hp.type = SC_CHANGE_HP;
+	change_hp.hp = player.m_hp;
+	change_hp.id = player.m_id;
+	do_send(&change_hp);
 }

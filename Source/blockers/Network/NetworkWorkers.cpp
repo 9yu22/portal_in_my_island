@@ -60,7 +60,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
 
         memcpy(&login, packet, sizeof(SC_LOGIN_INFO_PACKET));
         //FVector NewLocation(login.x, login.y, login.z);
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("%dRecv_Thread Recv Login Packet id: %d, x: %f, y: %f, z: %f"), th_num, login.id, login.x, login.y, login.z));
+        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("%dRecv_Thread Recv Login Packet id: %d, x: %f, y: %f, z: %f"), th_num, login.id, login.x, login.y, login.z));
 
         //AsyncTask(ENamedThreads::GameThread, [this, NewLocation, info]()
         //    {
@@ -88,7 +88,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
             FVector NewLocation(login.x, login.y, login.z);
             Instance->MyCharacter->SetActorLocation(NewLocation);
             Instance->MyCharacter->IsSelf = true;
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Set Login Info id: %d, x: %f, y: %f, z: %f"), login.id, login.x, login.y, login.z));
+            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Recv Login Packet id: %d, x: %f, y: %f, z: %f"), login.id, login.x, login.y, login.z));
         }
             });
         Instance->MyCharacter->loginOk = true;
@@ -120,7 +120,6 @@ void FRecvWorker::ProcessPacket(uint8* packet)
 
         memcpy(&new_player, packet, sizeof(new_player));
         Instance->SpawnCharacter(&new_player);
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("%dRecv_Thread Recv Add Packet id: %d, x: %f, y: %f, z: %f"), th_num, new_player.id, new_player.x, new_player.y, new_player.z));
 
         
         break;
@@ -178,7 +177,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         SC_CHANGE_HP_PACKET new_hp;
         
         memcpy(&new_hp, packet, sizeof(new_hp));
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("RecvThread.. Recv My New Hp Packet My Id:%d, Hp: %d"), new_hp.id, new_hp.hp));
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Recv New Hp Packet My Id:%d, Hp: %d"), new_hp.id, new_hp.hp));
         Instance->MyCharacter->health = new_hp.hp;
         break;
     default:
@@ -188,7 +187,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
 
 bool FRecvWorker::Init()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Thread Init")));
+    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Thread Init")));
     return true;
 }
 
@@ -222,78 +221,78 @@ void FRecvWorker::Stop()
 
 // SendWorker
 
-FSendWorker::FSendWorker(USGameInstance* Instance, AblockersCharacter* Character) : Instance(Instance), Character(Character)
-{
-    c_Socket = Instance->Socket;
-}
-
-FSendWorker::~FSendWorker()
-{
-}
-
-bool FSendWorker::Init()
-{
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Send Thread Init")));
-    return true;
-}
-
-uint32 FSendWorker::Run()
-{
-    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("SendWorker Running Start")));
-    //UPacketHeader Header;
-
-    while (!Character->loginOk) {
-        // 로그인 패킷 받기 전까지 대기
-    }
-
-    int32 BytesSent = 0;
-       
-    double LastSendTime = FPlatformTime::Seconds();
-
-    //while (sendRunning)
-    //{
-    //    if (IsValid(Character))
-    //    {
-    //        CurrentLocation = Character->GetActorLocation();
-    //        CurrentRotation = Character->GetActorRotation();
-
-    //        double CurrentTime = FPlatformTime::Seconds();
-
-    //        if (CurrentTime - LastSendTime >= 0.1)
-    //        {
-    //            CS_MOVE_PACKET new_pos;
-    //            // 위치 및 회전 정보 패킷 구성
-    //            new_pos.type = CS_MOVE;
-    //            new_pos.size = sizeof(CS_MOVE_PACKET);
-    //            new_pos.x = CurrentLocation.X;
-    //            new_pos.y = CurrentLocation.Y;
-    //            new_pos.z = CurrentLocation.Z;
-    //            new_pos.pitch = CurrentRotation.Pitch;
-    //            new_pos.yaw = CurrentRotation.Yaw;
-    //            new_pos.roll = CurrentRotation.Roll;
-
-    //            BytesSent = 0;
-    //            c_Socket->Send((uint8*)&new_pos, sizeof(new_pos), BytesSent);
-
-    //            LastSendTime = CurrentTime;
-
-    //            // 디버그 메시지 출력
-    //            //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Send My Move Packet, x: %f, y: %f, z: %f"), new_pos.x, new_pos.y, new_pos.z));
-    //        }
-    //    }
-    //    else
-    //    {
-    //        sendRunning = false;
-    //    }
-
-    //    //FPlatformProcess::Sleep(0.01);
-    //}
-
-    return 0;
-}
-
-void FSendWorker::Stop()
-{
-    sendRunning = false;
-}
+//FSendWorker::FSendWorker(USGameInstance* Instance, AblockersCharacter* Character) : Instance(Instance), Character(Character)
+//{
+//    c_Socket = Instance->Socket;
+//}
+//
+//FSendWorker::~FSendWorker()
+//{
+//}
+//
+//bool FSendWorker::Init()
+//{
+//    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Send Thread Init")));
+//    return true;
+//}
+//
+//uint32 FSendWorker::Run()
+//{
+//    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("SendWorker Running Start")));
+//    //UPacketHeader Header;
+//
+//    while (!Character->loginOk) {
+//        // 로그인 패킷 받기 전까지 대기
+//    }
+//
+//    int32 BytesSent = 0;
+//       
+//    double LastSendTime = FPlatformTime::Seconds();
+//
+//    //while (sendRunning)
+//    //{
+//    //    if (IsValid(Character))
+//    //    {
+//    //        CurrentLocation = Character->GetActorLocation();
+//    //        CurrentRotation = Character->GetActorRotation();
+//
+//    //        double CurrentTime = FPlatformTime::Seconds();
+//
+//    //        if (CurrentTime - LastSendTime >= 0.1)
+//    //        {
+//    //            CS_MOVE_PACKET new_pos;
+//    //            // 위치 및 회전 정보 패킷 구성
+//    //            new_pos.type = CS_MOVE;
+//    //            new_pos.size = sizeof(CS_MOVE_PACKET);
+//    //            new_pos.x = CurrentLocation.X;
+//    //            new_pos.y = CurrentLocation.Y;
+//    //            new_pos.z = CurrentLocation.Z;
+//    //            new_pos.pitch = CurrentRotation.Pitch;
+//    //            new_pos.yaw = CurrentRotation.Yaw;
+//    //            new_pos.roll = CurrentRotation.Roll;
+//
+//    //            BytesSent = 0;
+//    //            c_Socket->Send((uint8*)&new_pos, sizeof(new_pos), BytesSent);
+//
+//    //            LastSendTime = CurrentTime;
+//
+//    //            // 디버그 메시지 출력
+//    //            //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Send My Move Packet, x: %f, y: %f, z: %f"), new_pos.x, new_pos.y, new_pos.z));
+//    //        }
+//    //    }
+//    //    else
+//    //    {
+//    //        sendRunning = false;
+//    //    }
+//
+//    //    //FPlatformProcess::Sleep(0.01);
+//    //}
+//
+//    return 0;
+//}
+//
+//void FSendWorker::Stop()
+//{
+//    sendRunning = false;
+//}
 

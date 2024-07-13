@@ -11,138 +11,9 @@
 using namespace std;
 constexpr int MAX_USER = 4;
 
-//enum OP_TYPE { OP_ACCEPT, OP_RECV, OP_SEND };
-//class EX_OVERLAPPED {
-//public:
-//	WSAOVERLAPPED _over;
-//	WSABUF _wsabuf;
-//	char _send_buf[BUF_SIZE];
-//	OP_TYPE _op_type;
-//	char _packet_type;
-//	EX_OVERLAPPED()
-//	{
-//		_wsabuf.len = BUF_SIZE;
-//		_wsabuf.buf = _send_buf;
-//		_op_type = OP_RECV;
-//		ZeroMemory(&_over, sizeof(_over));
-//	}
-//	EX_OVERLAPPED(unsigned char* packet)
-//	{
-//		_wsabuf.len = packet[0];
-//		_wsabuf.buf = _send_buf;
-//		ZeroMemory(&_over, sizeof(_over));
-//		_op_type = OP_SEND;
-//		_packet_type = packet[1];
-//		memcpy(_send_buf, packet, packet[0]);
-//	}
-//};
-
-//class SESSION {
-//	EX_OVERLAPPED _recv_over;
-//
-//public:
-//	bool in_use;
-//	int _id;
-//	int hp;
-//	SOCKET _socket;
-//	float	x, y, z;
-//	float pitch, yaw, roll;
-//	//char	_name[NAME_SIZE];
-//
-//	int		_prev_remain;
-//public:
-//	SESSION() : _socket(0), in_use(false)
-//	{
-//		_id = -1;
-//		x = 0;
-//		y = 0;
-//		z = 0;
-//		hp = 100;
-//		//_name[0] = 0;
-//		_prev_remain = 0;
-//	}
-//
-//	~SESSION() {}
-//
-//	void do_recv()
-//	{
-//		DWORD recv_flag = 0;
-//		memset(&_recv_over._over, 0, sizeof(_recv_over._over));
-//		_recv_over._wsabuf.len = BUF_SIZE - _prev_remain;
-//		_recv_over._wsabuf.buf = _recv_over._send_buf + _prev_remain;
-//		WSARecv(_socket, &_recv_over._wsabuf, 1, 0, &recv_flag,
-//			&_recv_over._over, 0);
-//	}
-//
-//	void do_send(void* packet)
-//	{
-//		EX_OVERLAPPED* sdata = new EX_OVERLAPPED{ reinterpret_cast<unsigned char*>(packet) };
-//		WSASend(_socket, &sdata->_wsabuf, 1, 0, 0, &sdata->_over, 0);
-//	}
-//
-//	void send_login_info_packet()
-//	{
-//		SC_LOGIN_INFO_PACKET p;
-//		p.id = _id;
-//		p.size = sizeof(SC_LOGIN_INFO_PACKET);
-//		p.type = SC_LOGIN_INFO;
-//		p.x = x;
-//		p.y = y;
-//		p.z = z;
-//		std::cout << "id: " << p.id << " x:" << p.x << " y: " << p.y << " z: " << p.z << " 로그인 패킷 전송" << std::endl;
-//		do_send(&p);
-//	}
-//
-//	void send_move_packet(int c_id);
-//	void send_add_block_packet(char* packet);
-//	void send_remove_block_packet(char* packet);
-//	void send_hp_packet(int hit_id);
-//};
-//
 array<Session, MAX_USER> clients;
 Map map;
 //
-//void SESSION::send_move_packet(int c_id)
-//{
-//	SC_MOVE_PLAYER_PACKET p;
-//	p.id = c_id;
-//	p.size = sizeof(SC_MOVE_PLAYER_PACKET);
-//	p.type = SC_MOVE_PLAYER;
-//	p.x = clients[c_id].x;
-//	p.y = clients[c_id].y;
-//	p.z = clients[c_id].z;
-//	p.pitch = clients[c_id].pitch;
-//	p.yaw = clients[c_id].yaw;
-//	p.roll = clients[c_id].roll;
-//	//std::cout << "클라이언트 " << c_id << "x:" << p.x << " y : " << p.y << " z : " << p.z << " 무브 패킷 전송" << std::endl << std::endl;
-//	do_send(&p);
-//}
-//
-//void SESSION::send_add_block_packet(char* packet)
-//{
-//	SC_ADD_BLOCK_PACKET* p = reinterpret_cast<SC_ADD_BLOCK_PACKET*>(packet);
-//	p->size = sizeof(SC_ADD_BLOCK_PACKET);
-//	p->type = SC_ADD_BLOCK;
-//	do_send(p);
-//}
-//
-//void SESSION::send_remove_block_packet(char* packet)
-//{
-//	SC_REMOVE_BLOCK_PACKET* p = reinterpret_cast<SC_REMOVE_BLOCK_PACKET*>(packet);
-//	p->size = sizeof(SC_REMOVE_BLOCK_PACKET);
-//	p->type = SC_REMOVE_BLOCK;
-//	do_send(p);
-//}
-//
-//void SESSION::send_hp_packet(int hit_id)
-//{
-//	SC_CHANGE_HP_PACKET p;
-//	p.size = sizeof(SC_CHANGE_HP_PACKET);
-//	p.type = SC_CHANGE_HP;
-//	p.hp = clients[hit_id].hp;
-//	p.id = hit_id;
-//	do_send(&p);
-//}
 
 int get_new_client_id()
 {
@@ -154,15 +25,6 @@ int get_new_client_id()
 
 void disconnect(int c_id)
 {
-	//for (auto& pl : clients) {
-	//	if (pl.b_use == false) continue;
-	//	if (pl.m_player.m_id == c_id) continue;
-	//	SC_REMOVE_PLAYER_PACKET p;
-	//	p.id = c_id;
-	//	p.size = sizeof(p);
-	//	p.type = SC_REMOVE_PLAYER;
-	//	pl.do_send(&p);
-	//}
 	std::cout << "클라이언트 " << c_id << " 연결 끊김" << std::endl;
 	closesocket(clients[c_id].m_socket);
 	clients[c_id].b_use = false;
@@ -175,37 +37,23 @@ void process_packet(int c_id, char* packet)
 		std::cout << "클라이언트 " << c_id << " 로그인 패킷 도착" << std::endl;
 		//CS_LOGIN_PACKET* p = reinterpret_cast<CS_LOGIN_PACKET*>(packet);
 		//strcpy_s(clients[c_id]._name, p->name);
-		clients[c_id].send_login_info_packet();
+		clients[c_id].send_login_player_packet();
 
 		std::cout << std::endl;
 		for (auto& pl : clients) { // 새로 추가된 클라를 모두에게 전송
 			if (false == pl.b_use) continue;
-			if (pl.m_player.m_id== c_id) continue;
-			SC_ADD_PLAYER_PACKET add_packet;
-			add_packet.id = c_id;
-			//strcpy_s(add_packet.name, p->name);
-			add_packet.size = sizeof(add_packet);
-			add_packet.type = SC_ADD_PLAYER;
-			add_packet.x = clients[c_id].m_player.location.x;
-			add_packet.y = clients[c_id].m_player.location.y;
-			add_packet.z = clients[c_id].m_player.location.z;
-			pl.do_send(&add_packet);
-			std::cout << "새로운 클라이언트 " << c_id << "의 ADD 패킷을 원래 있던 클라이언트 " << pl.m_player.m_id<< "에게 전송" << std::endl;
+			if (pl.m_player.m_id == c_id) continue;
+			pl.send_add_player_packet(clients[c_id].m_player);
+
+			//pl.do_send(&add_packet);
+			std::cout << "클라이언트 " << pl.m_player.m_id << "에게 " << c_id << "의 ADD 패킷을 전송" << std::endl;
 		}
 		for (auto& pl : clients) { // 새로 추가된 클라에게 모두 전송
 			if (false == pl.b_use) continue;
 			if (pl.m_player.m_id == c_id) continue;
-			SC_ADD_PLAYER_PACKET add_packet;
-			add_packet.id = pl.m_player.m_id;
-			//strcpy_s(add_packet.name, pl._name);
-			add_packet.size = sizeof(add_packet);
-			add_packet.type = SC_ADD_PLAYER;
-			add_packet.x = pl.m_player.location.x;
-			add_packet.y = pl.m_player.location.y;
-			add_packet.z = pl.m_player.location.z;
-			clients[c_id].do_send(&add_packet);
-			std::cout << "새로운 클라이언트 " << c_id <<"에게 원래 존재하던 " << pl.m_player.m_id << "의 ADD 패킷을 전송" << std::endl;
+			clients[c_id].send_add_player_packet(pl.m_player);
 
+			std::cout << "클라이언트 " << c_id <<"에게 " << pl.m_player.m_id << "의 ADD 패킷을 전송" << std::endl;
 		}
 		break;
 	}
@@ -217,7 +65,7 @@ void process_packet(int c_id, char* packet)
 		//std::cout << "클라이언트 " <<c_id << "x:" << p->x << " y : " << p->y << " z : " << p->z << " 무브 패킷 도착" << std::endl;
 		for (auto& pl : clients)
 			if (true == pl.b_use && pl.m_player.m_id != c_id)
-				pl.send_move_packet(clients[c_id].m_player);
+				pl.send_move_player_packet(clients[c_id].m_player);
 		break;
 	}
 	case CS_ADD_BLOCK: {
@@ -227,9 +75,6 @@ void process_packet(int c_id, char* packet)
 				if (true == pl.b_use)
 					pl.send_add_block_packet(packet);
 		}
-		//for (auto& pl : clients)
-		//	if (true == pl.b_use /*&& pl.m_player.m_id != c_id*/)
-		//		pl.send_add_block_packet(packet);
 			
 		break;
 	}
@@ -240,9 +85,6 @@ void process_packet(int c_id, char* packet)
 				if (true == pl.b_use)
 					pl.send_remove_block_packet(packet);
 		}		
-		//for (auto& pl : clients)
-		//	if (true == pl.b_use /*&& pl.m_player.m_id != c_id*/)
-		//		pl.send_remove_block_packet(packet);
 				
 		break;
 	}
@@ -311,7 +153,21 @@ int main()
 			int client_id = get_new_client_id();
 			if (client_id != -1) {
 				clients[client_id].b_use = true;
-				clients[client_id].m_player.SetWorldLocation(900.f - 300 * client_id, 1600.f, 1000.f);
+				switch (client_id % 4) {
+				case 0:
+					clients[client_id].m_player.SetWorldLocation(8000.f, 8000.f, 1000.f);
+					break;
+				case 1:
+					clients[client_id].m_player.SetWorldLocation(-8000.f, -8000.f, 1000.f);
+					break;
+				case 2:
+					clients[client_id].m_player.SetWorldLocation(8000.f, -8000.f, 1000.f);
+					break;
+				case 3:
+					clients[client_id].m_player.SetWorldLocation(-8000.f, 8000.f, 1000.f);
+					break;
+				}
+				
 				clients[client_id].m_player.m_id = client_id;
 				clients[client_id].m_prev_remain = 0;
 				clients[client_id].m_socket = c_socket;

@@ -39,24 +39,24 @@ public:
     virtual void Stop() override;
 };
 
-class BLOCKERS_API FSendWorker : public FRunnable
-{
-private:
-    USGameInstance* Instance;
-    FSocket* c_Socket;
-    AblockersCharacter* Character;
-    bool sendRunning = true;
-
-    FVector CurrentLocation;
-    FRotator CurrentRotation;
-
-public:
-    FSendWorker(USGameInstance* Instance, AblockersCharacter* Character);
-    virtual ~FSendWorker();
-
-    virtual bool Init() override;
-    virtual uint32 Run() override;
-    virtual void Stop() override;
-
-    //void UpdateLocation(const FVector& NewLocation);
-};
+//class BLOCKERS_API FSendWorker : public FRunnable
+//{
+//private:
+//    USGameInstance* Instance;
+//    FSocket* c_Socket;
+//    AblockersCharacter* Character;
+//    bool sendRunning = true;
+//
+//    FVector CurrentLocation;
+//    FRotator CurrentRotation;
+//
+//public:
+//    FSendWorker(USGameInstance* Instance, AblockersCharacter* Character);
+//    virtual ~FSendWorker();
+//
+//    virtual bool Init() override;
+//    virtual uint32 Run() override;
+//    virtual void Stop() override;
+//
+//    //void UpdateLocation(const FVector& NewLocation);
+//};

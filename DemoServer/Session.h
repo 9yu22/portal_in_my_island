@@ -47,8 +47,9 @@ public:
 	void do_recv();
 	void do_send(void* packet);
 
-	void send_login_info_packet();
-	void send_move_packet(Player player);
+	void send_login_player_packet();
+	void send_move_player_packet(Player player);
+	void send_add_player_packet(Player player);
 	void send_add_block_packet(char* packet);
 	void send_remove_block_packet(char* packet);
 	void send_hp_packet(Player player);

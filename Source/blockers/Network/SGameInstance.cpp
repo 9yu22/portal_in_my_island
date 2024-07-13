@@ -32,12 +32,12 @@ void USGameInstance::ConnectToGameServer()
 	InternetAddr->SetIp(Ip.Value);
 	InternetAddr->SetPort(Port);
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Connecting To Server..")));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Connecting To Server..")));
 
 	bool Connected = Socket->Connect(*InternetAddr); // 블로킹 방식, 연결 부분은 굳이 논블로킹 방식 고려 필요 x(체감 잘 안됨)
 
 	if (Connected) {
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Connection Success!")));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Connection Success!")));
 
 		// Session
 		// PacketSession 객체 생성 및 GameServerSession 에 TSharedPtr객체 할당, 이 객체에 생성된 객체를 가리키는 포인터 존재
@@ -159,8 +159,10 @@ void USGameInstance::SpawnCharacter(SC_ADD_PLAYER_PACKET* new_player)
 							SpawnCharacter->id = new_player->id;
 							UCharacterMovementComponent* MovementComponent = SpawnCharacter->GetCharacterMovement();
 							MovementComponent->GravityScale = 0.0f;  // 중력을 0으로 설정
+							GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Packet id: %d, x: %f, y: %f, z: %f"), SpawnCharacter->id,
+								SpawnCharacter->GetActorLocation().X, SpawnCharacter->GetActorLocation().Y, SpawnCharacter->GetActorLocation().Z));
 						}
-					}
+					}					
 				}
 			}
 		});
