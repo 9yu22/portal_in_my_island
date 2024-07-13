@@ -9,7 +9,7 @@
 //#include "S1.h"
 //#include "PacketSession.h"
 #include "../blockersCharacter.h"
-//#include "Protocol.h"
+#include "Protocol.h"
 #include "SGameInstance.generated.h"
 
 /**
@@ -39,6 +39,7 @@ public:
 	static USGameInstance* GetMyInstance(UObject* WorldContextObject); // static 함수는 객체 존재 없이 호출가능
 
 	bool SetIpAddress();
+	void SpawnCharacter(SC_ADD_PLAYER_PACKET* new_player);
 
 protected:
 	virtual void Shutdown() override;
@@ -50,6 +51,7 @@ public:
 	int16 Port = 4040;
 
 	//ProcessQueueBlock Blocks;
+	TArray<AblockersCharacter*> Players;
 	AblockersCharacter* MyCharacter;
 	TQueue<BlockInfo> BlockQueue;
 	TQueue<AnimInfo> AnimQueue;

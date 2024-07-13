@@ -71,7 +71,7 @@ public:
 	TSubclassOf<class ABullet> bulletFactory;
 
 	int8 id = -1;
-	TArray<AblockersCharacter*> Players;
+	//TArray<AblockersCharacter*> Players;
 	bool loginOk = false;
 
 	// 캐릭터 위치를 보정해주는 로직을 포함한 함수

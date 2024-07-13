@@ -40,18 +40,18 @@ void AblockersGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	// Spawn 'i' players
-	TSet<ABKPlayerController*> PlayerControllersSet;
-	for (int32 i = 0; i < 1; i++)
-	{
-		// Spawn player
-		ABKPlayerController* NewPlayerController = Cast<ABKPlayerController>(UGameplayStatics::CreatePlayer(GetWorld(), -1, true));
+	//TSet<ABKPlayerController*> PlayerControllersSet;
+	//for (int32 i = 0; i < 1; i++)
+	//{
+	//	// Spawn player
+	//	ABKPlayerController* NewPlayerController = Cast<ABKPlayerController>(UGameplayStatics::CreatePlayer(GetWorld(), -1, true));
 
-		if (NewPlayerController)
-		{
+	//	if (NewPlayerController)
+	//	{
 
-			PlayerControllersSet.Add(NewPlayerController);
-		}
-	}
+	//		PlayerControllersSet.Add(NewPlayerController);
+	//	}
+	//}
 
 	//Bind our Player died delegate to the Gamemode's PlayerDied function.
 	if (!OnPlayerDied.IsBound())

@@ -108,7 +108,7 @@ void AblockersCharacter::BeginPlay()
 
 	Super::BeginPlay();
 
-	TArray<AActor*> FoundActors;
+	/*TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AblockersCharacter::StaticClass(), FoundActors);
 
 	for (AActor* Actor : FoundActors)
@@ -118,7 +118,7 @@ void AblockersCharacter::BeginPlay()
 		{
 			Players.Add(Character);
 		}
-	}
+	}*/
 
 	PacketLocation = GetActorLocation();
 	PacketRotation = GetActorRotation();
