@@ -152,6 +152,22 @@ int get_new_client_id()
 	return -1;
 }
 
+void disconnect(int c_id)
+{
+	//for (auto& pl : clients) {
+	//	if (pl.b_use == false) continue;
+	//	if (pl.m_player.m_id == c_id) continue;
+	//	SC_REMOVE_PLAYER_PACKET p;
+	//	p.id = c_id;
+	//	p.size = sizeof(p);
+	//	p.type = SC_REMOVE_PLAYER;
+	//	pl.do_send(&p);
+	//}
+	std::cout << "Å¬¶óÀÌ¾ðÆ® " << c_id << " ¿¬°á ²÷±è" << std::endl;
+	closesocket(clients[c_id].m_socket);
+	clients[c_id].b_use = false;
+}
+
 void process_packet(int c_id, char* packet)
 {
 	switch (packet[1]) {
@@ -238,24 +254,12 @@ void process_packet(int c_id, char* packet)
 		clients[p->hit_player_id].send_hp_packet(clients[p->hit_player_id].m_player);
 		break;
 	}
+	case CS_DISCONNECT:
+		CS_DISCONNECT_PACKET* p = reinterpret_cast<CS_DISCONNECT_PACKET*>(packet);
+		disconnect(p->id);
 	}
 
 	
-}
-
-void disconnect(int c_id)
-{
-	for (auto& pl : clients) {
-		if (pl.b_use == false) continue;
-		if (pl.m_player.m_id == c_id) continue;
-		SC_REMOVE_PLAYER_PACKET p;
-		p.id = c_id;
-		p.size = sizeof(p);
-		p.type = SC_REMOVE_PLAYER;
-		pl.do_send(&p);
-	}
-	closesocket(clients[c_id].m_socket);
-	clients[c_id].b_use = false;
 }
 
 int main()

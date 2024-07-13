@@ -21,6 +21,8 @@ constexpr char CS_REMOVE_BLOCK = 10;
 constexpr char SC_CHANGE_HP = 11;
 constexpr char CS_CHANGE_HP = 12;
 
+constexpr char CS_DISCONNECT = 50;
+
 enum class Anim : int8 { IDLE, MOVE, JUMP };
 
 #pragma pack (push, 1)
@@ -122,5 +124,12 @@ struct SC_CHANGE_HP_PACKET {
     int8 id;
     int hp;
 };
+
+struct CS_DISCONNECT_PACKET {
+    uint8 size;
+    char type;
+    char id;
+};
+
 
 #pragma pack (pop)
