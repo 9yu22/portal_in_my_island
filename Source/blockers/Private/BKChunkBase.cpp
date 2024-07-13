@@ -77,19 +77,25 @@ void ABKChunkBase::ClearMesh()
 	MeshData.Clear();
 }
 
-void ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
+bool ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
 {
 	// 서버 연결 안되어도 블록 설치는 가능하게 일단 아래 코드는 유지
-	ModifyVoxelData(Position, Block);
+	bool removingSuccess = ModifyVoxelData(Position, Block);
 
-	ClearMesh();
+	if (removingSuccess)
+	{
+		ClearMesh();
 
-	GenerateMesh();
+		GenerateMesh();
 
-	ApplyMesh();
+		ApplyMesh();
+
+		return true;
+	}
+	return false;
 }
 
-void ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const BKEBlock Block)
+bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const BKEBlock Block)
 {
 	// 조건에 따라 일부 인자는 안쓰인다. 함수를 합쳐놔서 이런 구조로 되어있다.
 
@@ -146,9 +152,11 @@ void ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector
 		}
 	}
 	if(instance->Socket == nullptr) {
-		ModifyVoxel(Position, Block);
+		bool removingSuccess = ModifyVoxel(Position, Block);
+		return removingSuccess;
 	}
 	//ModifyVoxel(Position, Block);
+	return false;
 }
 
 void ABKChunkBase::SetOwningChunkWorld(ABKChunkWorld* NewOwner)
