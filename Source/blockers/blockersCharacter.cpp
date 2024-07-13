@@ -33,14 +33,14 @@
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 
-AblockersCharacter::AblockersCharacter()
+AblockersCharacter::AblockersCharacter() 
 {
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_blockers(TEXT("/Game/Blockers/Blueprints/Character/new_player_Mesh.new_player_Mesh"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_blockers(TEXT("/Game/Blockers/Blueprints/Character/CharacterSkeletalMesh.CharacterSkeletalMesh"));
 	if (SK_blockers.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(SK_blockers.Object);
 	}
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimBPClass(TEXT("/Game/Blockers/Blueprints/Character/BlockersAnimBP.BlockersAnimBP_C"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimBPClass(TEXT("/Game/Blockers/Blueprints/Character/CharacterAnimBP.CharacterAnimBP_C"));
 	if (AnimBPClass.Succeeded()) {
 		UE_LOG(LogTemp, Warning, TEXT("Animation OK"));
 		GetMesh()->SetAnimInstanceClass(AnimBPClass.Class);
