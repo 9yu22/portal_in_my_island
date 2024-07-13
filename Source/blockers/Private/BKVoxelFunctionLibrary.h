@@ -13,6 +13,9 @@ UCLASS()
 class UBKVoxelFunctionLibrary final : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
+	
+public:
+	static const int32 ChunkSize = 150;
 
 public:
 	UFUNCTION(BlueprintPure, Category = "Voxel")

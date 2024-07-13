@@ -25,7 +25,7 @@ class ABKChunkWorld final : public AActor
 	TObjectPtr<UMaterialInterface> Material;
 
 	UPROPERTY(EditInstanceOnly, Category = "Chunk")
-	int Size = 64;
+	int Size = 150;
 
 	UPROPERTY(EditInstanceOnly, Category = "Height Map")
 	EGenerationType GenerationType;

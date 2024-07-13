@@ -23,17 +23,17 @@ class BLOCKERS_API ABKChunkBase : public AActor
 	ABKChunkBase();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Chunk")
-	int Size = 64;
+	int Size = 150;
 
 	TObjectPtr<UMaterialInterface> Material;
 	float Frequency;
 	EGenerationType GenerationType;
 
 	UFUNCTION(BlueprintCallable, Category = "Chunk")
-	void ModifyVoxel(const FIntVector Position, const BKEBlock Block);
+	bool ModifyVoxel(const FIntVector Position, const BKEBlock Block);
 
 	UFUNCTION(BlueprintCallable, Category = "Chunk")
-	void SendModifiedVoxel(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const BKEBlock Block);
+	bool SendModifiedVoxel(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const BKEBlock Block);
 
 	// Reference to the owning ChunkWorld
 	UPROPERTY()
@@ -55,7 +55,7 @@ protected:
 	virtual void Generate3DHeightMap(const FVector Position) PURE_VIRTUAL(ABKChunkBase::Generate3DHeightMap);
 	virtual void GenerateMesh() PURE_VIRTUAL(ABKChunkBase::GenerateMesh);
 
-	virtual void ModifyVoxelData(const FIntVector Position, const BKEBlock Block) PURE_VIRTUAL(ABKChunkBase::RemoveVoxelData);
+	virtual bool ModifyVoxelData(const FIntVector Position, const BKEBlock Block) PURE_VIRTUAL(ABKChunkBase::ModifyVoxelData, return false;);
 
 	TObjectPtr<UProceduralMeshComponent> Mesh;
 	FastNoiseLite* Noise;
