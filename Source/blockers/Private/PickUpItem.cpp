@@ -60,6 +60,7 @@ void APickUpItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 void APickUpItem::OnInteract()
 {
 	FString pickup = FString::Printf(TEXT("Picked up: %s"), *Name);
+	UGameplayStatics::PlaySoundAtLocation(this, PickUpSound, GetActorLocation());
 	//GEngine->AddOnScreenDebugMessage(1, 5, FColor::White, pickup);
 	//Destroy();
 
