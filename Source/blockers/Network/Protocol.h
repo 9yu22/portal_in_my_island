@@ -1,6 +1,6 @@
 #pragma once
 
-#define BUFSIZE = 256;
+constexpr int BUFFER_SIZE = 256;
 
 constexpr char TEST = 100;
 constexpr char LOCATION = 90;
@@ -42,14 +42,14 @@ struct CS_MOVE_PACKET {
 struct SC_LOGIN_INFO_PACKET {
     uint8 size;
     int8 type;
-    int8 id;
+    int id;
     float x, y, z;
 };
 
 struct SC_ADD_PLAYER_PACKET {
     uint8 size;
     int8 type;
-    int8 id;
+    int id;
     float x, y, z;
     //char	name[NAME_SIZE];
 };
@@ -57,13 +57,13 @@ struct SC_ADD_PLAYER_PACKET {
 struct SC_REMOVE_PLAYER_PACKET {
     uint8 size;
     int8 type;
-    int8 id;
+    int id;
 };
 
 struct SC_MOVE_PLAYER_PACKET {
     uint8 size;
     int8 type;
-    int8 id;
+    int id;
     float x, y, z;
     float pitch, yaw, roll;
 };
@@ -71,24 +71,24 @@ struct SC_MOVE_PLAYER_PACKET {
 struct SC_ADD_BLOCK_PACKET {
     uint8 size;
     int8 type;
-    int8 chunk_index;
-    int32 ix, iy, iz;
+    int chunk_index;
+    int ix, iy, iz;
     int8 blocktype;
 };
 
 struct CS_ADD_BLOCK_PACKET {
     uint8 size;
     int8 type;
-    int8 chunk_index;
-    int32 ix, iy, iz;
+    int chunk_index;
+    int ix, iy, iz;
     int8 blocktype;
 };
 
 struct SC_REMOVE_BLOCK_PACKET {
     uint8 size;
     int8 type;
-    int8 chunk_index;
-    int32 ix, iy, iz;
+    int chunk_index;
+    int ix, iy, iz;
     float wx, wy, wz; // 히트된 부분의 월드 좌표 벡터
     float nx, ny, nz; // 히트된 부분의 노멀 벡터
     int8 blocktype;
@@ -97,8 +97,8 @@ struct SC_REMOVE_BLOCK_PACKET {
 struct CS_REMOVE_BLOCK_PACKET {
     uint8 size;
     int8 type;
-    int8 chunk_index;
-    int32 ix, iy, iz;
+    int chunk_index;
+    int ix, iy, iz;
     float wx, wy, wz; // 히트된 부분의 월드 좌표 벡터
     float nx, ny, nz; // 히트된 부분의 노멀 벡터
     int8 blocktype;
@@ -107,7 +107,7 @@ struct CS_REMOVE_BLOCK_PACKET {
 struct ANIM_PACKET {
     uint8 size;
     int8 type;
-    int8 id;
+    int id;
     int8 anim_type;
 };
 
@@ -115,20 +115,20 @@ struct CS_CHANGE_HP_PACKET {
     uint8 size;
     int8 type;
     //int8 id;
-    int8 hit_id;
+    int hit_id;
 };
 
 struct SC_CHANGE_HP_PACKET {
     uint8 size;
     int8 type;
-    int8 id;
-    int hp;
+    int id;
+    float hp;
 };
 
 struct CS_DISCONNECT_PACKET {
     uint8 size;
-    char type;
-    char id;
+    int8 type;
+    int id;
 };
 
 

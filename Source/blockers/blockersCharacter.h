@@ -70,7 +70,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ABullet> bulletFactory;
 
-	int8 id = -1;
+	int id = -1;
 	//TArray<AblockersCharacter*> Players;
 	bool loginOk = false;
 

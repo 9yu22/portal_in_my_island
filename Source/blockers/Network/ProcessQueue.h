@@ -26,7 +26,7 @@
 //};
 
 struct BlockInfo {
-    int8 chunk_index;
+    int chunk_index;
     FIntVector index;
     FVector world_index; // 블록 제거에만 사용
     FVector normal; // 블록 제거에만 사용

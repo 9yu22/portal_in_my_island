@@ -10,7 +10,7 @@ class Player : public GameObject
 {
 public:
 	int m_id;
-	int m_hp;
+	float m_hp;
 	WorldRotation m_rotation;
 	std::array<Item, 1> m_player_items;
 

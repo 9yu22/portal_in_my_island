@@ -47,6 +47,7 @@ void process_packet(int c_id, char* packet)
 
 			//pl.do_send(&add_packet);
 			std::cout << "클라이언트 " << pl.m_player.m_id << "에게 " << c_id << "의 ADD 패킷을 전송" << std::endl;
+			//std::cout << "-> id: " << c_id << " x: " << clients[c_id].m_player.location.x << " y: "<< clients[c_id].m_player.location.y << " z: " << clients[c_id].m_player.location.z << std::endl;
 		}
 		for (auto& pl : clients) { // 새로 추가된 클라에게 모두 전송
 			if (false == pl.b_use) continue;
@@ -54,6 +55,8 @@ void process_packet(int c_id, char* packet)
 			clients[c_id].send_add_player_packet(pl.m_player);
 
 			std::cout << "클라이언트 " << c_id <<"에게 " << pl.m_player.m_id << "의 ADD 패킷을 전송" << std::endl;
+			//std::cout << "-> id: " << pl.m_player.m_id << " x: " << pl.m_player.location.x << " y: " << pl.m_player.location.y << " z: " << pl.m_player.location.z << std::endl;
+
 		}
 		break;
 	}
@@ -91,7 +94,7 @@ void process_packet(int c_id, char* packet)
 
 	case CS_CHANGE_HP: {
 		CS_CHANGE_HP_PACKET* p = reinterpret_cast<CS_CHANGE_HP_PACKET*>(packet);
-		clients[p->hit_player_id].m_player.m_hp -= 20;
+		clients[p->hit_player_id].m_player.m_hp -= 20.f;
 		std::cout << "클라이언트 " << p->hit_player_id << " 공격당함, 남은 hp: " << clients[p->hit_player_id].m_player.m_hp << std::endl;
 		clients[p->hit_player_id].send_hp_packet(clients[p->hit_player_id].m_player);
 		break;
@@ -153,7 +156,7 @@ int main()
 			int client_id = get_new_client_id();
 			if (client_id != -1) {
 				clients[client_id].b_use = true;
-				switch (client_id % 4) {
+			/*	switch (client_id % 4) {
 				case 0:
 					clients[client_id].m_player.SetWorldLocation(8000.f, 8000.f, 1000.f);
 					break;
@@ -166,9 +169,25 @@ int main()
 				case 3:
 					clients[client_id].m_player.SetWorldLocation(-8000.f, 8000.f, 1000.f);
 					break;
+				}*/
+
+				// 테스트용 시작 좌표
+				clients[client_id].m_player.m_id = client_id;
+				switch (client_id % 4) {
+				case 0:
+					clients[client_id].m_player.SetWorldLocation(1000.f, 1000.f, 1000.f);
+					break;
+				case 1:
+					clients[client_id].m_player.SetWorldLocation(-1000.f, -1000.f, 1000.f);
+					break;
+				case 2:
+					clients[client_id].m_player.SetWorldLocation(1000.f, -1000.f, 1000.f);
+					break;
+				case 3:
+					clients[client_id].m_player.SetWorldLocation(-1000.f, 1000.f, 1000.f);
+					break;
 				}
 				
-				clients[client_id].m_player.m_id = client_id;
 				clients[client_id].m_prev_remain = 0;
 				clients[client_id].m_socket = c_socket;
 				CreateIoCompletionPort(reinterpret_cast<HANDLE>(c_socket),

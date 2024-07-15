@@ -53,14 +53,14 @@ struct CS_MOVE_PACKET {
 struct SC_LOGIN_INFO_PACKET {
     u_char size;
     char type;
-    char id;
+    int id;
     float x, y, z;
 };
 
 struct SC_ADD_PLAYER_PACKET {
     u_char size;
     char type;
-    char id;
+    int id;
     float x, y, z;
     //char	name[NAME_SIZE];
 };
@@ -68,13 +68,13 @@ struct SC_ADD_PLAYER_PACKET {
 struct SC_REMOVE_PLAYER_PACKET {
     u_char size;
     char type;
-    char id;
+    int id;
 };
 
 struct SC_MOVE_PLAYER_PACKET {
     u_char size;
     char type;
-    char id;
+    int id;
     float x, y, z;
     float pitch, yaw, roll;
 };
@@ -82,7 +82,7 @@ struct SC_MOVE_PLAYER_PACKET {
 struct SC_ADD_BLOCK_PACKET {
     u_char size;
     char type;
-    char chunk_index;
+    int chunk_index;
     int ix, iy, iz;
     char blocktype;
 };
@@ -90,7 +90,7 @@ struct SC_ADD_BLOCK_PACKET {
 struct CS_ADD_BLOCK_PACKET {
     u_char size;
     char type;
-    char chunk_index;
+    int chunk_index;
     int ix, iy, iz;
     char blocktype;
 };
@@ -98,7 +98,7 @@ struct CS_ADD_BLOCK_PACKET {
 struct SC_REMOVE_BLOCK_PACKET {
     u_char size;
     char type;
-    char chunk_index;
+    int chunk_index;
     int ix, iy, iz;
     float wx, wy, wz; 
     float nx, ny, nz; 
@@ -108,7 +108,7 @@ struct SC_REMOVE_BLOCK_PACKET {
 struct CS_REMOVE_BLOCK_PACKET {
     u_char size;
     char type;
-    char chunk_index;
+    int chunk_index;
     int ix, iy, iz;
     float wx, wy, wz;
     float nx, ny, nz; 
@@ -118,7 +118,7 @@ struct CS_REMOVE_BLOCK_PACKET {
 struct ANIM_PACKET {
     u_char size;
     char type;
-    char id;
+    int id;
     char anim_type;
 };
 
@@ -126,20 +126,20 @@ struct CS_CHANGE_HP_PACKET {
     u_char size;
     char type;
     //int8 id;
-    char hit_player_id;
+    int hit_player_id;
 };
 
 struct SC_CHANGE_HP_PACKET {
     u_char size;
     char type;
-    char id;
-    int hp;
+    int id;
+    float hp;
 };
 
 struct CS_DISCONNECT_PACKET {
     u_char size;
     char type;
-    char id;
+    int id;
 };
 
 #pragma pack (pop)
