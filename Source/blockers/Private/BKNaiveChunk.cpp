@@ -61,10 +61,12 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				// ±âº» ¸ÊÀº ºÎ¼ú ¼ö ¾øÀ½.
 				Blocks[GetBlockIndex(x, y, z)].isCollapsible = false;
 
+				BKEBlock groundBlock = BKEBlock::Mycelium;
+
 				// z = 0
 				// point: (0,0) / radius: 65
 				if (z + Position.Z == 0 && distanceFromCenter < 65) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (110,110) / radius: 20
 				else if (z + Position.Z == 0 && distanceFromPoint1 < 20) {
@@ -85,7 +87,7 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				// z = 1
 				// point: (0,0) / radius: 30
 				else if (z + Position.Z == 1 && distanceFromCenter < 30) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (110,110) / radius: 17
 				else if (z + Position.Z == 1 && distanceFromPoint1 < 17) {
@@ -149,148 +151,148 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				// ¹Ù±ùÂÊ ¾ð´ö 4°³
 				// point: (0,70) / radius: 35
 				else if (z + Position.Z == 0 && distanceFromPoint5 < 35) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (0,-70) / radius: 35
 				else if (z + Position.Z == 0 && distanceFromPoint6 < 35) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (70,0) / radius: 35
 				else if (z + Position.Z == 0 && distanceFromPoint7 < 35) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (-70,0) / radius: 35
 				else if (z + Position.Z == 0 && distanceFromPoint8 < 35) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (0,70) / radius: 25
 				else if (z + Position.Z == 1 && distanceFromPoint5 < 25) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (0,-70) / radius: 25
 				else if (z + Position.Z == 1 && distanceFromPoint6 < 25) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (70,0) / radius: 25
 				else if (z + Position.Z == 1 && distanceFromPoint7 < 25) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (-70,0) / radius: 25
 				else if (z + Position.Z == 1 && distanceFromPoint8 < 25) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (0,70) / radius: 21
 				else if (z + Position.Z == 2 && distanceFromPoint5 < 21) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (0,-70) / radius: 21
 				else if (z + Position.Z == 2 && distanceFromPoint6 < 21) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (70,0) / radius: 21
 				else if (z + Position.Z == 2 && distanceFromPoint7 < 21) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (-70,0) / radius: 21
 				else if (z + Position.Z == 2 && distanceFromPoint8 < 21) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (0,70) / radius: 17
 				else if (z + Position.Z == 3 && distanceFromPoint5 < 17) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (0,-70) / radius: 17
 				else if (z + Position.Z == 3 && distanceFromPoint6 < 17) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (70,0) / radius: 17
 				else if (z + Position.Z == 3 && distanceFromPoint7 < 17) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (-70,0) / radius: 17
 				else if (z + Position.Z == 3 && distanceFromPoint8 < 17) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// Áß¾ÓÂÊ ¾ð´ö 4°³
 				// point: (0,70) / radius: 20
 				else if (z + Position.Z == 1 && distanceFromPoint9 < 20) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (0,-70) / radius: 20
 				else if (z + Position.Z == 1 && distanceFromPoint10 < 20) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (70,0) / radius: 20
 				else if (z + Position.Z == 1 && distanceFromPoint11 < 20) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (-70,0) / radius: 20
 				else if (z + Position.Z == 1 && distanceFromPoint12 < 20) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (20,20) / radius: 17
 				else if (z + Position.Z == 2 && distanceFromPoint9 < 17) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (-20,20) / radius: 17
 				else if (z + Position.Z == 2 && distanceFromPoint10 < 17) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (20,-20) / radius: 17
 				else if (z + Position.Z == 2 && distanceFromPoint11 < 17) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (-20,-20) / radius: 17
 				else if (z + Position.Z == 2 && distanceFromPoint12 < 17) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (20,20) / radius: 14
 				else if (z + Position.Z == 3 && distanceFromPoint9 < 14) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (-20,20) / radius: 14
 				else if (z + Position.Z == 3 && distanceFromPoint10 < 14) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (20,-20) / radius: 14
 				else if (z + Position.Z == 3 && distanceFromPoint11 < 14) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (-20,-20) / radius: 14
 				else if (z + Position.Z == 3 && distanceFromPoint12 < 14) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (20,20) / radius: 11
 				else if (z + Position.Z == 4 && distanceFromPoint9 < 11) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (-20,20) / radius: 11
 				else if (z + Position.Z == 4 && distanceFromPoint10 < 11) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (20,-20) / radius: 11
 				else if (z + Position.Z == 4 && distanceFromPoint11 < 11) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (-20,-20) / radius: 11
 				else if (z + Position.Z == 4 && distanceFromPoint12 < 11) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (20,20) / radius: 7
 				else if (z + Position.Z == 5 && distanceFromPoint9 < 7) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (-20,20) / radius: 7
 				else if (z + Position.Z == 5 && distanceFromPoint10 < 7) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (20,-20) / radius: 7
 				else if (z + Position.Z == 5 && distanceFromPoint11 < 7) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// point: (-20,-20) / radius: 7
 				else if (z + Position.Z == 5 && distanceFromPoint12 < 7) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Stone;
+					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				else {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Air;
@@ -827,12 +829,16 @@ int ABKNaiveChunk::GetTextureIndex(BKEBlock Block, FVector Normal) const
 	case BKEBlock::Stair:
 		return 1;
 		break;
-	/*case BKEBlock::Grass:
-		if (Normal == FVector::UpVector) return 0;
+	case BKEBlock::Mycelium:
+		if (Normal == FVector::UpVector) return 3;
 		if (Normal == FVector::DownVector) return 2;
-		return 1;*/
+		return 4;
+		break;
 	case BKEBlock::Amethyst:
 		return 0;
+		break;
+	case BKEBlock::Diamond:
+		return 5;
 		break;
 	default:
 		return 255;

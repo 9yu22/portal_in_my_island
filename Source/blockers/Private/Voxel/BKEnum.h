@@ -9,7 +9,7 @@ enum class BKEDirection : uint8
 UENUM(BlueprintType)
 enum class BKEBlock : uint8
 {
-	Null, Air, Stone, Dirt, Grass, Amethyst, Stair
+	Null, Air, Stone, Dirt, Grass, Amethyst, Stair, Mycelium, Diamond
 };
 
 UENUM(BlueprintType)
