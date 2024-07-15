@@ -114,12 +114,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AddToInventory(APickUpItem* actor);
 
-	int32 CheckInventory(FString itemName);
+	int32 GetItemIndex(FString itemName);
 
 	int32 FindEmptySlot();
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveFromInventory(FString itemName);
+	void RemoveFromInventory(FString itemName, int32 number);
+
+	UFUNCTION(BlueprintCallable)
+	bool CheckItemNum(FString itemName, int32 number);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateInventory();

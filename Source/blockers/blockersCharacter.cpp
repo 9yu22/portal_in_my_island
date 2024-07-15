@@ -232,7 +232,7 @@ void AblockersCharacter::UseItem(UItem* Item)
 void AblockersCharacter::AddToInventory(APickUpItem* actor)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("init size: %d"), _inventory.Num());
-	int32 ItemIndex = CheckInventory(actor->Name);
+	int32 ItemIndex = GetItemIndex(actor->Name);
 	if (ItemIndex != -2) {
 		ItemInventory[ItemIndex]->amount += actor->amount;
 	}
@@ -246,23 +246,46 @@ void AblockersCharacter::AddToInventory(APickUpItem* actor)
 	//UE_LOG(LogTemp, Warning, TEXT("Inventory size: %d"), _inventory.Num());
 }
 
-void AblockersCharacter::RemoveFromInventory(FString itemName)
+void AblockersCharacter::RemoveFromInventory(const FString itemName, const int32 number)
 {
-	int32 ItemIndex = CheckInventory(itemName);
+	int32 ItemIndex = GetItemIndex(itemName);
 	if (ItemIndex != -2) {
-		ItemInventory[ItemIndex]->amount -= 1;
+		if (ItemInventory[ItemIndex]->amount >= number) {
+			ItemInventory[ItemIndex]->amount -= number;
 
-		if (ItemInventory[ItemIndex]->amount == 0)
-		{
-			ItemInventory.RemoveAt(ItemIndex);
+			if (ItemInventory[ItemIndex]->amount == 0)
+			{
+				ItemInventory.RemoveAt(ItemIndex);
+			}
+		}
+		else {
+
 		}
 	}
 	else {
-		UE_LOG(LogTemp, Warning, TEXT("cannot buy"));
+
 	}
 }
 
-int32 AblockersCharacter::CheckInventory(FString itemName)
+bool AblockersCharacter::CheckItemNum(FString itemName, int32 number)
+{
+	int32 ItemIndex = GetItemIndex(itemName);
+	if (ItemIndex != -2) {
+		if (ItemInventory[ItemIndex]->amount >= number) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	else {
+		return false;
+	}
+}
+
+
+
+int32 AblockersCharacter::GetItemIndex(FString itemName)
 {
 	for (int32 i = 0; i < ItemInventory.Num(); ++i) {
 		if (ItemInventory[i]->Name == *itemName) {
