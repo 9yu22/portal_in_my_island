@@ -15,6 +15,7 @@
 USGameInstance::USGameInstance()
 {
 	Socket = nullptr;
+	MyCharacter = nullptr;
 }
 
 void USGameInstance::ConnectToGameServer()
@@ -44,6 +45,11 @@ void USGameInstance::ConnectToGameServer()
 		/*GameServerSession = MakeShared<PacketSession>(Socket);
 		GameServerSession->Run();*/
 
+		AblockersGameMode* FindGameMode = Cast<AblockersGameMode>(UGameplayStatics::GetGameMode(GWorld));
+		if (FindGameMode) {
+			GameMode = FindGameMode;
+		}
+
 		CS_LOGIN_PACKET login;
 		login.size = sizeof(CS_LOGIN_PACKET);
 		login.type = CS_LOGIN;
@@ -58,6 +64,7 @@ void USGameInstance::ConnectToGameServer()
 		AblockersCharacter* Character = Cast<AblockersCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
 		if (Character) {
 			MyCharacter = Character;
+			Players.Add(Character);
 			FRecvWorker* RecvWorker = new FRecvWorker(this);
 			//FSendWorker* SendWorker = new FSendWorker(this, Character);
 			// 스레드 생성 및 시작
@@ -129,43 +136,6 @@ bool USGameInstance::SetIpAddress()
 		return true;
 
 	return false;
-}
-
-void USGameInstance::SpawnCharacter(SC_ADD_PLAYER_PACKET* new_player)
-{
-	// 게임 스레드에서 실행되도록 AsyncTask 사용
-	AsyncTask(ENamedThreads::GameThread, [this, new_player]()
-		{
-			if (UWorld* World = GetWorld())
-			{
-				FVector SpawnLocation = FVector(new_player->x, new_player->y, new_player->z);
-				FRotator SpawnRotation = FRotator::ZeroRotator;
-
-				// 클래스 이름으로 클래스를 동적으로 로드
-				UClass* AblockersCharacterClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_Player.BP_Player_C"));
-
-				if (AblockersCharacterClass)
-				{
-					// CharacterClass를 사용하여 캐릭터를 스폰
-					AActor* SpawnActor = World->SpawnActor<AActor>(AblockersCharacterClass, SpawnLocation, SpawnRotation);
-
-					if (SpawnActor)
-					{
-						// AActor 포인터를 AblockersCharacter 포인터로 캐스팅
-						AblockersCharacter* SpawnCharacter = Cast<AblockersCharacter>(SpawnActor);
-						if (SpawnCharacter)
-						{
-							Players.Add(SpawnCharacter);
-							SpawnCharacter->id = new_player->id;
-							UCharacterMovementComponent* MovementComponent = SpawnCharacter->GetCharacterMovement();
-							MovementComponent->GravityScale = 0.0f;  // 중력을 0으로 설정
-							GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Packet id: %d, x: %f, y: %f, z: %f"), SpawnCharacter->id,
-								SpawnCharacter->GetActorLocation().X, SpawnCharacter->GetActorLocation().Y, SpawnCharacter->GetActorLocation().Z));
-						}
-					}					
-				}
-			}
-		});
 }
 
 void USGameInstance::Shutdown()

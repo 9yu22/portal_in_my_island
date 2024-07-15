@@ -4,6 +4,7 @@
 #include "NetworkWorkers.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "../Private/BKChunkBase.h"
+#include "blockers/blockersGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Protocol.h"
 #include "ProcessQueue.h"
@@ -59,28 +60,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         SC_LOGIN_INFO_PACKET login;
 
         memcpy(&login, packet, sizeof(SC_LOGIN_INFO_PACKET));
-        //FVector NewLocation(login.x, login.y, login.z);
-        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("%dRecv_Thread Recv Login Packet id: %d, x: %f, y: %f, z: %f"), th_num, login.id, login.x, login.y, login.z));
 
-        //AsyncTask(ENamedThreads::GameThread, [this, NewLocation, info]()
-        //    {
-        //        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Login Packet")));
-        //        if (IsValid(Character)) {
-        //            for (auto& p : Character->Players) {
-        //                if (p->id < 0) {
-        //                    p->id = info.id;
-        //                    Character->id = info.id;
-        //                    p->SetActorLocation(NewLocation);
-        //                    p->IsSelf = true;
-        //                    
-        //                    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Set Login Info id: %d, x: %f, y: %f, z: %f"), info.id, info.x, info.y, info.z));
-        //                    break;
-        //                }
-        //            }
-        //        }
-        //        else
-        //            recvRunning = false;
-        //    });
         AsyncTask(ENamedThreads::GameThread, [this, login]()
             {
         if (IsValid(Instance->MyCharacter)) {
@@ -89,10 +69,9 @@ void FRecvWorker::ProcessPacket(uint8* packet)
             Instance->MyCharacter->SetActorLocation(NewLocation);
             Instance->MyCharacter->IsSelf = true;
             GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Recv Login Packet id: %d, x: %f, y: %f, z: %f"), login.id, login.x, login.y, login.z));
+            Instance->MyCharacter->loginOk = true;
         }
             });
-        Instance->MyCharacter->loginOk = true;
-
         break;
     }
 
@@ -100,27 +79,33 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         SC_MOVE_PLAYER_PACKET new_pos;
 
         memcpy(&new_pos, packet, sizeof(new_pos));
-        FVector NewLocation(new_pos.x, new_pos.y, new_pos.z);
-        FRotator NewRotation(new_pos.pitch, new_pos.yaw, new_pos.roll);
-        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Move Packet id: %d, x: %f, y: %f, z: %f"), new_pos.id, new_pos.x, new_pos.y, new_pos.z));
 
-        if (IsValid(Instance->MyCharacter)) {
-            for (auto& p : Instance->Players) {
-                if (p->id == new_pos.id && Instance->MyCharacter->id != new_pos.id) {
-                    p->PacketLocation = NewLocation;
-                    p->PacketRotation = NewRotation;
-                    break;
+        AsyncTask(ENamedThreads::GameThread, [this, new_pos]()
+            {
+                FVector NewLocation(new_pos.x, new_pos.y, new_pos.z);
+                FRotator NewRotation(new_pos.pitch, new_pos.yaw, new_pos.roll);
+                if (IsValid(Instance->MyCharacter)) {
+                    for (auto& p : Instance->Players) {
+                        if (p->id == new_pos.id && Instance->MyCharacter->id != new_pos.id) {
+                            p->PacketLocation = NewLocation;
+                            p->PacketRotation = NewRotation;
+                            break;
+                        }
+                    }
                 }
-            }
-        }
+            });
+      
         break;
     }
     case SC_ADD_PLAYER: {
         SC_ADD_PLAYER_PACKET new_player;
 
         memcpy(&new_player, packet, sizeof(new_player));
-        Instance->SpawnCharacter(&new_player);
 
+        AsyncTask(ENamedThreads::GameThread, [this, new_player]()
+            {
+                Instance->GameMode->SpawnCharacter(new_player);               
+            });        
         
         break;
     }
@@ -136,7 +121,11 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         block.index = { new_block.ix, new_block.iy, new_block.iz };
         block.type = static_cast<BKEBlock>(new_block.blocktype);
 
-        Instance->BlockQueue.Enqueue(block);
+        AsyncTask(ENamedThreads::GameThread, [this, block]()
+            {
+                Instance->BlockQueue.Enqueue(block);
+            });
+       
         
         break;
     }
@@ -154,23 +143,26 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         block.normal = { remove_block.nx, remove_block.ny, remove_block.nz };
         block.type = static_cast<BKEBlock>(remove_block.blocktype);
 
-        Instance->BlockQueue.Enqueue(block);
+        AsyncTask(ENamedThreads::GameThread, [this, block]()
+            {
+                Instance->BlockQueue.Enqueue(block);
+            });
 
         break;
     }
 
     case ANIM: {
-        ANIM_PACKET new_anim;
+        //ANIM_PACKET new_anim;
 
-        memcpy(&new_anim, packet, sizeof(new_anim));
-        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Block Packet x: %d, y: %d, z: %d"), new_block.ix, new_block.iy, new_block.iz));
+        //memcpy(&new_anim, packet, sizeof(new_anim));
+        ////GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Block Packet x: %d, y: %d, z: %d"), new_block.ix, new_block.iy, new_block.iz));
 
-        AnimInfo anim;
-        anim.id = new_anim.id;
-        anim.type = static_cast<Anim>(new_anim.anim_type);
+        //AnimInfo anim;
+        //anim.id = new_anim.id;
+        //anim.type = static_cast<Anim>(new_anim.anim_type);
 
-        Instance->AnimQueue.Enqueue(anim);
-        UE_LOG(LogTemp, Warning, TEXT("Anim ENQ"));
+        //Instance->AnimQueue.Enqueue(anim);
+        //UE_LOG(LogTemp, Warning, TEXT("Anim ENQ"));
         break;
     }
     case SC_CHANGE_HP:
@@ -178,7 +170,11 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         
         memcpy(&new_hp, packet, sizeof(new_hp));
         GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Recv New Hp Packet My Id:%d, Hp: %d"), new_hp.id, new_hp.hp));
-        Instance->MyCharacter->health = new_hp.hp;
+        AsyncTask(ENamedThreads::GameThread, [this, new_hp]()
+            {
+                Instance->MyCharacter->health = new_hp.hp;
+            });
+        
         break;
     default:
         break;

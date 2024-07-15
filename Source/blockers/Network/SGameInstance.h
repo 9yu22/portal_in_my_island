@@ -9,6 +9,7 @@
 //#include "S1.h"
 //#include "PacketSession.h"
 #include "../blockersCharacter.h"
+#include "../blockersGameMode.h"
 #include "Protocol.h"
 #include "SGameInstance.generated.h"
 
@@ -39,7 +40,6 @@ public:
 	static USGameInstance* GetMyInstance(UObject* WorldContextObject); // static 함수는 객체 존재 없이 호출가능
 
 	bool SetIpAddress();
-	void SpawnCharacter(SC_ADD_PLAYER_PACKET* new_player);
 
 protected:
 	virtual void Shutdown() override;
@@ -59,9 +59,9 @@ public:
 	FRunnableThread* RecvThread;
 	FRunnableThread* SendThread;
 
+	AblockersGameMode* GameMode = nullptr;
+
 	//TSharedPtr<class PacketSession> GameServerSession;
 	//TSharedPtr<class FRecvWorker> makeRecvThread;
 	//TSharedPtr<class FSendWorker> makeSendThread;
 };
-
-//TArray<AblockersCharacter*> players; //전역으로 해서 변경된 사항을 항상 가져올 수 있게 해보자

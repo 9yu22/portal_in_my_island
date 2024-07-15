@@ -5,6 +5,9 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/HUD.h"
+#include "GameFramework/CharacterMovementComponent.h"
+//#include "Misc/Memory.h"
+#include "Network/Protocol.h"
 
 
 AblockersGameMode::AblockersGameMode()
@@ -35,6 +38,36 @@ AblockersGameMode::AblockersGameMode()
 	}
 }
 
+void AblockersGameMode::SpawnCharacter(SC_ADD_PLAYER_PACKET new_player)
+{
+	if (UWorld* World = GetWorld())
+	{
+		FVector SpawnLocation(new_player.x, new_player.y, new_player.z);
+		FRotator SpawnRotation = FRotator::ZeroRotator;
+
+		// 클래스 이름으로 클래스를 동적으로 로드
+		UClass* AblockersCharacterClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_Player.BP_Player_C"));
+
+		if (AblockersCharacterClass)
+		{
+			// CharacterClass를 사용하여 캐릭터를 스폰
+			AblockersCharacter* SpawnCharacter = World->SpawnActor<AblockersCharacter>(AblockersCharacterClass, SpawnLocation, SpawnRotation);
+
+			USGameInstance* instance = USGameInstance::GetMyInstance(this);
+
+			if (SpawnCharacter && instance)
+			{
+				SpawnCharacter->id = new_player.id;
+				UCharacterMovementComponent* MovementComponent = SpawnCharacter->GetCharacterMovement();
+				MovementComponent->GravityScale = 0.0f;  // 중력을 0으로 설정				
+				instance->Players.Add(SpawnCharacter);
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("Client id:%d / Spawned Character id: %d, x: %f, y: %f, z: %f"), instance->MyCharacter->id, SpawnCharacter->id,
+					SpawnCharacter->GetActorLocation().X, SpawnCharacter->GetActorLocation().Y, SpawnCharacter->GetActorLocation().Z));
+			}
+		}
+	}
+}
+
 void AblockersGameMode::BeginPlay()
 {
 	Super::BeginPlay();
@@ -61,7 +94,6 @@ void AblockersGameMode::BeginPlay()
 
 
 }
-
 
 void AblockersGameMode::PlayerDied(ACharacter* Character)
 {

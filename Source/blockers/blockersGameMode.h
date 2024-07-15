@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/Controller.h"
 #include "blockersCharacter.h"
+#include "Network/ProcessQueue.h"
 #include "blockersGameMode.generated.h"
 
 
@@ -19,6 +20,8 @@ class AblockersGameMode : public AGameModeBase
 public:
 
 	AblockersGameMode();
+
+	void SpawnCharacter(SC_ADD_PLAYER_PACKET new_player);
 
 	const FOnPlayerDiedSignature& GetOnPlayerDied() const { return OnPlayerDied; }
 
