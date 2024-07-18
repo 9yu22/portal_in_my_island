@@ -40,9 +40,9 @@ AblockersCharacter::AblockersCharacter()
 		GetMesh()->SetSkeletalMesh(SK_blockers.Object);
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterial> M_blockers(TEXT("/Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin2.M_NPC_Character_Four_Skin2"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> M_blockers(TEXT("/Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin1.M_NPC_Character_Four_Skin1"));
 	//character1:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin1.M_NPC_Character_Four_Skin1
-	//현재 적용된 매터리얼은 character2
+	//character2:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin2.M_NPC_Character_Four_Skin2
 	//character3:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin3.M_NPC_Character_Four_Skin3
 	//character4:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin4.M_NPC_Character_Four_Skin4
 	if (M_blockers.Succeeded()) {
@@ -258,21 +258,20 @@ void AblockersCharacter::AddToInventory(APickUpItem* actor)
 void AblockersCharacter::RemoveFromInventory(const FString itemName, const int32 number)
 {
 	int32 ItemIndex = GetItemIndex(itemName);
-	if (ItemIndex != -2) {
-		if (ItemInventory[ItemIndex]->amount >= number) {
-			ItemInventory[ItemIndex]->amount -= number;
+	int32 lastIndex = ItemInventory.Num() - 1;
 
-			if (ItemInventory[ItemIndex]->amount == 0)
-			{
-				ItemInventory.RemoveAt(ItemIndex);
-			}
+	if (ItemIndex != -2) {
+		if (ItemInventory[ItemIndex]->amount > number) {
+			ItemInventory[ItemIndex]->amount -= number;
 		}
 		else {
-
+			ItemInventory.RemoveAt(ItemIndex);
+			ItemInventory.Shrink();
+			UE_LOG(LogTemp, Warning, TEXT("last item removed."));
 		}
 	}
 	else {
-
+		UE_LOG(LogTemp, Warning, TEXT("Item not found in inventory."));
 	}
 }
 
