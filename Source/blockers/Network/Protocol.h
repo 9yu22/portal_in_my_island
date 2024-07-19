@@ -18,10 +18,12 @@ constexpr char ANIM = 8;
 constexpr char SC_REMOVE_BLOCK = 9;
 constexpr char CS_REMOVE_BLOCK = 10;
 
-constexpr char SC_CHANGE_HP = 11;
-constexpr char CS_CHANGE_HP = 12;
+constexpr char SC_CHANGE_PLAYER_HP = 11;
+constexpr char CS_CHANGE_PLAYER_HP = 12;
 
 constexpr char SC_ADD_PORTAL = 13;
+constexpr char SC_CHANGE_PORTAL_HP = 14;
+constexpr char CS_CHANGE_PORTAL_HP = 15;
 
 constexpr char CS_DISCONNECT = 50;
 
@@ -120,14 +122,28 @@ struct ANIM_PACKET {
     int8 anim_type;
 };
 
-struct CS_CHANGE_HP_PACKET {
+struct CS_CHANGE_PLAYER_HP_PACKET {
     uint8 size;
     int8 type;
     //int8 id;
     int hit_id;
 };
 
-struct SC_CHANGE_HP_PACKET {
+struct SC_CHANGE_PLAYER_HP_PACKET {
+    uint8 size;
+    int8 type;
+    int id;
+    float hp;
+};
+
+struct CS_CHANGE_PORTAL_HP_PACKET {
+    uint8 size;
+    int8 type;
+    //int8 id;
+    int hit_id;
+};
+
+struct SC_CHANGE_PORTAL_HP_PACKET {
     uint8 size;
     int8 type;
     int id;

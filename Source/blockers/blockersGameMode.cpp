@@ -90,10 +90,10 @@ void AblockersGameMode::SpawnPortal(SC_ADD_PORTAL_PACKET add_portal)
 			if (SpawnPortal && instance)
 			{
 				SpawnPortal->id = add_portal.id;
-				SpawnPortal->Portalhealth - add_portal.hp;
+				SpawnPortal->Portalhealth = add_portal.hp;
 				instance->Portals.Add(SpawnPortal);
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Portal id: %d, x: %f, y: %f, z: %f"), SpawnPortal->id,
-					SpawnPortal->GetActorLocation().X, SpawnPortal->GetActorLocation().Y, SpawnPortal->GetActorLocation().Z));
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Portal id: %d, x: %f, y: %f, z: %f / hp: %f"), SpawnPortal->id,
+					SpawnPortal->GetActorLocation().X, SpawnPortal->GetActorLocation().Y, SpawnPortal->GetActorLocation().Z, SpawnPortal->Portalhealth));
 			}
 		}
 	}

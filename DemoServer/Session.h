@@ -52,7 +52,8 @@ public:
 	void send_add_player_packet(Player player);
 	void send_add_block_packet(char* packet);
 	void send_remove_block_packet(char* packet);
-	void send_hp_packet(Player player);
+	void send_player_hp_packet(Player player);
 	void send_add_portal_packet(Portal portal);
+	void send_portal_hp_packet(Portal portal);
 };
 

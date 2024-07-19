@@ -179,17 +179,33 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         //UE_LOG(LogTemp, Warning, TEXT("Anim ENQ"));
         break;
     }
-    case SC_CHANGE_HP:
-        SC_CHANGE_HP_PACKET new_hp;
-        
+    case SC_CHANGE_PLAYER_HP: {
+        SC_CHANGE_PLAYER_HP_PACKET new_hp;
+
         memcpy(&new_hp, packet, sizeof(new_hp));
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Recv New Hp Packet My Id:%d, Hp: %d"), new_hp.id, new_hp.hp));
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Recv New Player Hp Packet My Id:%d, Hp: %f"), new_hp.id, new_hp.hp));
         AsyncTask(ENamedThreads::GameThread, [this, new_hp]()
             {
                 Instance->MyCharacter->health = new_hp.hp;
             });
+    }    
         
         break;
+    case SC_CHANGE_PORTAL_HP: {
+        SC_CHANGE_PORTAL_HP_PACKET new_hp;
+
+        memcpy(&new_hp, packet, sizeof(new_hp));
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("Recv New Portal Hp Packet My Id:%d, Hp: %f"), new_hp.id, new_hp.hp));
+        AsyncTask(ENamedThreads::GameThread, [this, new_hp]()
+            {
+                for (auto p : Instance->Portals)
+                    if (p->id == new_hp.id) {
+                        p->Portalhealth = new_hp.hp;
+                        break;
+                    }                    
+            });
+    }
+        
     default:
         break;
     }

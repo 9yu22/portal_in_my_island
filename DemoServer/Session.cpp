@@ -84,11 +84,11 @@ void Session::send_remove_block_packet(char* packet)
 	do_send(remove_block);
 }
 
-void Session::send_hp_packet(Player player)
+void Session::send_player_hp_packet(Player player)
 {
-	SC_CHANGE_HP_PACKET change_hp;
-	change_hp.size = sizeof(SC_CHANGE_HP_PACKET);
-	change_hp.type = SC_CHANGE_HP;
+	SC_CHANGE_PLAYER_HP_PACKET change_hp;
+	change_hp.size = sizeof(SC_CHANGE_PLAYER_HP_PACKET);
+	change_hp.type = SC_CHANGE_PLAYER_HP;
 	change_hp.hp = player.m_hp;
 	change_hp.id = player.m_id;
 	do_send(&change_hp);
@@ -106,3 +106,14 @@ void Session::send_add_portal_packet(Portal portal)
 	add_portal.z = portal.location.z;
 	do_send(&add_portal);
 }
+
+void Session::send_portal_hp_packet(Portal portal)
+{
+	SC_CHANGE_PORTAL_HP_PACKET change_hp;
+	change_hp.size = sizeof(SC_CHANGE_PORTAL_HP_PACKET);
+	change_hp.type = SC_CHANGE_PORTAL_HP;
+	change_hp.hp = portal.m_hp;
+	change_hp.id = portal.m_id;
+	do_send(&change_hp);
+}
+

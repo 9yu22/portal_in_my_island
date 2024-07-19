@@ -91,9 +91,9 @@ void ABullet::OnBulletOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 		//enemyCharacter->health -= 30.f;
 		USGameInstance* instance = USGameInstance::GetMyInstance(this);
 		if (instance && instance->Socket != nullptr) {
-			CS_CHANGE_HP_PACKET p;
+			CS_CHANGE_PLAYER_HP_PACKET p;
 			p.size = sizeof(p);
-			p.type = CS_CHANGE_HP;
+			p.type = CS_CHANGE_PLAYER_HP;
 			p.hit_id = enemyCharacter->id;
 
 			int BytesSent = 0;

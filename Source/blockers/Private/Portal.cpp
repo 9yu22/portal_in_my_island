@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Portal.h"
+#include "../blockersCharacter.h"
+#include "../Network/SGameInstance.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -50,25 +52,50 @@ void APortal::Tick(float DeltaTime)
 void APortal::OnBeginOverLap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromsweep, const FHitResult& SweepResult)
 {
  
-    if (OtherActor)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("OtherActor is valid"));
-        if (OtherActor->ActorHasTag("Test"))
-        {
+    //if (OtherActor)
+    //{
+    //    UE_LOG(LogTemp, Warning, TEXT("OtherActor is valid"));
+    //    if (OtherActor->ActorHasTag("Test"))
+    //    {
 
-            UE_LOG(LogTemp, Warning, TEXT("OtherActor has 'Test' tag"));
-            Portalhealth -= 10.f;
-            
-        }
-        else
-        {
-            UE_LOG(LogTemp, Warning, TEXT("OtherActor does not have 'Test' tag"));
-        }
-    }
-    else
-    {
-        UE_LOG(LogTemp, Warning, TEXT("OtherActor is null"));
-    }
+    //        UE_LOG(LogTemp, Warning, TEXT("OtherActor has 'Test' tag"));
+    //        Portalhealth -= 10.f;
+    //        
+    //    }
+    //    else
+    //    {
+    //        UE_LOG(LogTemp, Warning, TEXT("OtherActor does not have 'Test' tag"));
+    //    }
+    //}
+    //else
+    //{
+    //    UE_LOG(LogTemp, Warning, TEXT("OtherActor is null"));
+    //}
 
+	AblockersCharacter* enemyCharacter = Cast<AblockersCharacter>(OtherActor);
+
+	//if (enemy != nullptr)
+	//{
+	//	OtherActor->Destroy();
+
+	//	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosionFX, GetActorLocation(), GetActorRotation());
+	//}
+	if (enemyCharacter != nullptr)
+	{
+		//enemyCharacter->health -= 30.f;
+		USGameInstance* instance = USGameInstance::GetMyInstance(this);
+
+		if (enemyCharacter->id != id) {
+			if (instance && instance->Socket != nullptr) {
+				CS_CHANGE_PORTAL_HP_PACKET p;
+				p.size = sizeof(p);
+				p.type = CS_CHANGE_PORTAL_HP;
+				p.hit_id = id;
+
+				int BytesSent = 0;
+				instance->Socket->Send((uint8*)&p, sizeof(p), BytesSent);
+			}
+		}		
+	}
 }
 
