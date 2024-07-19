@@ -61,7 +61,7 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				// 기본 맵은 부술 수 없음.
 				Blocks[GetBlockIndex(x, y, z)].isCollapsible = false;
 
-				BKEBlock groundBlock = BKEBlock::Mycelium;
+				BKEBlock groundBlock = BKEBlock::Grass;
 
 				// z = 0
 				// point: (0,0) / radius: 65
@@ -294,6 +294,145 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				else if (z + Position.Z == 5 && distanceFromPoint12 < 7) {
 					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
+				// 나무
+				else if (ableToCreateObject(x, y, z, Position, {-20, -20, 6}, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -20, -20, 6 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 20, 20, 6 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 20, 20, 6 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -20, 20, 6 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -20, 20, 6 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 20, -20, 6 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 20, -20, 6 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 0, -35, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 0, -35, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 0, 35, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 0, 35, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -35, 0, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -35, 0, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 35, 0, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 35, 0, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 40, 40, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 40, 40, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 35, 44, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 35, 44, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 44, 35, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 44, 35, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 30, 48, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 30, 48, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 48, 30, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { 48, 30, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				/*else if (ableToCreateObject(x, y, z, Position, { -40, -40, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -40, -40, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -35, -44, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -35, -44, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -44, -35, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -44, -35, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -30, -48, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -30, -48, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -48, -30, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -48, -30, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -40, 40, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -40, 40, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -35, 44, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -35, 44, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -44, 35, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -44, 35, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -30, 48, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -30, 48, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -48, 30, 1 }, "spruce")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
+				}
+				else if (ableToCreateObject(x, y, z, Position, { -48, 30, 1 }, "leaves")) {
+					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
+				}*/
 				else {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Air;
 				}
@@ -319,7 +458,7 @@ void ABKNaiveChunk::GenerateMesh()
 		{
 			for (int z = 0; z < Size; z++)
 			{
-				if (Blocks[GetBlockIndex(x, y, z)].block == BKEBlock::Stair)
+				if (Blocks[GetBlockIndex(x, y, z)].block == BKEBlock::Stair || Blocks[GetBlockIndex(x, y, z)].block == BKEBlock::Leaves)
 				{
 					const auto Position = FVector(x, y, z);
 
@@ -350,7 +489,7 @@ bool ABKNaiveChunk::Check(const FVector Position) const
 {
 	if (Position.X >= Size || Position.Y >= Size || Position.X < 0 || Position.Y < 0 || Position.Z < 0) return true;
 	if (Position.Z >= Size) return true;
-	return Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)].block == BKEBlock::Air || Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)].block == BKEBlock::Stair;
+	return Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)].block == BKEBlock::Air || Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)].block == BKEBlock::Stair || Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)].block == BKEBlock::Leaves;
 }
 
 void ABKNaiveChunk::CreateFace(const Block Block, const BKEDirection Direction, const FVector Position)
@@ -834,6 +973,17 @@ int ABKNaiveChunk::GetTextureIndex(BKEBlock Block, FVector Normal) const
 		if (Normal == FVector::DownVector) return 2;
 		return 4;
 		break;
+	case BKEBlock::Grass:
+		if (Normal == FVector::UpVector) return 6;
+		if (Normal == FVector::DownVector) return 2;
+		return 7;
+		break;
+	case BKEBlock::Leaves:
+		return 8;
+		break;
+	case BKEBlock::Spruce:
+		return 9;
+		break;
 	case BKEBlock::Amethyst:
 		return 0;
 		break;
@@ -844,6 +994,37 @@ int ABKNaiveChunk::GetTextureIndex(BKEBlock Block, FVector Normal) const
 		return 255;
 		break;
 	}
+}
+
+bool ABKNaiveChunk::ableToCreateObject(const int x, const int y, const int z, const FVector Position, const FVector startPosition, const std::string objName)
+{
+	if (objName == "spruce")
+	{
+		return (x + Position.X == startPosition.X && y + Position.Y == startPosition.Y && z + Position.Z == startPosition.Z) ||
+			(x + Position.X == startPosition.X && y + Position.Y == startPosition.Y && z + Position.Z == startPosition.Z + 1) ||
+			(x + Position.X == startPosition.X && y + Position.Y == startPosition.Y && z + Position.Z == startPosition.Z + 2);
+	}
+	else if (objName == "leaves")
+	{
+		return (x + Position.X == startPosition.X && y + Position.Y == startPosition.Y && z + Position.Z == startPosition.Z + 4) ||
+			(x + Position.X == startPosition.X && y + Position.Y == startPosition.Y - 1 && z + Position.Z == startPosition.Z + 3) ||
+			(x + Position.X == startPosition.X && y + Position.Y == startPosition.Y + 1 && z + Position.Z == startPosition.Z + 3) ||
+			(x + Position.X == startPosition.X - 1 && y + Position.Y == startPosition.Y && z + Position.Z == startPosition.Z + 3) ||
+			(x + Position.X == startPosition.X + 1 && y + Position.Y == startPosition.Y && z + Position.Z == startPosition.Z + 3) ||
+			(x + Position.X == startPosition.X && y + Position.Y == startPosition.Y - 1 && z + Position.Z == startPosition.Z + 2) ||
+			(x + Position.X == startPosition.X && y + Position.Y == startPosition.Y + 1 && z + Position.Z == startPosition.Z + 2) ||
+			(x + Position.X == startPosition.X - 1 && y + Position.Y == startPosition.Y && z + Position.Z == startPosition.Z + 2) ||
+			(x + Position.X == startPosition.X + 1 && y + Position.Y == startPosition.Y && z + Position.Z == startPosition.Z + 2) ||
+			(x + Position.X == startPosition.X + 1 && y + Position.Y == startPosition.Y + 1 && z + Position.Z == startPosition.Z + 2) ||
+			(x + Position.X == startPosition.X - 1 && y + Position.Y == startPosition.Y - 1 && z + Position.Z == startPosition.Z + 2) ||
+			(x + Position.X == startPosition.X - 1 && y + Position.Y == startPosition.Y + 1 && z + Position.Z == startPosition.Z + 2) ||
+			(x + Position.X == startPosition.X + 1 && y + Position.Y == startPosition.Y - 1 && z + Position.Z == startPosition.Z + 2);
+	}
+	else
+	{
+		
+	}
+	return false; // 기본 반환 값
 }
 
 void ABKNaiveChunk::GetMapList()
