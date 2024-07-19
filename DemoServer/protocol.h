@@ -23,6 +23,8 @@ constexpr char CS_REMOVE_BLOCK = 10;
 constexpr char SC_CHANGE_HP = 11;
 constexpr char CS_CHANGE_HP = 12;
 
+constexpr char SC_ADD_PORTAL = 13;
+
 constexpr char CS_DISCONNECT = 50;
 
 enum OP_TYPE { OP_ACCEPT, OP_RECV, OP_SEND };
@@ -62,7 +64,14 @@ struct SC_ADD_PLAYER_PACKET {
     char type;
     int id;
     float x, y, z;
-    //char	name[NAME_SIZE];
+};
+
+struct SC_ADD_PORTAL_PACKET {
+    u_char size;
+    char type;
+    int id;
+    int hp;
+    float x, y, z;
 };
 
 struct SC_REMOVE_PLAYER_PACKET {

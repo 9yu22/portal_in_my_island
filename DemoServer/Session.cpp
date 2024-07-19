@@ -93,3 +93,16 @@ void Session::send_hp_packet(Player player)
 	change_hp.id = player.m_id;
 	do_send(&change_hp);
 }
+
+void Session::send_add_portal_packet(Portal portal)
+{
+	SC_ADD_PORTAL_PACKET add_portal;
+	add_portal.size = sizeof(SC_ADD_PORTAL_PACKET);
+	add_portal.type = SC_ADD_PORTAL;
+	add_portal.hp = portal.m_hp;
+	add_portal.id = portal.m_id;
+	add_portal.x = portal.location.x;
+	add_portal.y = portal.location.y;
+	add_portal.z = portal.location.z;
+	do_send(&add_portal);
+}

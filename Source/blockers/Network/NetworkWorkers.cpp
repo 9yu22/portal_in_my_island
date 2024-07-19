@@ -64,6 +64,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         AsyncTask(ENamedThreads::GameThread, [this, login]()
             {
         if (IsValid(Instance->MyCharacter)) {
+            Instance->MyCharacter->SetTextureForCharacter(login.id);
             Instance->MyCharacter->id = login.id;
             FVector NewLocation(login.x, login.y, login.z);
             Instance->MyCharacter->SetActorLocation(NewLocation);
@@ -107,6 +108,19 @@ void FRecvWorker::ProcessPacket(uint8* packet)
                 Instance->GameMode->SpawnCharacter(new_player);               
             });        
         
+        break;
+    }
+
+    case SC_ADD_PORTAL: {
+        SC_ADD_PORTAL_PACKET new_portal;
+
+        memcpy(&new_portal, packet, sizeof(new_portal));
+
+        AsyncTask(ENamedThreads::GameThread, [this, new_portal]()
+            {
+                Instance->GameMode->SpawnPortal(new_portal);
+            });
+
         break;
     }
 

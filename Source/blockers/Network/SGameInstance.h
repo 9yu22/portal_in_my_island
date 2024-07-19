@@ -10,6 +10,7 @@
 //#include "PacketSession.h"
 #include "../blockersCharacter.h"
 #include "../blockersGameMode.h"
+#include "../Public/Portal.h"
 #include "Protocol.h"
 #include "SGameInstance.generated.h"
 
@@ -33,7 +34,7 @@ public:
 	void DisconnectFromGameServer();
 
 	//UFUNCTION(BlueprintCallable)
-	//void HandleRecvPackets();
+	//void HandleRecvPackets(); m, 
 
 	//void SendPacket(SendBufferRef SendBuffer);
 
@@ -51,8 +52,11 @@ public:
 	int16 Port = 4040;
 
 	//ProcessQueueBlock Blocks;
-	TArray<AblockersCharacter*> Players;
 	AblockersCharacter* MyCharacter;
+	TArray<AblockersCharacter*> Players;
+
+	TArray<APortal*> Portals;
+
 	TQueue<BlockInfo> BlockQueue;
 	TQueue<AnimInfo> AnimQueue;
 

@@ -38,12 +38,14 @@ void process_packet(int c_id, char* packet)
 		//CS_LOGIN_PACKET* p = reinterpret_cast<CS_LOGIN_PACKET*>(packet);
 		//strcpy_s(clients[c_id]._name, p->name);
 		clients[c_id].send_login_player_packet();
+		clients[c_id].send_add_portal_packet(clients[c_id].m_player.portal);
 
 		std::cout << std::endl;
 		for (auto& pl : clients) { // 새로 추가된 클라를 모두에게 전송
 			if (false == pl.b_use) continue;
 			if (pl.m_player.m_id == c_id) continue;
 			pl.send_add_player_packet(clients[c_id].m_player);
+			pl.send_add_portal_packet(clients[c_id].m_player.portal);
 
 			//pl.do_send(&add_packet);
 			std::cout << "클라이언트 " << pl.m_player.m_id << "에게 " << c_id << "의 ADD 패킷을 전송" << std::endl;
@@ -53,6 +55,7 @@ void process_packet(int c_id, char* packet)
 			if (false == pl.b_use) continue;
 			if (pl.m_player.m_id == c_id) continue;
 			clients[c_id].send_add_player_packet(pl.m_player);
+			clients[c_id].send_add_portal_packet(pl.m_player.portal);
 
 			std::cout << "클라이언트 " << c_id <<"에게 " << pl.m_player.m_id << "의 ADD 패킷을 전송" << std::endl;
 			//std::cout << "-> id: " << pl.m_player.m_id << " x: " << pl.m_player.location.x << " y: " << pl.m_player.location.y << " z: " << pl.m_player.location.z << std::endl;
@@ -173,18 +176,23 @@ int main()
 
 				// 테스트용 시작 좌표
 				clients[client_id].m_player.m_id = client_id;
+				clients[client_id].m_player.portal.m_id = client_id;
 				switch (client_id % 4) {
 				case 0:
 					clients[client_id].m_player.SetWorldLocation(1000.f, 1000.f, 1000.f);
+					clients[client_id].m_player.portal.SetWorldLocation(1500.f, 1500.f, 700.f);
 					break;
 				case 1:
 					clients[client_id].m_player.SetWorldLocation(-1000.f, -1000.f, 1000.f);
+					clients[client_id].m_player.portal.SetWorldLocation(-1500.f, -1500.f, 700.f);
 					break;
 				case 2:
 					clients[client_id].m_player.SetWorldLocation(1000.f, -1000.f, 1000.f);
+					clients[client_id].m_player.portal.SetWorldLocation(1500.f, -1500.f, 700.f);
 					break;
 				case 3:
 					clients[client_id].m_player.SetWorldLocation(-1000.f, 1000.f, 1000.f);
+					clients[client_id].m_player.portal.SetWorldLocation(-1500.f, 1500.f, 700.f);
 					break;
 				}
 				

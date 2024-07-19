@@ -4,6 +4,10 @@ struct WorldLocation {
 	float x, y, z;
 };
 
+struct WorldRotation {
+	float pitch, yaw, roll;
+};
+
 class GameObject
 {
 public:

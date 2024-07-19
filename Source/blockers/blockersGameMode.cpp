@@ -57,6 +57,8 @@ void AblockersGameMode::SpawnCharacter(SC_ADD_PLAYER_PACKET new_player)
 
 			if (SpawnCharacter && instance)
 			{
+				SpawnCharacter->SetTextureForCharacter(new_player.id);
+
 				SpawnCharacter->id = new_player.id;
 				UCharacterMovementComponent* MovementComponent = SpawnCharacter->GetCharacterMovement();
 				MovementComponent->GravityScale = 0.0f;  // 중력을 0으로 설정				
@@ -67,6 +69,37 @@ void AblockersGameMode::SpawnCharacter(SC_ADD_PLAYER_PACKET new_player)
 		}
 	}
 }
+
+void AblockersGameMode::SpawnPortal(SC_ADD_PORTAL_PACKET add_portal)
+{
+	if (UWorld* World = GetWorld())
+	{
+		FVector SpawnLocation(add_portal.x, add_portal.y, add_portal.z);
+		FRotator SpawnRotation = FRotator::ZeroRotator;
+
+		// 클래스 이름으로 클래스를 동적으로 로드
+		UClass* PortalClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_Portal.BP_Portal_C"));		
+
+		if (PortalClass)
+		{
+			// PortalClass를 사용하여 포탈을 스폰
+			APortal* SpawnPortal = World->SpawnActor<APortal>(PortalClass, SpawnLocation, SpawnRotation);
+
+			USGameInstance* instance = USGameInstance::GetMyInstance(this);
+
+			if (SpawnPortal && instance)
+			{
+				SpawnPortal->id = add_portal.id;
+				SpawnPortal->Portalhealth - add_portal.hp;
+				instance->Portals.Add(SpawnPortal);
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Portal id: %d, x: %f, y: %f, z: %f"), SpawnPortal->id,
+					SpawnPortal->GetActorLocation().X, SpawnPortal->GetActorLocation().Y, SpawnPortal->GetActorLocation().Z));
+			}
+		}
+	}
+}
+
+
 
 void AblockersGameMode::BeginPlay()
 {

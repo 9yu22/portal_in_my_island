@@ -7,6 +7,7 @@
 #include "GameFramework/Controller.h"
 #include "blockersCharacter.h"
 #include "Network/ProcessQueue.h"
+#include "Public/Portal.h"
 #include "blockersGameMode.generated.h"
 
 
@@ -22,6 +23,7 @@ public:
 	AblockersGameMode();
 
 	void SpawnCharacter(SC_ADD_PLAYER_PACKET new_player);
+	void SpawnPortal(SC_ADD_PORTAL_PACKET add_portal);
 
 	const FOnPlayerDiedSignature& GetOnPlayerDied() const { return OnPlayerDied; }
 

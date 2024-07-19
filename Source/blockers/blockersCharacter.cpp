@@ -41,13 +41,13 @@ AblockersCharacter::AblockersCharacter()
 	}
 
 	static ConstructorHelpers::FObjectFinder<UMaterial> M_blockers(TEXT("/Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin1.M_NPC_Character_Four_Skin1"));
-	//character1:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin1.M_NPC_Character_Four_Skin1
-	//character2:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin2.M_NPC_Character_Four_Skin2
-	//character3:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin3.M_NPC_Character_Four_Skin3
-	//character4:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin4.M_NPC_Character_Four_Skin4
-	if (M_blockers.Succeeded()) {
-		GetMesh()->SetMaterial(0, M_blockers.Object);
-	}
+	////character1:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin1.M_NPC_Character_Four_Skin1
+	////character2:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin2.M_NPC_Character_Four_Skin2
+	////character3:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin3.M_NPC_Character_Four_Skin3
+	////character4:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin4.M_NPC_Character_Four_Skin4
+	//if (M_blockers.Succeeded()) {
+	//	GetMesh()->SetMaterial(0, M_blockers.Object);
+	//}
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimBPClass(TEXT("/Game/NPC_Character_Four/Animations/Demo/ThirdPerson_AnimBP.ThirdPerson_AnimBP_C"));
 	if (AnimBPClass.Succeeded()) {
@@ -220,6 +220,47 @@ void AblockersCharacter::SendMovePacket()
 	else
 		UE_LOG(LogTemp, Log, TEXT("Fail GetInstance"));
 }
+
+void AblockersCharacter::SetTextureForCharacter(int Character_id)
+{
+	UMaterial* Material = nullptr;
+	FString Path;
+
+	switch (Character_id % 4)
+	{
+	case 0:
+		Path = TEXT("/Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin1.M_NPC_Character_Four_Skin1");
+		break;
+	case 1:
+		Path = TEXT("/Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin2.M_NPC_Character_Four_Skin2");
+		break;
+	case 2:
+		Path = TEXT("/Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin3.M_NPC_Character_Four_Skin3");
+		break;
+	case 3:
+		Path = TEXT("/Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin4.M_NPC_Character_Four_Skin4");
+		break;
+	default:
+		break;
+	}
+
+	if (!Path.IsEmpty())
+	{
+		Material = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), nullptr, *Path));
+		if (Material)
+		{
+			GetMesh()->SetMaterial(0, Material);
+		}
+		else
+		{
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to load material"));
+			}
+		}
+	}
+}
+
 
 //마우스 왼쪽 버튼 입력 처리 함수
 void AblockersCharacter::Fire()

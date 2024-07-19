@@ -81,6 +81,7 @@ public:
 	bool IsSelf = false;
 	void InterpolateCharacter(FVector NewLocation, FRotator NewRotation, float DeltaTime);
 	void SendMovePacket();
+	void SetTextureForCharacter(int Character_id);
 
 	//bullet
 private:
