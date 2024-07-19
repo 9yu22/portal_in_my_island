@@ -343,7 +343,7 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				else if (ableToCreateObject(x, y, z, Position, { 35, 0, 1 }, "leaves")) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
 				}
-				else if (ableToCreateObject(x, y, z, Position, { 40, 40, 1 }, "spruce")) {
+				/*else if (ableToCreateObject(x, y, z, Position, { 40, 40, 1 }, "spruce")) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
 				}
 				else if (ableToCreateObject(x, y, z, Position, { 40, 40, 1 }, "leaves")) {
@@ -372,7 +372,7 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				}
 				else if (ableToCreateObject(x, y, z, Position, { 48, 30, 1 }, "leaves")) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
+				}*/
 				/*else if (ableToCreateObject(x, y, z, Position, { -40, -40, 1 }, "spruce")) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
 				}
