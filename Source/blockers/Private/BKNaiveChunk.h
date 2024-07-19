@@ -36,14 +36,12 @@ protected:
 
 public:
 	TArray<Block> Blocks;
-	TArray<FIntVector> splitBlocks;	// 쪼개지는 블록 자체의 좌표를 저장하는 배열
 
 	// 맵 정보를 알아내 서버에 파일로 저장하기 위해 만든 두 함수
 	void GetMapList();
 	FIntVector FindBlockindex(int index);
 
 private:
-	int splitBlockNum = 10;			// splitBlockNum x splitBlockNum x splitBlockNum로 쪼개짐
 	const FVector BlockVertexData[8] = {
 		FVector(100,100,100),
 		FVector(100,0,100),
@@ -72,5 +70,7 @@ private:
 	int GetBlockIndex(int X, int Y, int Z) const;
 
 	int GetTextureIndex(BKEBlock Block, FVector Normal) const;
+
+	bool ableToCreateObject(const int x, const int y, const int z, const FVector Position, const FVector startPosition, const std::string objName);
 };
 
