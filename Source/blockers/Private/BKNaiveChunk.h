@@ -28,6 +28,9 @@ protected:
 	virtual void GenerateMesh() override;
 	virtual bool ModifyVoxelData(const FIntVector Position, BKEBlock Block) override;
 
+	void CreateTreeAtPosition(double x, double y, double z);
+	void CreateObjects(int32 x, int32 y, int32 z, FVector Position);
+
 	struct Block {
 		BKEBlock block;
 		BKEDirection backDir;

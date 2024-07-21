@@ -112,6 +112,9 @@ public:
 public:
 	TArray<APickUpItem*> ItemInventory;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "InventoryItem")
+	APickUpItem* SelectedItem;
+
 	UFUNCTION(BlueprintCallable)
 	void AddToInventory(APickUpItem* actor);
 
