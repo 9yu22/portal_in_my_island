@@ -58,6 +58,7 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				auto distanceFromPoint11 = sqrt((x + Position.X - 20) * (x + Position.X - 20) + (y + Position.Y + 20) * (y + Position.Y + 20));	// point: (20,-20)
 				auto distanceFromPoint12 = sqrt((x + Position.X + 20) * (x + Position.X + 20) + (y + Position.Y + 20) * (y + Position.Y + 20));	// point: (-20,-20)
 
+
 				// 기본 맵은 부술 수 없음.
 				Blocks[GetBlockIndex(x, y, z)].isCollapsible = false;
 
@@ -295,7 +296,7 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
 				// 나무
-				else if (ableToCreateObject(x, y, z, Position, {-20, -20, 6}, "spruce")) {
+				/*else if (ableToCreateObject(x, y, z, Position, {-20, -20, 6}, "spruce")) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
 				}
 				else if (ableToCreateObject(x, y, z, Position, { -20, -20, 6 }, "leaves")) {
@@ -342,7 +343,7 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				}
 				else if (ableToCreateObject(x, y, z, Position, { 35, 0, 1 }, "leaves")) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
+				}*/
 				/*else if (ableToCreateObject(x, y, z, Position, { 40, 40, 1 }, "spruce")) {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
 				}
@@ -446,6 +447,81 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				//	Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
 				//}
 			}
+		}
+	}
+
+	TArray<FVector> Spruce = {
+		{ -20, -20, 6 },
+		{ 20, 20, 6 },
+		{ -20, 20, 6 },
+		{ 20, -20, 6 },
+		{ 0, -35, 1 },
+		{ 0, 35, 1 },
+		{ -35, 0, 1 },
+		{ 35, 0, 1 }
+	};
+
+	CreateObjects(0, 0, 0, Position);
+}
+
+void ABKNaiveChunk::CreateTreeAtPosition(double x, double y, double z)
+{
+	// 나무를 구성하는 좌표
+	TArray<FVector> spruceCoordinates = {
+		{0, 0, 0}, {0, 0, 1}, {0, 0, 2}
+	};
+
+	// 잎 블록을 구성하는 좌표
+	TArray<FVector> leavesCoordinates = {
+		{0, 0, 4},
+		{0, -1, 3}, {0, 1, 3}, {-1, 0, 3}, {1, 0, 3},
+		{0, -1, 2}, {0, 1, 2}, {-1, 0, 2}, {1, 0, 2},
+		{1, 1, 2}, {-1, -1, 2}, {-1, 1, 2}, {1, -1, 2}
+	};
+
+	// 나무 블록 생성
+	for (const FVector& coord : spruceCoordinates)
+	{
+		int32 targetX = x + coord.X;
+		int32 targetY = y + coord.Y;
+		int32 targetZ = z + coord.Z;
+		Blocks[GetBlockIndex(targetX, targetY, targetZ)].block = BKEBlock::Spruce;
+	}
+
+	// 잎 블록 생성
+	for (const FVector& coord : leavesCoordinates)
+	{
+		int32 targetX = x + coord.X;
+		int32 targetY = y + coord.Y;
+		int32 targetZ = z + coord.Z;
+		if (targetX >= 0 && targetY >= 0 && targetZ >= 0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Leaves Pos - x:%f, y:%f, z:%f"), x + coord.X, y + coord.Y, z + coord.Z);
+			Blocks[GetBlockIndex(targetX, targetY, targetZ)].block = BKEBlock::Leaves;
+		}
+	}
+}
+
+
+void ABKNaiveChunk::CreateObjects(int32 x, int32 y, int32 z, FVector Position)
+{
+	// 나무를 생성할 위치 목록
+	TArray<FVector> positionsToCheck = {
+		{-20, -20, 6}, {20, 20, 6}, {-20, 20, 6}, {20, -20, 6},
+		{0, -35, 1}, {0, 35, 1}, {-35, 0, 1}, {35, 0, 1},
+		{40, 40, 1}, {35, 44, 1}, {44, 35, 1}, {30, 48, 1}, {48, 30, 1}
+	};
+
+	// 각 위치에 나무를 생성
+	for (const FVector& offset : positionsToCheck)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Making Map... x:%f, y:%f, z:%f"), x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z);
+		if (x + offset.X - Position.X >= 0 && x + offset.X - Position.X < (float)Size
+			&& y + offset.Y - Position.Y >= 0 && y + offset.Y - Position.Y < (float)Size
+			&& z + offset.Z - Position.Z >= 0 && z + offset.Z - Position.Z < (float)Size)
+		{
+			
+			CreateTreeAtPosition(x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z);
 		}
 	}
 }
@@ -963,32 +1039,36 @@ int ABKNaiveChunk::GetTextureIndex(BKEBlock Block, FVector Normal) const
 	switch (Block)
 	{
 	case BKEBlock::Stone:
-		return 1;
-		break;
-	case BKEBlock::Stair:
-		return 1;
-		break;
-	case BKEBlock::Mycelium:
-		if (Normal == FVector::UpVector) return 3;
-		if (Normal == FVector::DownVector) return 2;
-		return 4;
-		break;
-	case BKEBlock::Grass:
-		if (Normal == FVector::UpVector) return 6;
-		if (Normal == FVector::DownVector) return 2;
-		return 7;
-		break;
-	case BKEBlock::Leaves:
-		return 8;
-		break;
-	case BKEBlock::Spruce:
-		return 9;
-		break;
-	case BKEBlock::Amethyst:
 		return 0;
 		break;
+	case BKEBlock::Stair:
+		return 0;
+		break;
+	case BKEBlock::Amethyst:
+		return 1;
+		break;
+	case BKEBlock::Ruby:
+		return 2;
+		break;
 	case BKEBlock::Diamond:
-		return 5;
+		return 3;
+		break;
+	case BKEBlock::Mycelium:
+		if (Normal == FVector::UpVector) return 5;
+		if (Normal == FVector::DownVector) return 4;
+		return 6;
+		break;
+	case BKEBlock::Grass:
+		if (Normal == FVector::UpVector) return 7;
+		if (Normal == FVector::DownVector) return 4;
+		return 8;
+		break;
+	case BKEBlock::Leaves:
+		return 9;
+		break;
+	case BKEBlock::Spruce:
+		if (Normal == FVector::UpVector || Normal == FVector::DownVector) return 11;
+		return 10;
 		break;
 	default:
 		return 255;
