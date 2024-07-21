@@ -6,6 +6,8 @@
 #include "BKChunkWorld.h"			// for server
 #include "BKVoxelFunctionLibrary.h"	// for localBlockPosition
 #include "CollapsibleBlockComponent.h"	// for collapsible Block
+#include "PickUpItem.h"
+#include "BlockItem.h"
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -160,6 +162,25 @@ void ABKPlayerController::OnLeftClick(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Log, TEXT("Left Click!"));
 
+	// 블록 아이템을 들고 있을 때만 블록 설치 가능
+	/*ACharacter* MyCharacter = GetCharacter();
+	if (MyCharacter)
+	{
+		AblockersCharacter* MyBlockersCharacter = Cast<AblockersCharacter>(MyCharacter);
+		if (MyBlockersCharacter)
+		{
+			ABlockItem* blockItem = Cast<ABlockItem>(MyBlockersCharacter->SelectedItem);
+		}
+		else
+		{
+			return;
+		}
+	}
+	else
+	{
+		return;
+	}*/
+	
 	if (PlayerCameraManager)
 	{
 		FVector CameraLocation = PlayerCameraManager->GetCameraLocation();
