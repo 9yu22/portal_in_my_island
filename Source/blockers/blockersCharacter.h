@@ -145,5 +145,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Movement")
 	float CurrSpeed;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Movement")
+	bool BIsInAir;
 };
 

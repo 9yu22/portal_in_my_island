@@ -172,6 +172,18 @@ void AblockersCharacter::Tick(float DeltaTime) {
 
 	// 이전 위치를 업데이트
 	PrevLocation = CurrentLocation;
+
+	// 점프 여부 판단
+	FVector Start = GetActorLocation();
+	FVector End = Start - FVector(0, 0, 110.0f); // 발 밑 110 유닛 아래까지 검사
+
+	FHitResult HitResult;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	// 라인 트레이스 수행
+	bool bLandHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, Params);
+	BIsInAir = !bLandHit;
 }
 
 void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
