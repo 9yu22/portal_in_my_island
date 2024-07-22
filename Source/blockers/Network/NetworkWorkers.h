@@ -32,7 +32,6 @@ public:
     void RecvPacket();
     void MergePacket(uint8* buffer, int32 recvPacketSize);
     void ProcessPacket(uint8* packet);
-    void ProcessBlockPacket(const SC_ADD_BLOCK_PACKET& block);
 
     virtual bool Init() override;
     virtual uint32 Run() override;

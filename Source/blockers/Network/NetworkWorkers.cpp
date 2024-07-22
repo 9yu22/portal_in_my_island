@@ -32,10 +32,13 @@ void FRecvWorker::MergePacket(uint8* buffer, int32 recvPacketSize) // 패킷 조립
     uint8* ptr = buffer;
     static size_t real_packet_size = 0;
     static size_t saved_packet_size = 0;
-    static uint8 packet_buffer[256];
+    static uint8 packet_buffer[256]; 
 
     while (0 < recvPacketSize) {
         if (0 == real_packet_size) real_packet_size = ptr[0];
+
+        // real_packet_size - saved_packet_size -> 받아온 데이터 중 이번 루프에서 처리된 데이터 크기
+
         if (recvPacketSize + saved_packet_size >= real_packet_size) { // 패킷 처리가 가능한 만큼 버퍼에 패킷이 있다면
             memcpy(packet_buffer + saved_packet_size, ptr, real_packet_size - saved_packet_size); // ptr[0] 만큼만(실제 처리할 패킷 크기만큼) 넘겨 처리
             ProcessPacket(packet_buffer);
@@ -125,22 +128,23 @@ void FRecvWorker::ProcessPacket(uint8* packet)
     }
 
     case SC_ADD_BLOCK: {
-        SC_ADD_BLOCK_PACKET new_block;
+        SC_ADD_BLOCK_PACKET add_block;
 
-        memcpy(&new_block, packet, sizeof(new_block));
-        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Block Packet chunk index:%d, x: %d, y: %d, z: %d"),new_block.chunk_index, new_block.ix, new_block.iy, new_block.iz));
+        memcpy(&add_block, packet, sizeof(add_block));
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Recv Add Block Packet chunk index:%d, x: %d, y: %d, z: %d"), add_block.chunk_index, add_block.ix, add_block.iy, add_block.iz));
 
-        BlockInfo block;
-        block.chunk_index = new_block.chunk_index;
-        block.index = { new_block.ix, new_block.iy, new_block.iz };
-        block.type = static_cast<BKEBlock>(new_block.blocktype);
+        //BlockInfo block;
+        //block.chunk_index = add_block.chunk_index;
+        //block.index = { add_block.ix, add_block.iy, add_block.iz };
+        //block.type = static_cast<BKEBlock>(add_block.blocktype);
 
-        AsyncTask(ENamedThreads::GameThread, [this, block]()
+        AsyncTask(ENamedThreads::GameThread, [this, add_block]()
             {
-                Instance->BlockQueue.Enqueue(block);
+                ABKChunkBase* chunk = Cast<ABKChunkBase>(Instance->ChunkWorld->Chunks[add_block.chunk_index]);
+                chunk->AddBlock(add_block);
+                //Instance->BlockQueue.Enqueue(block);
             });
        
-        
         break;
     }
 
@@ -148,18 +152,20 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         SC_REMOVE_BLOCK_PACKET remove_block;
 
         memcpy(&remove_block, packet, sizeof(remove_block));
-        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Block Packet x: %d, y: %d, z: %d"), new_block.ix, new_block.iy, new_block.iz));
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Remove Block Packet chunk index:%d, x: %d, y: %d, z: %d"), remove_block.chunk_index, remove_block.ix, remove_block.iy, remove_block.iz));
 
-        BlockInfo block;
-        block.chunk_index = remove_block.chunk_index;
-        block.index = { remove_block.ix, remove_block.iy, remove_block.iz };
-        block.world_index = { remove_block.wx, remove_block.wy, remove_block.wz };
-        block.normal = { remove_block.nx, remove_block.ny, remove_block.nz };
-        block.type = static_cast<BKEBlock>(remove_block.blocktype);
+        //BlockInfo block;
+        //block.chunk_index = remove_block.chunk_index;
+        //block.index = { remove_block.ix, remove_block.iy, remove_block.iz };
+        //block.world_index = { remove_block.wx, remove_block.wy, remove_block.wz };
+        //block.normal = { remove_block.nx, remove_block.ny, remove_block.nz };
+        //block.type = static_cast<BKEBlock>(remove_block.blocktype);
 
-        AsyncTask(ENamedThreads::GameThread, [this, block]()
+        AsyncTask(ENamedThreads::GameThread, [this, remove_block]()
             {
-                Instance->BlockQueue.Enqueue(block);
+                ABKChunkBase* chunk = Cast<ABKChunkBase>(Instance->ChunkWorld->Chunks[remove_block.chunk_index]); 
+                chunk->RemoveBlock(remove_block);
+                //Instance->BlockQueue.Enqueue(block);
             });
 
         break;

@@ -45,7 +45,7 @@ void ABKPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ABKPlayerController::StopJumping);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABKPlayerController::InputMove);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABKPlayerController::Look);
-		EnhancedInputComponent->BindAction(LeftClickAction, ETriggerEvent::Triggered, this, &ABKPlayerController::OnLeftClick);
+		EnhancedInputComponent->BindAction(LeftClickAction, ETriggerEvent::Started, this, &ABKPlayerController::OnLeftClick);
 	}
 
 }

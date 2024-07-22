@@ -151,7 +151,7 @@ bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector
 			//ModifyVoxel(Position, Block);
 		}
 	}
-	if(instance->Socket == nullptr) {
+	if(instance && instance->Socket == nullptr) {
 		bool removingSuccess = ModifyVoxel(Position, Block);
 		return removingSuccess;
 	}
@@ -167,21 +167,63 @@ void ABKChunkBase::SetOwningChunkWorld(ABKChunkWorld* NewOwner)
 
 void ABKChunkBase::ProcessBlock(const BlockInfo& Block)
 {
-	ModifyVoxelData(Block.index, Block.type);
+	//bool modifySuccess = ModifyVoxelData(Block.index, Block.type);
 
-	ClearMesh();
+	//if (modifySuccess) {
 
-	GenerateMesh();
+	//	ClearMesh();
 
-	ApplyMesh();
+	//	GenerateMesh();
 
-	//if (Block.type == BKEBlock::Air) {
-	//	//여기에 블록 파괴 이펙트 함수 추가
-	//	CreateBlockDestroyEffect(Block);
+	//	ApplyMesh();
+
+	//	if (Block.type == BKEBlock::Air) {
+	//		CreateBlockDestroyEffect(Block);
+	//    }
 	//}
 }
 
-void ABKChunkBase::CreateBlockDestroyEffect(const BlockInfo& Block) // 블록이 사라진 자리에 엑터 스폰 및 파괴 이펙트 생성->컨트롤러 코드 가져옴
+void ABKChunkBase::AddBlock(const SC_ADD_BLOCK_PACKET& add_block)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Enter AddBlock Method")));
+	FIntVector Position{ add_block.ix, add_block.iy, add_block.iz };
+	BKEBlock Block = static_cast<BKEBlock>(add_block.blocktype);
+
+	bool modifySuccess = ModifyVoxelData(Position, Block);
+
+	if (modifySuccess)
+	{
+		ClearMesh();
+
+		GenerateMesh();
+
+		ApplyMesh();
+	}
+}
+
+void ABKChunkBase::RemoveBlock(const SC_REMOVE_BLOCK_PACKET& remove_block)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Enter RemoveBlock Method")));
+	FIntVector Position{ remove_block.ix, remove_block.iy, remove_block.iz };
+	FVector world_index{ remove_block.wx, remove_block.wy, remove_block.wz };
+	FVector normal{ remove_block.nx, remove_block.ny, remove_block.nz };
+	BKEBlock Block = static_cast<BKEBlock>(remove_block.blocktype);
+
+	bool modifySuccess = ModifyVoxelData(Position, Block);
+
+	if (modifySuccess)
+	{
+		ClearMesh();
+
+		GenerateMesh();
+
+		ApplyMesh();
+
+		CreateBlockDestroyEffect(world_index, normal);
+	}
+}
+
+void ABKChunkBase::CreateBlockDestroyEffect(const FVector& world_index, const FVector& normal) // 블록이 사라진 자리에 엑터 스폰 및 파괴 이펙트 생성->컨트롤러 코드 가져옴
 {
 	// 이미 자기 자신 청크에 대한 함수이다. 청크를 얻어올 이유가 없다. this를 넘겨야 하나?-> 자기 자신에 대한 청크 월드를 가져온다.
 	ABKChunkWorld* OwningWorld = ABKChunkWorld::FindOwningChunkWorld(this);
@@ -190,7 +232,7 @@ void ABKChunkBase::CreateBlockDestroyEffect(const BlockInfo& Block) // 블록이 사
 		//UE_LOG(LogTemp, Log, TEXT("World Hit!"));
 
 		// Block의 월드 위치
-		FVector BlockWorldPosition = Block.world_index - Block.normal;
+		FVector BlockWorldPosition = world_index - normal;
 
 		//FIntVector LocalBlockPosition = UBKVoxelFunctionLibrary::WorldToLocalBlockPosition(Block.world_index, Block.normal, 64);
 		//// 디버깅용: Chunk Index 불러옴
@@ -201,7 +243,7 @@ void ABKChunkBase::CreateBlockDestroyEffect(const BlockInfo& Block) // 블록이 사
 		//ModifyVoxel(LocalBlockPosition, Block.type);
 
 		// BP_CollapsibleBlock 스폰
-		FIntVector SpawnLocationInt = UBKVoxelFunctionLibrary::GetBlockWorldPostion(BlockWorldPosition, Block.normal, 64);
+		FIntVector SpawnLocationInt = UBKVoxelFunctionLibrary::GetBlockWorldPostion(BlockWorldPosition, normal, 64);
 		FVector SpawnLocationV = FVector(static_cast<float>(SpawnLocationInt.X), static_cast<float>(SpawnLocationInt.Y), static_cast<float>(SpawnLocationInt.Z));
 		FRotator SpawnRotation = FRotator::ZeroRotator; // 기본 회전값 사용
 
@@ -230,7 +272,7 @@ void ABKChunkBase::CreateBlockDestroyEffect(const BlockInfo& Block) // 블록이 사
 						UClass* BombClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_Bomb.BP_Bomb_C"));
 						if (BombClass)
 						{
-							AActor* SpawnedBomb = GetWorld()->SpawnActor<AActor>(BombClass, Block.world_index, SpawnRotation);
+							AActor* SpawnedBomb = GetWorld()->SpawnActor<AActor>(BombClass, world_index, SpawnRotation);
 						}
 					}
 					else

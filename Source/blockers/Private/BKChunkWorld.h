@@ -55,6 +55,6 @@ public:
 
 	// Function to find the ChunkWorld owning a specific ChunkBase
 	static ABKChunkWorld* FindOwningChunkWorld(ABKChunkBase* Chunk);
-
-	int32 GetChunkIndex(AActor* Chunk, FIntVector Position, BKEBlock Block);
+	static ABKChunkWorld* GetChunkWorld(UWorld* World);
+	
 };

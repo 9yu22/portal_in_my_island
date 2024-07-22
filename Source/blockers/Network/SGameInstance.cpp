@@ -16,6 +16,7 @@ USGameInstance::USGameInstance()
 {
 	Socket = nullptr;
 	MyCharacter = nullptr;
+	RecvThread = nullptr;
 }
 
 void USGameInstance::ConnectToGameServer()
@@ -37,18 +38,21 @@ void USGameInstance::ConnectToGameServer()
 
 	bool Connected = Socket->Connect(*InternetAddr); // 블로킹 방식, 연결 부분은 굳이 논블로킹 방식 고려 필요 x(체감 잘 안됨)
 
+	AblockersGameMode* FindGameMode = Cast<AblockersGameMode>(UGameplayStatics::GetGameMode(GWorld));
+	if (FindGameMode) {
+		GameMode = FindGameMode;
+	}
+
+	ABKChunkWorld* FindChunkWorld = Cast<ABKChunkWorld>(UGameplayStatics::GetActorOfClass(GWorld, ABKChunkWorld::StaticClass()));
+	if (FindChunkWorld) {
+		ChunkWorld = FindChunkWorld;
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("FindChunkWorld Fail..")));
+	}
+
 	if (Connected) {
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Connection Success!")));
-
-		// Session
-		// PacketSession 객체 생성 및 GameServerSession 에 TSharedPtr객체 할당, 이 객체에 생성된 객체를 가리키는 포인터 존재
-		/*GameServerSession = MakeShared<PacketSession>(Socket);
-		GameServerSession->Run();*/
-
-		AblockersGameMode* FindGameMode = Cast<AblockersGameMode>(UGameplayStatics::GetGameMode(GWorld));
-		if (FindGameMode) {
-			GameMode = FindGameMode;
-		}
 
 		CS_LOGIN_PACKET login;
 		login.size = sizeof(CS_LOGIN_PACKET);
@@ -97,12 +101,12 @@ void USGameInstance::DisconnectFromGameServer()
 		RecvThread = nullptr;
 	}
 
-	if (SendThread)
+	/*if (SendThread)
 	{
 		SendThread->Kill(true);
 		delete SendThread;
 		SendThread = nullptr;
-	}
+	}*/
 
 	if (Socket) {
 		ISocketSubsystem* SocketSubsystem = ISocketSubsystem::Get();

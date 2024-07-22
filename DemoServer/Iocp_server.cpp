@@ -32,6 +32,9 @@ void disconnect(int c_id)
 
 void process_packet(int c_id, char* packet)
 {
+	static CS_ADD_BLOCK_PACKET prev_add;
+	static CS_REMOVE_BLOCK_PACKET prev_remove;
+
 	switch (packet[1]) {
 	case CS_LOGIN: {
 		std::cout << "클라이언트 " << c_id << " 로그인 패킷 도착" << std::endl;
@@ -76,21 +79,45 @@ void process_packet(int c_id, char* packet)
 	}
 	case CS_ADD_BLOCK: {
 		CS_ADD_BLOCK_PACKET* p = reinterpret_cast<CS_ADD_BLOCK_PACKET*>(packet);
-		if (map.AddBlockToMap(p)) {
+		
+		std::cout << "추가 ->Chunk Index: " << p->chunk_index << ", Indices: (" << p->ix << ", " << p->iy << ", " << p->iz << ")" << std::endl;
+	/*	if (map.AddBlockToMap(p)) {
 			for (auto& pl : clients)
 				if (true == pl.b_use)
 					pl.send_add_block_packet(packet);
+		}*/
+		if (memcmp(&prev_add, p, sizeof(CS_ADD_BLOCK_PACKET)) == 0) {// 클라에서 같은 패킷이 여러번 올 경우 1번만 보내도록 하기 위함->이유를 알 수가 없다..
+			break;
 		}
+
+		else {
+			std::memcpy(&prev_add, p, sizeof(CS_ADD_BLOCK_PACKET));
+			for (auto& pl : clients)
+				if (true == pl.b_use)
+					pl.send_add_block_packet(packet);
+		}	
 			
 		break;
 	}
 	case CS_REMOVE_BLOCK: {
 		CS_REMOVE_BLOCK_PACKET* p = reinterpret_cast<CS_REMOVE_BLOCK_PACKET*>(packet);
-		if (map.RemoveBlockToMap(p)) {
+		std::cout << "삭제 ->Chunk Index: " << p->chunk_index << ", Indices: (" << p->ix << ", " << p->iy << ", " << p->iz << ")" << std::endl;
+	/*	if (map.RemoveBlockToMap(p)) {
 			for (auto& pl : clients)
 				if (true == pl.b_use)
 					pl.send_remove_block_packet(packet);
-		}		
+		}	*/	
+		if (memcmp(&prev_remove, p, sizeof(CS_REMOVE_BLOCK_PACKET)) == 0) {
+			break;
+		}
+
+		else {
+			std::memcpy(&prev_add, p, sizeof(CS_REMOVE_BLOCK_PACKET));
+			for (auto& pl : clients)
+				if (true == pl.b_use)
+					pl.send_remove_block_packet(packet);
+		}
+		
 				
 		break;
 	}

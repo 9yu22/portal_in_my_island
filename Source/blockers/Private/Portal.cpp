@@ -44,6 +44,11 @@ void APortal::Tick(float DeltaTime)
 
     if (Portalhealth == 0)
     {
+	/*	USGameInstance* instance = USGameInstance::GetMyInstance(this);
+		if (instance) {
+			instance->Portals.Remove(this);
+		}*/	
+		
         UGameplayStatics::OpenLevel(this, FName("End"));
     }
 

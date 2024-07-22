@@ -10,6 +10,7 @@
 //#include "PacketSession.h"
 #include "../blockersCharacter.h"
 #include "../blockersGameMode.h"
+#include "../Private/BKChunkWorld.h"
 #include "../Public/Portal.h"
 #include "Protocol.h"
 #include "SGameInstance.generated.h"
@@ -34,7 +35,7 @@ public:
 	void DisconnectFromGameServer();
 
 	//UFUNCTION(BlueprintCallable)
-	//void HandleRecvPackets(); m, 
+	//void HandleRecvPackets(); 
 
 	//void SendPacket(SendBufferRef SendBuffer);
 
@@ -57,13 +58,15 @@ public:
 
 	TArray<APortal*> Portals;
 
+
 	TQueue<BlockInfo> BlockQueue;
 	TQueue<AnimInfo> AnimQueue;
 
 	FRunnableThread* RecvThread;
-	FRunnableThread* SendThread;
+	//FRunnableThread* SendThread;
 
-	AblockersGameMode* GameMode = nullptr;
+	AblockersGameMode* GameMode;
+	ABKChunkWorld* ChunkWorld;
 
 	//TSharedPtr<class PacketSession> GameServerSession;
 	//TSharedPtr<class FRecvWorker> makeRecvThread;

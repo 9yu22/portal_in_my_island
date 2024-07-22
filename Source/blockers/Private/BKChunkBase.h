@@ -7,6 +7,7 @@
 #include "Voxel/BKEnum.h"
 #include "GameFramework/Actor.h"
 #include "../Network/ProcessQueue.h"
+#include "../Network/Protocol.h"
 #include "BKChunkBase.generated.h"
 
 class FastNoiseLite;
@@ -43,7 +44,9 @@ class BLOCKERS_API ABKChunkBase : public AActor
 	void SetOwningChunkWorld(ABKChunkWorld* NewOwner);
 
 	void ProcessBlock(const BlockInfo& Block);
-	void CreateBlockDestroyEffect(const BlockInfo& Block);
+	void AddBlock(const SC_ADD_BLOCK_PACKET& add_block);
+	void RemoveBlock(const SC_REMOVE_BLOCK_PACKET& remove_block);
+	void CreateBlockDestroyEffect(const FVector& world_index, const FVector& normal);
 	int8 GetMyChunkIndex() const;
 
 protected:
