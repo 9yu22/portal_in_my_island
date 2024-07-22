@@ -27,6 +27,8 @@ void ABKPlayerController::BeginPlay()
 	// ºÎ¸ð
 	Super::BeginPlay();
 
+	BlockersCharacter = Cast<AblockersCharacter>(GetCharacter());
+
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		Subsystem->AddMappingContext(MappingContext, 0);
@@ -81,7 +83,16 @@ void ABKPlayerController::InputMove(const FInputActionValue& value)
 		controlledPawn->AddMovementInput(ForwardVector, inputAxis.Y);
 		controlledPawn->AddMovementInput(RightVector, inputAxis.X);
 
-		bool isFalling = GetCharacter()->GetCharacterMovement()->IsFalling();
+		bool isFalling = BlockersCharacter->BIsInAir;
+
+		// Check a point in front of the player to see if there is ground
+		FVector CheckPoint = BlockersCharacter->GetActorLocation() + (BlockersCharacter->GetActorForwardVector() * -30.0f) + FVector(0.0f, 0.0f, -110.0f);
+
+		FHitResult HitResultt;
+		FCollisionQueryParams CollisionParams;
+
+		bool bIsOnGround = GetWorld()->LineTraceSingleByChannel(HitResultt, BlockersCharacter->GetActorLocation(), CheckPoint, ECC_Visibility, CollisionParams);
+
 
 		if (bShift && !isFalling)
 		{
@@ -90,7 +101,7 @@ void ABKPlayerController::InputMove(const FInputActionValue& value)
 				prevLocation = GetCharacter()->GetActorLocation();
 			}
 
-			if (GetCharacter()->GetActorLocation().Z < prevLocation.Z)
+			if (!bIsOnGround)
 			{
 				GetCharacter()->SetActorLocation(prevLocation);
 			}
@@ -102,25 +113,46 @@ void ABKPlayerController::InputMove(const FInputActionValue& value)
 		}
 		else if (bShift && isFalling)
 		{
-			prevLocation = {-100, -100, -100};
+			if (BlockersCharacter->BIsJumping)
+				prevLocation = {-100, -100, -100};
+			else
+			{
+				if (prevLocation.Z == -100)
+				{
+					prevLocation = GetCharacter()->GetActorLocation();
+				}
+
+				if (!bIsOnGround)
+				{
+					GetCharacter()->SetActorLocation(prevLocation);
+				}
+				else
+				{
+
+				}
+				prevLocation = GetCharacter()->GetActorLocation();
+			}
+
 		}
 		else
 		{
 			prevLocation = GetCharacter()->GetActorLocation();
 		}
 	}
-}
+} 
 
 
 void ABKPlayerController::Jump(const FInputActionValue& Value)
 {
 	GetCharacter()->bPressedJump = true;
+	BlockersCharacter->BIsJumping = true;
 	//SendAnimation(static_cast<int8>(Anim::JUMP));
 }
 
 void ABKPlayerController::StopJumping(const FInputActionValue& Value)
 {
 	GetCharacter()->bPressedJump = false;
+	BlockersCharacter->BIsJumping = false;
 	//SendAnimation(static_cast<int8>(Anim::IDLE));
 }
 

@@ -148,5 +148,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Movement")
 	bool BIsInAir;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Movement")
+	bool BIsJumping;
 };
 

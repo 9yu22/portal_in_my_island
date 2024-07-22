@@ -81,4 +81,7 @@ public:
 	bool bShift = false;
 
 	FVector prevLocation;
+
+private:
+	AblockersCharacter* BlockersCharacter;
 };
