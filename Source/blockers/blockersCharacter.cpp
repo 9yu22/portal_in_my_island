@@ -49,6 +49,16 @@ AblockersCharacter::AblockersCharacter()
 	//	GetMesh()->SetMaterial(0, M_blockers.Object);
 	//}
 
+	static ConstructorHelpers::FObjectFinder<UTexture> TextureAsset1(TEXT("/Game/NPC_Character_Four/Textures/T_NPC_Character_Four_BaseColor_Skin_1.T_NPC_Character_Four_BaseColor_Skin_1"));
+	static ConstructorHelpers::FObjectFinder<UTexture> TextureAsset2(TEXT("/Game/NPC_Character_Four/Textures/T_NPC_Character_Four_BaseColor_Skin_2.T_NPC_Character_Four_BaseColor_Skin_2"));
+	static ConstructorHelpers::FObjectFinder<UTexture> TextureAsset3(TEXT("/Game/NPC_Character_Four/Textures/T_NPC_Character_Four_BaseColor_Skin_3.T_NPC_Character_Four_BaseColor_Skin_3"));
+	static ConstructorHelpers::FObjectFinder<UTexture> TextureAsset4(TEXT("/Game/NPC_Character_Four/Textures/T_NPC_Character_Four_BaseColor_Skin_4.T_NPC_Character_Four_BaseColor_Skin_4"));
+
+	if (TextureAsset1.Succeeded()) TextureAssets[0] = TextureAsset1.Object;
+	if (TextureAsset2.Succeeded()) TextureAssets[1] = TextureAsset2.Object;
+	if (TextureAsset3.Succeeded()) TextureAssets[2] = TextureAsset3.Object;
+	if (TextureAsset4.Succeeded()) TextureAssets[3] = TextureAsset4.Object;
+
 	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimBPClass(TEXT("/Game/NPC_Character_Four/Animations/Demo/ThirdPerson_AnimBP.ThirdPerson_AnimBP_C"));
 	if (AnimBPClass.Succeeded()) {
 		UE_LOG(LogTemp, Warning, TEXT("Animation OK"));
@@ -242,15 +252,19 @@ void AblockersCharacter::SetTextureForCharacter(int Character_id)
 	{
 	case 0:
 		Path = TEXT("/Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin1.M_NPC_Character_Four_Skin1");
+		voxelTexture = TextureAssets[0];
 		break;
 	case 1:
 		Path = TEXT("/Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin2.M_NPC_Character_Four_Skin2");
+		voxelTexture = TextureAssets[1];
 		break;
 	case 2:
 		Path = TEXT("/Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin3.M_NPC_Character_Four_Skin3");
+		voxelTexture = TextureAssets[2];
 		break;
 	case 3:
 		Path = TEXT("/Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin4.M_NPC_Character_Four_Skin4");
+		voxelTexture = TextureAssets[3];
 		break;
 	default:
 		break;

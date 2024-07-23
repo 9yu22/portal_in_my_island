@@ -88,6 +88,8 @@ public:
 private:
 	void Fire();
 
+	UTexture* TextureAssets[4];
+
 	//HP & HealthBar
 public:
 
@@ -101,8 +103,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	float health;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
-	float portalhealth;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "voxelTexture")
+	UTexture* voxelTexture;
 
 	UFUNCTION(BlueprintCallable, Category = "Items")
 	void UseItem(class UItem* Item);
