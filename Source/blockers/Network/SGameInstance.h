@@ -56,6 +56,7 @@ public:
 	AblockersCharacter* MyCharacter;
 	TArray<AblockersCharacter*> Players;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "portal")
 	TArray<APortal*> Portals;
 
 

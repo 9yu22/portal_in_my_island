@@ -29,6 +29,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Portalhealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int id = -1;
 
 	UPROPERTY(EditAnywhere, Category = "UI")

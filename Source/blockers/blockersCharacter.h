@@ -70,6 +70,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ABullet> bulletFactory;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int id = -1;
 	//TArray<AblockersCharacter*> Players;
 	bool loginOk = false;
