@@ -3,6 +3,7 @@
 #include <MSWSock.h>
 #include "Player.h"
 #include "protocol.h"
+#include "ManageItem.h"
 
 class EX_OVERLAPPED {
 public:
@@ -55,5 +56,6 @@ public:
 	void send_player_hp_packet(Player player);
 	void send_add_portal_packet(Portal portal);
 	void send_portal_hp_packet(Portal portal);
+	void send_add_item_packet(Item item);
 };
 

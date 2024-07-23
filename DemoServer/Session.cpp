@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Session.h"
 
 Session::Session()
@@ -116,4 +117,32 @@ void Session::send_portal_hp_packet(Portal portal)
 	change_hp.id = portal.m_id;
 	do_send(&change_hp);
 }
+
+void Session::send_add_item_packet(Item item)
+{
+	SC_ADD_ITEM_PACKET add_item;
+	add_item.size = sizeof(SC_ADD_ITEM_PACKET);
+	add_item.type = SC_ADD_ITEM;
+	add_item.item_type = item.item_type;
+	// 스폰시키는 위치 지정 필요
+	//do_send(&add_item);
+	switch (item.item_type) {
+	case ROCK:
+		std::cout << "돌 아이템 생성" << std::endl;
+		break;
+
+	case AMETHYST:
+		std::cout << "자수정 아이템 생성" << std::endl;
+		break;
+
+	case RUBY:
+		std::cout << "루비 아이템 생성" << std::endl;
+		break;
+
+	case DIAMOND:
+		std::cout << "다이아몬드 아이템 생성" << std::endl;
+		break;
+	}
+}
+
 

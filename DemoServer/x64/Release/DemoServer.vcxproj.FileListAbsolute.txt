@@ -1,1 +1,2 @@
 C:\Users\givoo\Documents\GitHub\portal_in_my_island\DemoServer\x64\Release\DemoServer.exe
+C:\Users\givoo\source\repos\portal_in_my_island\DemoServer\x64\Release\DemoServer.exe

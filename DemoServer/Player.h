@@ -1,7 +1,7 @@
 #pragma once
 #include <array>
 #include "GameObject.h"
-#include "Item.h"
+#include "ManageItem.h"
 #include "Portal.h"
 
 class Player : public GameObject

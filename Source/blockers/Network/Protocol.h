@@ -61,7 +61,7 @@ struct SC_ADD_PORTAL_PACKET {
     uint8 size;
     int8 type;
     int id;
-    int hp;
+    float hp;
     float x, y, z;
 };
 

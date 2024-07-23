@@ -129,7 +129,7 @@
   <ItemGroup>
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Iocp_server.cpp" />
-    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="ManageItem.cpp" />
     <ClCompile Include="main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -145,7 +145,7 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="DemoServer.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Item.h" />
+    <ClInclude Include="ManageItem.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Portal.h" />
