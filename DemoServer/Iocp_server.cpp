@@ -126,7 +126,11 @@ void process_packet(int c_id, char* packet)
 		CS_CHANGE_PLAYER_HP_PACKET* p = reinterpret_cast<CS_CHANGE_PLAYER_HP_PACKET*>(packet);
 		clients[p->hit_id].m_player.m_hp -= 20.f;
 		std::cout << "클라이언트 " << p->hit_id << " 공격당함, 남은 hp: " << clients[p->hit_id].m_player.m_hp << std::endl;
-		clients[p->hit_id].send_portal_hp_packet(clients[p->hit_id].m_player.portal);
+		if (clients[p->hit_id].m_player.m_hp <= 0.f && clients[p->hit_id].m_player.portal.m_hp > 0.f) {
+			clients[p->hit_id].m_player.m_hp = 100.f;
+		}
+
+		clients[p->hit_id].send_player_hp_packet(clients[p->hit_id].m_player);
 		break;
 	}
 
