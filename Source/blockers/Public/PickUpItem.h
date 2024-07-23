@@ -63,8 +63,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pickup)
 	int32 amount;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pickup)
+	float Durability = 100.f;		// For Pickax, Sword, Pistol / Max: 100.0
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pickup)
+	float Usage;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 	USoundBase* PickUpSound;
+
+	UFUNCTION(BlueprintCallable, Category = Pickup)
+	void UseItem();
 
 	virtual void OnInteract();
 

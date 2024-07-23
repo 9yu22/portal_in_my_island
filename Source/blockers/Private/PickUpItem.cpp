@@ -74,6 +74,11 @@ void APickUpItem::OnInteract()
 	GEngine->AddOnScreenDebugMessage(1, 3, FColor::Red, *pickup);
 }
 
+void APickUpItem::UseItem()
+{
+	Durability -= Usage;
+}
+
 void APickUpItem::Show(bool visible)
 {
 	ECollisionEnabled::Type collision = visible ?
