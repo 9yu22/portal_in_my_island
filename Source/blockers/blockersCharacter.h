@@ -100,6 +100,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	float health;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
+	float portalhealth;
+
 	UFUNCTION(BlueprintCallable, Category = "Items")
 	void UseItem(class UItem* Item);
 

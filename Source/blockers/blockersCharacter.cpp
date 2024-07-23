@@ -147,7 +147,7 @@ void AblockersCharacter::Tick(float DeltaTime) {
 		SendMovePacket();
 	}
 
-	health = FMath::Clamp<float>(health - DeltaTime * 0.5, 0, MaxHealth); //시간에 따라 줄어들도록 설정.
+	health = FMath::Clamp<float>(health - DeltaTime * 0.5, 99, MaxHealth); //시간에 따라 줄어들도록 설정.
 	if (health < 1.f) {
 		health = MaxHealth;
 	}
