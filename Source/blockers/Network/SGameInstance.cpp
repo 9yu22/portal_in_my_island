@@ -151,7 +151,7 @@ void USGameInstance::Shutdown()
 	DisconnectFromGameServer();
 }
 
-bool USGameInstance::isOnServer()
+bool USGameInstance::IsServerOnline()
 {
 	if (Socket == nullptr)
 		return false;
