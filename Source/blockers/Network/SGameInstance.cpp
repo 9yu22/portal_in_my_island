@@ -151,6 +151,16 @@ void USGameInstance::Shutdown()
 	DisconnectFromGameServer();
 }
 
+bool USGameInstance::isOnServer()
+{
+	if (Socket == nullptr)
+		return false;
+	else
+		return true;
+}
+
+
+
 
 //void US1GameInstance::HandleRecvPackets()
 //{

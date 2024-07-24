@@ -69,6 +69,9 @@ public:
 	AblockersGameMode* GameMode;
 	ABKChunkWorld* ChunkWorld;
 
+	UFUNCTION(BlueprintCallable)
+	bool isOnServer();	// 블루프린트에서 서버 켜져 있는지 확인하는 함수
+
 	//TSharedPtr<class PacketSession> GameServerSession;
 	//TSharedPtr<class FRecvWorker> makeRecvThread;
 	//TSharedPtr<class FSendWorker> makeSendThread;
