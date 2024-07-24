@@ -362,10 +362,28 @@ bool AblockersCharacter::CheckItemNum(FString itemName, int32 number)
 
 int32 AblockersCharacter::GetItemIndex(FString itemName)
 {
+	// 비교할 아이템 이름들을 배열에 저장
+	TArray<FString> validItems = {
+		"ResourceAmethyst",
+		"ResourceDiamond",
+		"ResourceRuby",
+		"ResourceStone",
+		"PotionRed",
+		"ResourceBullet",
+		"BlockAmethyst",
+		"BlockDiamond",
+		"BlockRuby",
+		"BlockStone"
+	};
+
 	for (int32 i = 0; i < ItemInventory.Num(); ++i) {
-		if (ItemInventory[i]->Name == *itemName) {
-			return i;
+		if (validItems.Contains(ItemInventory[i]->Name)) {
+			if (ItemInventory[i]->Name == *itemName) {
+				return i;
+			}
 		}
+		else
+			return -2;
 	}
 	return -2;
 }
