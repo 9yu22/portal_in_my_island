@@ -121,17 +121,21 @@ public:
 	TArray<APickUpItem*> ItemInventory;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "InventoryItem")
-	APickUpItem* SelectedItem;
+	int32 SelectedItemIndex = -1;
 
 	UFUNCTION(BlueprintCallable)
 	void AddToInventory(APickUpItem* actor);
 
+	UFUNCTION(BlueprintPure, Category = "InventoryItem")
 	int32 GetItemIndex(FString itemName);
+
+	UFUNCTION(BlueprintPure, Category = "InventoryItem")
+	APickUpItem* GetItemActor() const;
 
 	int32 FindEmptySlot();
 
 	UFUNCTION(BlueprintCallable)
-	void RemoveFromInventory(FString itemName, int32 number);
+	void RemoveFromInventory(const int32 ItemIndex, const int32 number);
 
 	UFUNCTION(BlueprintCallable)
 	bool CheckItemNum(FString itemName, int32 number);
