@@ -211,6 +211,18 @@ void FRecvWorker::ProcessPacket(uint8* packet)
                     }                    
             });
     }
+
+    case SC_ADD_ITEM: {
+        SC_ADD_ITEM_PACKET add_item;
+
+        memcpy(&add_item, packet, sizeof(add_item));
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Recv Add Item Packet x: %f, y: %f, z: %f"), add_item.x, add_item.y, add_item.z));
+        AsyncTask(ENamedThreads::GameThread, [this, add_item]()
+            {
+                Instance->GameMode->SpawnItem(add_item);
+            });
+    }
+
         
     default:
         break;

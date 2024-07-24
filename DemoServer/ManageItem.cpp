@@ -18,24 +18,28 @@ Item::~Item()
 
 ManageItem::ManageItem()
 {
-	manage_items[ROCK].item_type = ROCK;
+	manage_items[STONE].item_type = STONE;
 	manage_items[AMETHYST].item_type = AMETHYST;
 	manage_items[RUBY].item_type = RUBY;
 	manage_items[DIAMOND].item_type = DIAMOND;
 
 	for (auto& i : manage_items) {
 		switch (i.item_type) {
-		case ROCK:
+		case STONE:
 			i.item_spawn_time = 5.0;
+			i.SetWorldLocation(2500.f, 2500.f, 700.f);
 			break;
 		case AMETHYST:
 			i.item_spawn_time = 10.0;
+			i.SetWorldLocation(-2500.f, 2500.f, 700.f);
 			break;
 		case RUBY:
 			i.item_spawn_time = 20.0;
+			i.SetWorldLocation(2500.f, -2500.f, 700.f);
 			break;
 		case DIAMOND:
 			i.item_spawn_time = 40.0;
+			i.SetWorldLocation(-2500.f, -2500.f, 700.f);
 			break;
 		}
 	}
@@ -50,10 +54,10 @@ ManageItem::~ManageItem()
 void ManageItem::SpawnItem(Item_type type)
 {
 	switch (type) {
-	case ROCK:
-		manage_items[ROCK].is_spawned = true;
-		manage_items[ROCK].calculate_spawn_time = 0.0;
-		spawn_item_type = ROCK;
+	case STONE:
+		manage_items[STONE].is_spawned = true;
+		manage_items[STONE].calculate_spawn_time = 0.0;
+		spawn_item_type = STONE;
 		break;
 
 	case AMETHYST:

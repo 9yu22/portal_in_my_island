@@ -173,6 +173,7 @@ struct CS_DISCONNECT_PACKET {
 struct SC_ADD_ITEM_PACKET {
     u_char size;
     char type;
+    float x, y, z;
     char item_type;
 };
 

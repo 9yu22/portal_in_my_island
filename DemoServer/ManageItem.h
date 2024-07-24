@@ -6,10 +6,10 @@
 class Item : public GameObject
 {
 public:
-	int item_id = -1;
+	//int item_id = -1;
 	char item_type = -1;
 	double item_spawn_time = 0.0;
-	double calculate_spawn_time = 0.0;
+	double calculate_spawn_time = -10.0;
 	bool is_spawned = false;
 
 public:
@@ -19,7 +19,7 @@ public:
 
 
 
-enum Item_type { ROCK, AMETHYST, RUBY, DIAMOND, NONE };
+enum Item_type { STONE, AMETHYST, RUBY, DIAMOND, NONE };
 
 class ManageItem
 {

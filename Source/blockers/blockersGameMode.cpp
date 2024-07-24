@@ -99,6 +99,60 @@ void AblockersGameMode::SpawnPortal(SC_ADD_PORTAL_PACKET add_portal)
 	}
 }
 
+void AblockersGameMode::SpawnItem(SC_ADD_ITEM_PACKET add_item)
+{
+	if (UWorld* World = GetWorld())
+	{
+		FVector SpawnLocation(add_item.x, add_item.y, add_item.z);
+		FRotator SpawnRotation = FRotator::ZeroRotator;
+
+		UClass* ItemClass = nullptr;
+
+		switch (add_item.item_type) {
+		case STONE:
+			ItemClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/Item/BP_ResourceItem_Stone.BP_ResourceItem_Stone_C"));
+			break;
+
+		case AMETHYST:
+			ItemClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/Item/BP_ResourceItem_Amethyst.BP_ResourceItem_Amethyst_C"));
+			break;
+
+		case RUBY:
+			ItemClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/Item/BP_ResourceItem_Ruby.BP_ResourceItem_Ruby_C"));
+			break;
+
+		case DIAMOND:
+			ItemClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/Item/BP_ResourceItem_Diamond.BP_ResourceItem_Diamond_C"));
+			break;
+		}
+
+		if (ItemClass)
+		{
+			World->SpawnActor<AActor>(ItemClass, SpawnLocation, SpawnRotation);
+			switch (add_item.item_type) {
+			case STONE:
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Stone")));
+				break;
+
+			case AMETHYST:
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Amethyst")));
+				break;
+
+			case RUBY:
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Ruby")));
+				break;
+
+			case DIAMOND:
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Diamond")));
+				break;
+			}
+		}
+		else {
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Item Path Load Fail..")));
+		}
+	}
+}
+
 
 
 void AblockersGameMode::BeginPlay()

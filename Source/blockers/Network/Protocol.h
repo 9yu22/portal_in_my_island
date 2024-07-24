@@ -25,6 +25,9 @@ constexpr char SC_ADD_PORTAL = 13;
 constexpr char SC_CHANGE_PORTAL_HP = 14;
 constexpr char CS_CHANGE_PORTAL_HP = 15;
 
+constexpr char SC_ADD_ITEM = 16;
+constexpr char CS_REMOVE_ITEM = 17;
+
 constexpr char CS_DISCONNECT = 50;
 
 enum class Anim : int8 { IDLE, MOVE, JUMP };
@@ -156,5 +159,17 @@ struct CS_DISCONNECT_PACKET {
     int id;
 };
 
+struct SC_ADD_ITEM_PACKET {
+    uint8 size;
+    int8 type;
+    float x, y, z;
+    char item_type;
+};
+
+struct CS_REMOVE_ITEM_PACKET {
+    uint8 size;
+    int8 type;
+    char item_type;
+};
 
 #pragma pack (pop)

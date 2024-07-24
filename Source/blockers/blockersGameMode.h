@@ -10,6 +10,7 @@
 #include "Public/Portal.h"
 #include "blockersGameMode.generated.h"
 
+enum Item_type { STONE, AMETHYST, RUBY, DIAMOND, NONE };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerDiedSignature, ACharacter*, Character);
 
@@ -24,6 +25,7 @@ public:
 
 	void SpawnCharacter(SC_ADD_PLAYER_PACKET new_player);
 	void SpawnPortal(SC_ADD_PORTAL_PACKET add_portal);
+	void SpawnItem(SC_ADD_ITEM_PACKET add_item);
 
 	const FOnPlayerDiedSignature& GetOnPlayerDied() const { return OnPlayerDied; }
 
