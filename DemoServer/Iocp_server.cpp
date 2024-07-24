@@ -37,28 +37,28 @@ void process_packet(int c_id, char* packet)
 	static CS_REMOVE_BLOCK_PACKET prev_remove;
 
 	// 일단 임시로 여기에..
-	//item_manager.CalculateItemSpawnTime(); // 여기서 스폰되어야할 아이템 타입이 결정됨(없다면 NONE)
+	item_manager.CalculateItemSpawnTime(); // 여기서 스폰되어야할 아이템 타입이 결정됨(없다면 NONE)
 
-	//if (item_manager.spawn_item_type != NONE) { // 스폰되어야 할 아이템이 있다면
-	//	for (auto& i : item_manager.manage_items) // 아이템 종류 배열 중에서
-	//	{
-	//		if (item_manager.spawn_item_type == i.item_type) { //스폰 되어야 하는 타입의 아이템을 찾아
-	//			for (auto& pl : clients) { // 모든 클라이언트에게 스폰 명령을 전송한다.
-	//				if (false == pl.b_use) continue;
-	//				pl.send_add_item_packet(i);
-	//			}
-	//			//break;
-	//		}
-	//		else
-	//			break;
-	//	}
-	//}
+	if (item_manager.spawn_item_type != NONE) { // 스폰되어야 할 아이템이 있다면
+		for (auto& i : item_manager.manage_items) // 아이템 종류 배열 중에서
+		{
+			if (item_manager.spawn_item_type == i.item_type) { //스폰 되어야 하는 타입의 아이템을 찾아
+				for (auto& pl : clients) { // 모든 클라이언트에게 스폰 명령을 전송한다.
+					if (false == pl.b_use) continue;
+					pl.send_add_item_packet(i);
+				}
+				break;
+			}
+		/*	else
+				break;*/
+		}
+	}
 
 	//static int count = 0;
-	//for (auto& i : item_manager.manage_items) {
-	//	if (count > 30) {
+	//if (count > 30) {
+	//	for (auto& i : item_manager.manage_items) {
 	//		switch (i.item_type) {
-	//		case ROCK:
+	//		case STONE:
 	//			std::cout << "돌 경과시간" << i.calculate_spawn_time << std::endl;
 	//			break;
 	//		case AMETHYST:
@@ -71,11 +71,13 @@ void process_packet(int c_id, char* packet)
 	//			std::cout << "다이아 경과시간" << i.calculate_spawn_time << std::endl;
 	//			break;
 	//		}
-	//		count = 0;
 	//	}
+	//	count = 0;
 	//}
-	//
-	//count++;
+	//else
+	//	count++;
+	
+	
 
 	switch (packet[1]) {
 	case CS_LOGIN: {

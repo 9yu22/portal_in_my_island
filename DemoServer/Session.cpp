@@ -124,10 +124,13 @@ void Session::send_add_item_packet(Item item)
 	add_item.size = sizeof(SC_ADD_ITEM_PACKET);
 	add_item.type = SC_ADD_ITEM;
 	add_item.item_type = item.item_type;
-	// 스폰시키는 위치 지정 필요
-	//do_send(&add_item);
+	add_item.x = item.location.x;
+	add_item.y = item.location.y;
+	add_item.z = item.location.z;
+	do_send(&add_item);
+
 	switch (item.item_type) {
-	case ROCK:
+	case STONE:
 		std::cout << "돌 아이템 생성" << std::endl;
 		break;
 
@@ -143,6 +146,7 @@ void Session::send_add_item_packet(Item item)
 		std::cout << "다이아몬드 아이템 생성" << std::endl;
 		break;
 	}
+	std::cout << std::endl;
 }
 
 
