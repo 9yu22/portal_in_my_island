@@ -307,34 +307,72 @@ void AblockersCharacter::UseItem(UItem* Item)
 
 void AblockersCharacter::AddToInventory(APickUpItem* actor)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("init size: %d"), _inventory.Num());
+	// 비교할 아이템 이름들을 배열에 저장
+	TArray<FString> stackableItems = {
+		"ResourceAmethyst",
+		"ResourceDiamond",
+		"ResourceRuby",
+		"ResourceStone",
+		"PotionRed",
+		"ResourceBullet",
+		"BlockAmethyst",
+		"BlockDiamond",
+		"BlockRuby",
+		"BlockStone"
+	};
+
+	TArray<FString> toolItems = {
+		"SwordStone",
+		"SwordAmethyst",
+		"SwordRuby",
+		"SwordDiamond",
+		"PickaxStone",
+		"PickaxAmethyst",
+		"PickaxRuby",
+		"PickaxDiamond",
+		"Pistol"
+	};
+
 	int32 ItemIndex = GetItemIndex(actor->Name);
-	if (ItemIndex != -2) {
-		ItemInventory[ItemIndex]->amount += actor->amount;
-	}
-	else {
-		ItemInventory.Add(actor);
-		/*int32 EmptyIndex = FindEmptySlot();
-		if (EmptyIndex != -1) {
-			ItemInventory.Add(actor);
-		}*/
-	}
-	//UE_LOG(LogTemp, Warning, TEXT("Inventory size: %d"), _inventory.Num());
-}
 
-void AblockersCharacter::RemoveFromInventory(const FString itemName, const int32 number)
-{
-	int32 ItemIndex = GetItemIndex(itemName);
-	int32 lastIndex = ItemInventory.Num() - 1;
-
-	if (ItemIndex != -2) {
-		if (ItemInventory[ItemIndex]->amount > number) {
-			ItemInventory[ItemIndex]->amount -= number;
+	// stackableItem이면 Stack
+	if (stackableItems.Contains(actor->Name))
+	{
+		if (ItemIndex != -1) {
+			ItemInventory[ItemIndex]->amount += actor->amount;
 		}
 		else {
+			ItemInventory.Add(actor);
+		}
+	}
+	// toolItem이면 Add
+	else if (toolItems.Contains(actor->Name))
+	{
+		actor->Durability = 100.f;
+		ItemInventory.Add(actor);
+		UE_LOG(LogTemp, Warning, TEXT("du: %f, am: %d"), actor->Durability, actor->amount);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Invalid Item"));
+	}
+}
+
+void AblockersCharacter::RemoveFromInventory(const int32 ItemIndex, const int32 number)
+{
+	int32 lastIndex = ItemInventory.Num() - 1;
+
+	if (ItemIndex != -1) {
+		if (ItemInventory[ItemIndex]->amount >= number)
+		{
+			ItemInventory[ItemIndex]->amount -= number;
+		}
+		if (ItemInventory[ItemIndex]->amount == 0)
+		{
 			ItemInventory.RemoveAt(ItemIndex);
 			ItemInventory.Shrink();
 			UE_LOG(LogTemp, Warning, TEXT("last item removed."));
+			SelectedItemIndex = 0;
 		}
 	}
 	else {
@@ -362,30 +400,19 @@ bool AblockersCharacter::CheckItemNum(FString itemName, int32 number)
 
 int32 AblockersCharacter::GetItemIndex(FString itemName)
 {
-	// 비교할 아이템 이름들을 배열에 저장
-	TArray<FString> validItems = {
-		"ResourceAmethyst",
-		"ResourceDiamond",
-		"ResourceRuby",
-		"ResourceStone",
-		"PotionRed",
-		"ResourceBullet",
-		"BlockAmethyst",
-		"BlockDiamond",
-		"BlockRuby",
-		"BlockStone"
-	};
-
 	for (int32 i = 0; i < ItemInventory.Num(); ++i) {
-		if (validItems.Contains(ItemInventory[i]->Name)) {
-			if (ItemInventory[i]->Name == *itemName) {
-				return i;
-			}
+		if (ItemInventory[i]->Name == *itemName) {
+			return i;
 		}
-		else
-			return -2;
 	}
-	return -2;
+	return -1;
+}
+
+APickUpItem* AblockersCharacter::GetItemActor() const
+{
+	if (SelectedItemIndex != -1)
+		return ItemInventory[SelectedItemIndex];
+	return nullptr;
 }
 
 int32 AblockersCharacter::FindEmptySlot()
