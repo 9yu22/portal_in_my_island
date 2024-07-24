@@ -94,6 +94,8 @@ private:
 public:
 
 	float GetHealth() const { return health; }
+
+	UFUNCTION(BlueprintCallable, Category = "health")
 	void SetHealth(float val) { health = val; }
 
 	float GetMaxHealth() const { return MaxHealth; }
