@@ -3,3 +3,6 @@
 
 #include "PickUpPotionItem.h"
 
+void APickUpPotionItem::UseItem()
+{
+}

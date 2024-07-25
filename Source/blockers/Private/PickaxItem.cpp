@@ -3,3 +3,7 @@
 
 #include "PickaxItem.h"
 
+void APickaxItem::UseItem()
+{
+	Durability -= Usage;
+}

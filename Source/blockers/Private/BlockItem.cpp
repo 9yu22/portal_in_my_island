@@ -3,3 +3,6 @@
 
 #include "BlockItem.h"
 
+void ABlockItem::UseItem()
+{
+}

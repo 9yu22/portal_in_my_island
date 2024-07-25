@@ -3,3 +3,6 @@
 
 #include "ResourceItem.h"
 
+void AResourceItem::UseItem()
+{
+}

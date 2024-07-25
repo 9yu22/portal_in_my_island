@@ -14,4 +14,13 @@ class BLOCKERS_API ASwordItem : public APickUpItem
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void UseItem() override;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bHit = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FHitResult HitResult;
 };

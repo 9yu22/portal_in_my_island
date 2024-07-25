@@ -3,3 +3,7 @@
 
 #include "PistolItem.h"
 
+void APistolItem::UseItem()
+{
+	Durability -= Usage;
+}
