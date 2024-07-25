@@ -59,7 +59,11 @@ void process_packet(int c_id, char* packet)
 		}
 	}
 		
-	std::cout << "calculate_spawn_time: " << item_manager.calculate_spawn_time[0] << std::endl;
+	for (int i = 0; i < 4; i++)
+	{
+		std::cout << "calculate_spawn_time: " << item_manager.calculate_spawn_time[i] << std::endl;
+	}
+	std::cout << std::endl;	
 	std::cout << "calculate_time_for_int: " << item_manager.calculateTimeForInt << std::endl;
 
 	switch (packet[1]) {
@@ -222,25 +226,30 @@ int main()
 			int client_id = get_new_client_id();
 			if (client_id != -1) {
 				clients[client_id].b_use = true;
-			/*	switch (client_id % 4) {
-				case 0:
-					clients[client_id].m_player.SetWorldLocation(8000.f, 8000.f, 1000.f);
-					break;
-				case 1:
-					clients[client_id].m_player.SetWorldLocation(-8000.f, -8000.f, 1000.f);
-					break;
-				case 2:
-					clients[client_id].m_player.SetWorldLocation(8000.f, -8000.f, 1000.f);
-					break;
-				case 3:
-					clients[client_id].m_player.SetWorldLocation(-8000.f, 8000.f, 1000.f);
-					break;
-				}*/
-
-				// 테스트용 시작 좌표
 				clients[client_id].m_player.m_id = client_id;
 				clients[client_id].m_player.portal.m_id = client_id;
+
 				switch (client_id % 4) {
+				case 0:
+					clients[client_id].m_player.SetWorldLocation(11000.f, 11000.f, 1100.f);
+					clients[client_id].m_player.portal.SetWorldLocation(1500.f, 1500.f, 700.f);
+					break;
+				case 1:
+					clients[client_id].m_player.SetWorldLocation(-11000.f, -11000.f, 1100.f);
+					clients[client_id].m_player.portal.SetWorldLocation(1500.f, 1500.f, 700.f);
+					break;
+				case 2:
+					clients[client_id].m_player.SetWorldLocation(11000.f, -11000.f, 1100.f);
+					clients[client_id].m_player.portal.SetWorldLocation(1500.f, 1500.f, 700.f);
+					break;
+				case 3:
+					clients[client_id].m_player.SetWorldLocation(-11000.f, 11000.f, 1100.f);
+					clients[client_id].m_player.portal.SetWorldLocation(1500.f, 1500.f, 700.f);
+					break;
+				}
+
+				// 테스트용 시작 좌표
+				/*switch (client_id % 4) {
 				case 0:
 					clients[client_id].m_player.SetWorldLocation(1000.f, 1000.f, 1000.f);
 					clients[client_id].m_player.portal.SetWorldLocation(1500.f, 1500.f, 700.f);
@@ -257,7 +266,7 @@ int main()
 					clients[client_id].m_player.SetWorldLocation(-1000.f, 1000.f, 1000.f);
 					clients[client_id].m_player.portal.SetWorldLocation(-1500.f, 1500.f, 700.f);
 					break;
-				}
+				}*/
 				
 				clients[client_id].m_prev_remain = 0;
 				clients[client_id].m_socket = c_socket;
