@@ -383,7 +383,7 @@ void AblockersCharacter::RemoveFromInventory(const int32 ItemIndex, const int32 
 bool AblockersCharacter::CheckItemNum(FString itemName, int32 number)
 {
 	int32 ItemIndex = GetItemIndex(itemName);
-	if (ItemIndex != -2) {
+	if (ItemIndex != -1) {
 		if (ItemInventory[ItemIndex]->amount >= number) {
 			return true;
 		}

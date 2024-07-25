@@ -86,6 +86,7 @@ public:
 
 	//bullet
 private:
+	UFUNCTION(BlueprintCallable, Category = "fire")
 	void Fire();
 
 	UTexture* TextureAssets[4];
