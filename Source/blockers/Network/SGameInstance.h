@@ -62,7 +62,7 @@ public:
 	TArray<APortal*> Portals;
 
 	TArray<AResourceItem*> items;
-	FCriticalSection items_cs;
+	//FCriticalSection items_cs;
 
 	TQueue<BlockInfo> BlockQueue;
 	TQueue<AnimInfo> AnimQueue;

@@ -1,7 +1,7 @@
 #pragma once
 
 constexpr int PORT_NUM = 4040;
-constexpr int BUF_SIZE = 256; 
+constexpr int BUF_SIZE = 4096; 
 constexpr int NAME_SIZE = 20;
 
 constexpr char TEST = 100;
@@ -30,6 +30,8 @@ constexpr char CS_CHANGE_PORTAL_HP = 15;
 constexpr char SC_ADD_ITEM = 16;
 constexpr char SC_REMOVE_ITEM = 17;
 constexpr char CS_REMOVE_ITEM = 18;
+
+constexpr char SC_RESPAWN = 19;
 
 constexpr char CS_DISCONNECT = 50;
 
@@ -189,5 +191,13 @@ struct CS_REMOVE_ITEM_PACKET {
     u_char size;
     char type;
     int id;
+};
+
+struct SC_RESPAWN_PACKET {
+    u_char size;
+    char type;
+    int id;
+    float hp;
+    float x, y, z;
 };
 #pragma pack (pop)

@@ -32,7 +32,7 @@ void FRecvWorker::MergePacket(uint8* buffer, int32 recvPacketSize) // 패킷 조립
     uint8* ptr = buffer;
     static size_t real_packet_size = 0;
     static size_t saved_packet_size = 0;
-    static uint8 packet_buffer[256]; 
+    static uint8 packet_buffer[BUFFER_SIZE];
 
     while (0 < recvPacketSize) {
         if (0 == real_packet_size) real_packet_size = ptr[0];
@@ -194,9 +194,9 @@ void FRecvWorker::ProcessPacket(uint8* packet)
             {
                 Instance->MyCharacter->health = new_hp.hp;
             });
-    }    
-        
+    }            
         break;
+
     case SC_CHANGE_PORTAL_HP: {
         SC_CHANGE_PORTAL_HP_PACKET new_hp;
 
@@ -210,6 +210,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
                         break;
                     }                    
             });
+        break;
     }
 
     case SC_ADD_ITEM: {
@@ -221,27 +222,47 @@ void FRecvWorker::ProcessPacket(uint8* packet)
             {
                 Instance->GameMode->SpawnItem(add_item);
             });
+        break;
     }
-    case SC_REMOVE_ITEM:{
-        SC_ADD_ITEM_PACKET remove_item;
 
-        memcpy(&remove_item, packet, sizeof(remove_item));
+    //case SC_REMOVE_ITEM:{
+    //    SC_ADD_ITEM_PACKET remove_item;
 
-        AsyncTask(ENamedThreads::GameThread, [this, remove_item]()
-            {
-                for (auto& item : Instance->items) {
-                    if (remove_item.id == item->id) {
-                        Instance->items_cs.Lock();
-                        Instance->items.Remove(item);
-                        Instance->items_cs.Unlock();
-                        item->Destroy();
-                        break;
-                    }
-                }              
-            });
-    }
+    //    memcpy(&remove_item, packet, sizeof(remove_item));
+
+    //    AsyncTask(ENamedThreads::GameThread, [this, remove_item]()
+    //        {
+    //            for (auto& item : Instance->items) {
+    //                if (remove_item.id == item->id) {
+    //                    Instance->items_cs.Lock();
+    //                    Instance->items.Remove(item);
+    //                    Instance->items_cs.Unlock();
+    //                    item->Destroy();
+    //                    break;
+    //                }
+    //            }              
+    //        });
+    //    break;
+    //}
     
-        
+    case SC_RESPAWN:
+        SC_RESPAWN_PACKET respawn;
+
+        memcpy(&respawn, packet, sizeof(respawn));
+
+        AsyncTask(ENamedThreads::GameThread, [this, respawn]()
+            {
+                for (auto& p : Instance->Players) {
+                    if (p->id == respawn.id) {
+                        p->health = respawn.hp;
+                        FVector respawn_location(respawn.x, respawn.y, respawn.z);
+                        FRotator respawn_Rotation = FRotator::ZeroRotator;
+                        p->SetActorLocation(respawn_location);
+                        p->SetActorRotation(respawn_Rotation);
+                    }
+                }
+            });
+        break;
     default:
         break;
     }
@@ -255,7 +276,7 @@ bool FRecvWorker::Init()
 
 uint32 FRecvWorker::Run()
 {
-    uint8 recv_buf[256];
+    uint8 recv_buf[BUFFER_SIZE];
 
     th_num = ++recv_th_count;
 

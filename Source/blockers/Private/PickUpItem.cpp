@@ -72,19 +72,19 @@ void APickUpItem::OnInteract()
 		Show(false);
 		player->AddToInventory(this);
 
-		USGameInstance* instance = USGameInstance::GetMyInstance(this);
-		AResourceItem* pickup_item = Cast<AResourceItem>(this);
-		//instance->items.Remove(pickup_item);
+		//USGameInstance* instance = USGameInstance::GetMyInstance(this);
+		//AResourceItem* pickup_item = Cast<AResourceItem>(this);
+		////instance->items.Remove(pickup_item);
 
-		CS_REMOVE_ITEM_PACKET remove_item;
+		//CS_REMOVE_ITEM_PACKET remove_item;
 
-		remove_item.size = sizeof(CS_REMOVE_ITEM_PACKET);
-		remove_item.type = sizeof(CS_REMOVE_ITEM);
-		remove_item.id = pickup_item->id;
+		//remove_item.size = sizeof(CS_REMOVE_ITEM_PACKET);
+		//remove_item.type = sizeof(CS_REMOVE_ITEM);
+		//remove_item.id = pickup_item->id;
 
-		int BytesSent = 0;
+		//int BytesSent = 0;
 
-		instance->Socket->Send((uint8*)&remove_item, sizeof(remove_item), BytesSent);
+		//instance->Socket->Send((uint8*)&remove_item, sizeof(remove_item), BytesSent);
 	}
 
 

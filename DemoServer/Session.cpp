@@ -158,4 +158,17 @@ void Session::send_remove_item_packet(char* packet)
 	do_send(&remove_item);
 }
 
+void Session::send_respawn_packet(Player player)
+{
+	SC_RESPAWN_PACKET respawn;
+	respawn.size = sizeof(SC_RESPAWN_PACKET);
+	respawn.type = SC_RESPAWN;
+	respawn.id = player.m_id;
+	respawn.hp = 100.f;
+	respawn.x = player.respawn_location.x;
+	respawn.y = player.respawn_location.y;
+	respawn.z = player.respawn_location.z;
+	do_send(&respawn);
+}
+
 

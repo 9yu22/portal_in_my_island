@@ -1,6 +1,6 @@
 #pragma once
 
-constexpr int BUFFER_SIZE = 256;
+constexpr int BUFFER_SIZE = 4096;
 
 constexpr char TEST = 100;
 constexpr char LOCATION = 90;
@@ -28,6 +28,8 @@ constexpr char CS_CHANGE_PORTAL_HP = 15;
 constexpr char SC_ADD_ITEM = 16;
 constexpr char SC_REMOVE_ITEM = 17;
 constexpr char CS_REMOVE_ITEM = 18;
+
+constexpr char SC_RESPAWN = 19;
 
 constexpr char CS_DISCONNECT = 50;
 
@@ -178,6 +180,14 @@ struct CS_REMOVE_ITEM_PACKET {
     uint8 size;
     int8 type;
     int id;
+};
+
+struct SC_RESPAWN_PACKET {
+    uint8 size;
+    int8 type;
+    int id;
+    float hp;
+    float x, y, z;
 };
 
 #pragma pack (pop)

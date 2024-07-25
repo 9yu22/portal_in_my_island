@@ -59,12 +59,12 @@ void process_packet(int c_id, char* packet)
 		}
 	}
 		
-	for (int i = 0; i < 4; i++)
-	{
-		std::cout << "calculate_spawn_time: " << item_manager.calculate_spawn_time[i] << std::endl;
-	}
-	std::cout << std::endl;	
-	std::cout << "calculate_time_for_int: " << item_manager.calculateTimeForInt << std::endl;
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	std::cout << "calculate_spawn_time: " << item_manager.calculate_spawn_time[i] << std::endl;
+	//}
+	//std::cout << std::endl;	
+	//std::cout << "calculate_time_for_int: " << item_manager.calculateTimeForInt << std::endl;
 
 	switch (packet[1]) {
 	case CS_LOGIN: {
@@ -121,9 +121,10 @@ void process_packet(int c_id, char* packet)
 
 		else {
 			std::memcpy(&prev_add, p, sizeof(CS_ADD_BLOCK_PACKET));
-			for (auto& pl : clients)
+			for (auto& pl : clients) {
 				if (true == pl.b_use)
 					pl.send_add_block_packet(packet);
+			}			
 		}	
 			
 		break;
@@ -142,11 +143,11 @@ void process_packet(int c_id, char* packet)
 
 		else {
 			std::memcpy(&prev_add, p, sizeof(CS_REMOVE_BLOCK_PACKET));
-			for (auto& pl : clients)
+			for (auto& pl : clients) {
 				if (true == pl.b_use)
 					pl.send_remove_block_packet(packet);
-		}
-		
+			}	
+		}		
 				
 		break;
 	}
@@ -155,17 +156,31 @@ void process_packet(int c_id, char* packet)
 		CS_CHANGE_PLAYER_HP_PACKET* p = reinterpret_cast<CS_CHANGE_PLAYER_HP_PACKET*>(packet);
 		clients[p->hit_id].m_player.m_hp -= 20.f;
 		std::cout << "클라이언트 " << p->hit_id << " 공격당함, 남은 hp: " << clients[p->hit_id].m_player.m_hp << std::endl;
-		if (clients[p->hit_id].m_player.m_hp <= 0.f && clients[p->hit_id].m_player.portal.m_hp > 0.f) {
+	/*	if (clients[p->hit_id].m_player.m_hp <= 0.f && clients[p->hit_id].m_player.portal.m_hp > 0.f) {
 			clients[p->hit_id].m_player.m_hp = 100.f;
+		}*/
+		if (clients[p->hit_id].m_player.m_hp > 0.f) {
+			clients[p->hit_id].send_player_hp_packet(clients[p->hit_id].m_player); // 0 보다 크면 자기 자신한테만 전송
 		}
-
-		clients[p->hit_id].send_player_hp_packet(clients[p->hit_id].m_player);
+		else {
+			if (clients[p->hit_id].m_player.portal.m_hp > 0.f) {
+				for (auto& pl : clients) {
+					if (true == pl.b_use)
+						clients[p->hit_id].send_respawn_packet(clients[p->hit_id].m_player); // 리스폰만 모두에게 전송
+				}
+					
+			}
+			else {
+				// 사망 시 disconnect 패킷 전송
+			}
+		}
+		
 		break;
 	}
 
 	case CS_CHANGE_PORTAL_HP: {
 		CS_CHANGE_PORTAL_HP_PACKET* p = reinterpret_cast<CS_CHANGE_PORTAL_HP_PACKET*>(packet);
-		clients[p->hit_id].m_player.portal.m_hp -= 200.f;
+		clients[p->hit_id].m_player.portal.m_hp -= 50.f;
 		std::cout << "클라이언트 " << p->hit_id << " 포탈 공격당함, 남은 hp: " << clients[p->hit_id].m_player.portal.m_hp << std::endl;
 		clients[p->hit_id].send_portal_hp_packet(clients[p->hit_id].m_player.portal);
 		break;
@@ -229,44 +244,52 @@ int main()
 				clients[client_id].m_player.m_id = client_id;
 				clients[client_id].m_player.portal.m_id = client_id;
 
-				switch (client_id % 4) {
-				case 0:
-					clients[client_id].m_player.SetWorldLocation(11000.f, 11000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(10500.f, 10500.f, 300.f);
-					break;
-				case 1:
-					clients[client_id].m_player.SetWorldLocation(-11000.f, 11000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(-10500.f, 10500.f, 300.f);
-					break;
-				case 2:
-					clients[client_id].m_player.SetWorldLocation(11000.f, -11000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(10500.f, -10500.f, 300.f);
-					break;
-				case 3:
-					clients[client_id].m_player.SetWorldLocation(-11000.f, -11000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(-10500.f, -10500.f, 300.f);
-					break;
-				}
+				//switch (client_id % 4) {
+				//case 0:
+				//	clients[client_id].m_player.SetWorldLocation(11000.f, 11000.f, 1100.f);
+				//	clients[client_id].m_player.SetRespawnLocation(11000.f, 11000.f, 1100.f);
+				//	clients[client_id].m_player.portal.SetWorldLocation(10500.f, 10500.f, 300.f);
+				//	break;
+				//case 1:
+				//	clients[client_id].m_player.SetWorldLocation(-11000.f, 11000.f, 1100.f);
+				//	clients[client_id].m_player.SetRespawnLocation(-11000.f, 11000.f, 1100.f);
+				//	clients[client_id].m_player.portal.SetWorldLocation(-10500.f, 10500.f, 300.f);
+				//	break;
+				//case 2:
+				//	clients[client_id].m_player.SetWorldLocation(11000.f, -11000.f, 1100.f);
+				//	clients[client_id].m_player.SetRespawnLocation(11000.f, -11000.f, 1100.f);
+				//	clients[client_id].m_player.portal.SetWorldLocation(10500.f, -10500.f, 300.f);
+				//	break;
+				//case 3:
+				//	clients[client_id].m_player.SetWorldLocation(-11000.f, -11000.f, 1100.f);
+				//	clients[client_id].m_player.SetRespawnLocation(-11000.f, -11000.f, 1100.f);
+				//	clients[client_id].m_player.portal.SetWorldLocation(-10500.f, -10500.f, 300.f);
+				//	break;
+				//}
 
 				// 테스트용 시작 좌표
-				/*switch (client_id % 4) {
+				switch (client_id % 4) {
 				case 0:
 					clients[client_id].m_player.SetWorldLocation(1000.f, 1000.f, 1000.f);
+					clients[client_id].m_player.SetRespawnLocation(1000.f, 1000.f, 1000.f);
 					clients[client_id].m_player.portal.SetWorldLocation(1500.f, 1500.f, 700.f);
 					break;
 				case 1:
 					clients[client_id].m_player.SetWorldLocation(-1000.f, -1000.f, 1000.f);
+					clients[client_id].m_player.SetRespawnLocation(-1000.f, -1000.f, 1000.f);
 					clients[client_id].m_player.portal.SetWorldLocation(-1500.f, -1500.f, 700.f);
 					break;
 				case 2:
 					clients[client_id].m_player.SetWorldLocation(1000.f, -1000.f, 1000.f);
+					clients[client_id].m_player.SetRespawnLocation(1000.f, -1000.f, 1000.f);
 					clients[client_id].m_player.portal.SetWorldLocation(1500.f, -1500.f, 700.f);
 					break;
 				case 3:
 					clients[client_id].m_player.SetWorldLocation(-1000.f, 1000.f, 1000.f);
+					clients[client_id].m_player.SetRespawnLocation(-1000.f, 1000.f, 1000.f);
 					clients[client_id].m_player.portal.SetWorldLocation(-1500.f, 1500.f, 700.f);
 					break;
-				}*/
+				}
 				
 				clients[client_id].m_prev_remain = 0;
 				clients[client_id].m_socket = c_socket;

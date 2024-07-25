@@ -10,6 +10,7 @@ public:
 	int m_id;
 	float m_hp;
 	WorldRotation m_rotation;
+	WorldLocation respawn_location;
 	std::array<Item, 1> m_player_items;
 	Portal portal;
 
@@ -17,6 +18,7 @@ public:
 	Player();
 	~Player();
 
+	void SetRespawnLocation(float x, float y, float z);
 	WorldRotation GetWorldRotation();
 	void SetWorldRotation(WorldRotation new_rotation);
 	void SetWorldRotation(float new_pitch, float new_yaw, float new_roll);

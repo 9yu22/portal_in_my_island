@@ -14,6 +14,13 @@ Player::~Player()
 {
 }
 
+void Player::SetRespawnLocation(float x, float y, float z)
+{
+	respawn_location.x = x;
+	respawn_location.y = y;
+	respawn_location.z = z;
+}
+
 WorldRotation Player::GetWorldRotation()
 {
 	return m_rotation;
