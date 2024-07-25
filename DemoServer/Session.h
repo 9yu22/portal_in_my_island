@@ -57,5 +57,6 @@ public:
 	void send_add_portal_packet(Portal portal);
 	void send_portal_hp_packet(Portal portal);
 	void send_add_item_packet(Item item);
+	void send_remove_item_packet(char* packet);
 };
 

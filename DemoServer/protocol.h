@@ -28,7 +28,8 @@ constexpr char SC_CHANGE_PORTAL_HP = 14;
 constexpr char CS_CHANGE_PORTAL_HP = 15;
 
 constexpr char SC_ADD_ITEM = 16;
-constexpr char CS_REMOVE_ITEM = 17;
+constexpr char SC_REMOVE_ITEM = 17;
+constexpr char CS_REMOVE_ITEM = 18;
 
 constexpr char CS_DISCONNECT = 50;
 
@@ -173,13 +174,20 @@ struct CS_DISCONNECT_PACKET {
 struct SC_ADD_ITEM_PACKET {
     u_char size;
     char type;
+    int id;
     float x, y, z;
     char item_type;
+};
+
+struct SC_REMOVE_ITEM_PACKET {
+    u_char size;
+    char type;
+    int id;
 };
 
 struct CS_REMOVE_ITEM_PACKET {
     u_char size;
     char type;
-    char item_type;
+    int id;
 };
 #pragma pack (pop)

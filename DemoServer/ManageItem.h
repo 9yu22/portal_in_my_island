@@ -2,37 +2,45 @@
 #include "GameObject.h"
 #include <array>
 #include <chrono>
+#include <atomic>
+
+enum Item_type { STONE, AMETHYST, RUBY, DIAMOND, NONE };
 
 class Item : public GameObject
 {
 public:
-	//int item_id = -1;
-	char item_type = -1;
-	double item_spawn_time = 0.0;
-	double calculate_spawn_time = -10.0;
-	bool is_spawned = false;
+	int item_id;
+	Item_type item_type;
 
 public:
 	Item();
+	Item(int id, Item_type type, int location_number);
+
 	~Item();
 };
 
-
-
-enum Item_type { STONE, AMETHYST, RUBY, DIAMOND, NONE };
-
-class ManageItem
+class ItemSpawnManager
 {
 public:
-	std::array<Item, 4> manage_items;
+	//std::array<Item, 4> manage_items;
+	std::array<double, 4> item_spawn_time;
+	std::array<double, 4> calculate_spawn_time;
 	std::chrono::steady_clock::time_point lastUpdateTime;
-	Item_type spawn_item_type = NONE;
+
+	
+	//Item_type spawn_item_type = NONE;
+
+	std::atomic<int> calculateTimeForInt = 0;
+
+	int count_id = 0;
 
 public:
-	ManageItem();
-	~ManageItem();
+	ItemSpawnManager();
+	~ItemSpawnManager();
 
-	void SpawnItem(Item_type type);
-	void CheckCanSpawnItem(double elapsedTime);
+	//void SpawnItem(Item_type type);
+	void InitStartTime();
+	void UpdateTimeForSpawn(double elapsedTime);
+	Item_type CheckCanSpawn();
 	void CalculateItemSpawnTime();
 };

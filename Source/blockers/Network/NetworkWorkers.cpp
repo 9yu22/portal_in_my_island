@@ -222,7 +222,25 @@ void FRecvWorker::ProcessPacket(uint8* packet)
                 Instance->GameMode->SpawnItem(add_item);
             });
     }
+    case SC_REMOVE_ITEM:{
+        SC_ADD_ITEM_PACKET remove_item;
 
+        memcpy(&remove_item, packet, sizeof(remove_item));
+
+        AsyncTask(ENamedThreads::GameThread, [this, remove_item]()
+            {
+                for (auto& item : Instance->items) {
+                    if (remove_item.id == item->id) {
+                        Instance->items_cs.Lock();
+                        Instance->items.Remove(item);
+                        Instance->items_cs.Unlock();
+                        item->Destroy();
+                        break;
+                    }
+                }              
+            });
+    }
+    
         
     default:
         break;

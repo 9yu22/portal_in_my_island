@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <mutex>
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "ProcessQueue.h"
@@ -11,6 +12,7 @@
 #include "../blockersCharacter.h"
 #include "../blockersGameMode.h"
 #include "../Private/BKChunkWorld.h"
+#include "../Public/ResourceItem.h"
 #include "../Public/Portal.h"
 #include "Protocol.h"
 #include "SGameInstance.generated.h"
@@ -59,6 +61,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "portal")
 	TArray<APortal*> Portals;
 
+	TArray<AResourceItem*> items;
+	FCriticalSection items_cs;
 
 	TQueue<BlockInfo> BlockQueue;
 	TQueue<AnimInfo> AnimQueue;

@@ -123,6 +123,7 @@ void Session::send_add_item_packet(Item item)
 	SC_ADD_ITEM_PACKET add_item;
 	add_item.size = sizeof(SC_ADD_ITEM_PACKET);
 	add_item.type = SC_ADD_ITEM;
+	add_item.id = item.item_id;
 	add_item.item_type = item.item_type;
 	add_item.x = item.location.x;
 	add_item.y = item.location.y;
@@ -147,6 +148,14 @@ void Session::send_add_item_packet(Item item)
 		break;
 	}
 	std::cout << std::endl;
+}
+
+void Session::send_remove_item_packet(char* packet)
+{
+	SC_REMOVE_ITEM_PACKET* remove_item = reinterpret_cast<SC_REMOVE_ITEM_PACKET*>(packet);
+	remove_item->size = sizeof(SC_REMOVE_ITEM_PACKET);
+	remove_item->type = SC_REMOVE_ITEM;
+	do_send(&remove_item);
 }
 
 

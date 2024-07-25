@@ -13,6 +13,9 @@ UCLASS()
 class BLOCKERS_API AResourceItem : public APickUpItem
 {
 	GENERATED_BODY()
+
+public:
+	int id = -1;
 	
 protected:
 	virtual void UseItem() override;

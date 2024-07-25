@@ -2,6 +2,7 @@
 
 #include "blockersGameMode.h"
 #include "BKPlayerController.h"
+#include "ResourceItem.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/HUD.h"
@@ -128,24 +129,34 @@ void AblockersGameMode::SpawnItem(SC_ADD_ITEM_PACKET add_item)
 
 		if (ItemClass)
 		{
-			World->SpawnActor<AActor>(ItemClass, SpawnLocation, SpawnRotation);
-			switch (add_item.item_type) {
-			case STONE:
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Stone")));
-				break;
+			AResourceItem* item = World->SpawnActor<AResourceItem>(ItemClass, SpawnLocation, SpawnRotation);
 
-			case AMETHYST:
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Amethyst")));
-				break;
+			USGameInstance* instance = USGameInstance::GetMyInstance(this);
 
-			case RUBY:
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Ruby")));
-				break;
+			if (item && instance) {
+				item->id = add_item.id;
+				/*instance->items_cs.Lock();
+				instance->items.Add(item);
+				instance->items_cs.Unlock();*/
 
-			case DIAMOND:
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Diamond")));
-				break;
-			}
+				switch (add_item.item_type) {
+				case STONE:
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Stone")));
+					break;
+
+				case AMETHYST:
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Amethyst")));
+					break;
+
+				case RUBY:
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Ruby")));
+					break;
+
+				case DIAMOND:
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawned Diamond")));
+					break;
+				}
+			}	
 		}
 		else {
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Item Path Load Fail..")));
