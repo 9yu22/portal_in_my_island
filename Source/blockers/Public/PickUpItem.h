@@ -72,12 +72,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 	USoundBase* PickUpSound;
 
-	UFUNCTION(BlueprintCallable, Category = Pickup)
-	void UseItem();
-
 	virtual void OnInteract();
 
 protected:
 	virtual void Show(bool visible);
+
+	UFUNCTION(BlueprintCallable, Category = Pickup)
+	virtual void UseItem() PURE_VIRTUAL(APickUpItem::UseItem);
 
 };

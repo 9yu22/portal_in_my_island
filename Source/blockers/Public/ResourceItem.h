@@ -14,4 +14,6 @@ class BLOCKERS_API AResourceItem : public APickUpItem
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void UseItem() override;
 };

@@ -14,4 +14,6 @@ class BLOCKERS_API APistolItem : public APickUpItem
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void UseItem() override;
 };
