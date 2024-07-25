@@ -48,8 +48,9 @@ void APortal::Tick(float DeltaTime)
 		if (instance) {
 			instance->Portals.Remove(this);
 		}*/	
-		
-        UGameplayStatics::OpenLevel(this, FName("End"));
+		SetActorHiddenInGame(true);
+		SetActorEnableCollision(false);
+        //UGameplayStatics::OpenLevel(this, FName("End"));
     }
 
 }
