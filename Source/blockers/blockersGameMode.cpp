@@ -79,7 +79,7 @@ void AblockersGameMode::SpawnPortal(SC_ADD_PORTAL_PACKET add_portal)
 		FRotator SpawnRotation = FRotator::ZeroRotator;
 
 		// 클래스 이름으로 클래스를 동적으로 로드
-		UClass* PortalClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_Portal.BP_Portal_C"));		
+		UClass* PortalClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_MyPortal.BP_MyPortal_C"));		
 
 		if (PortalClass)
 		{

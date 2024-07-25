@@ -20,6 +20,10 @@ APortal::APortal()
 	// Set Sphere Radius and Collision Profile
 	SphereComponent->InitSphereRadius(50.0f);
 	SphereComponent->SetCollisionProfileName(TEXT("Trigger"));
+
+	SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+
 }
 
 // Called when the game starts or when spawned

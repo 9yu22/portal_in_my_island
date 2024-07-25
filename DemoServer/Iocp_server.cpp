@@ -232,19 +232,19 @@ int main()
 				switch (client_id % 4) {
 				case 0:
 					clients[client_id].m_player.SetWorldLocation(11000.f, 11000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(1500.f, 1500.f, 700.f);
+					clients[client_id].m_player.portal.SetWorldLocation(10500.f, 10500.f, 300.f);
 					break;
 				case 1:
-					clients[client_id].m_player.SetWorldLocation(-11000.f, -11000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(1500.f, 1500.f, 700.f);
+					clients[client_id].m_player.SetWorldLocation(-11000.f, 11000.f, 1100.f);
+					clients[client_id].m_player.portal.SetWorldLocation(-10500.f, 10500.f, 300.f);
 					break;
 				case 2:
 					clients[client_id].m_player.SetWorldLocation(11000.f, -11000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(1500.f, 1500.f, 700.f);
+					clients[client_id].m_player.portal.SetWorldLocation(10500.f, -10500.f, 300.f);
 					break;
 				case 3:
-					clients[client_id].m_player.SetWorldLocation(-11000.f, 11000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(1500.f, 1500.f, 700.f);
+					clients[client_id].m_player.SetWorldLocation(-11000.f, -11000.f, 1100.f);
+					clients[client_id].m_player.portal.SetWorldLocation(-10500.f, -10500.f, 300.f);
 					break;
 				}
 
