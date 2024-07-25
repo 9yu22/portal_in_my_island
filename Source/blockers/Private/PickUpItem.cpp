@@ -76,7 +76,7 @@ void APickUpItem::OnInteract()
 		AResourceItem* pickup_item = Cast<AResourceItem>(this);
 		//instance->items.Remove(pickup_item);
 
-		CS_REMOVE_ITEM_PACKET remove_item;
+		/*CS_REMOVE_ITEM_PACKET remove_item;
 
 		remove_item.size = sizeof(CS_REMOVE_ITEM_PACKET);
 		remove_item.type = sizeof(CS_REMOVE_ITEM);
@@ -84,7 +84,7 @@ void APickUpItem::OnInteract()
 
 		int BytesSent = 0;
 
-		instance->Socket->Send((uint8*)&remove_item, sizeof(remove_item), BytesSent);
+		instance->Socket->Send((uint8*)&remove_item, sizeof(remove_item), BytesSent);*/
 	}
 
 
