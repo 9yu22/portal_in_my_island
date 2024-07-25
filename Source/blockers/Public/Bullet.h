@@ -39,7 +39,7 @@ public:
 	bool bHit = false;
 
 	UPROPERTY(EditAnywhere)
-	float moveSpeed = 800.0f;
+	float moveSpeed = 1000.0f;
 
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* boxComp;
