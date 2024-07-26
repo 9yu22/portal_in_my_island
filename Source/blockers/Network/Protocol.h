@@ -33,8 +33,6 @@ constexpr char SC_RESPAWN = 19;
 
 constexpr char SC_DESTROY_PORTAL = 20;
 
-constexpr char SC_REMOVE_PLAYER = 21;
-
 constexpr char CS_DISCONNECT = 50;
 
 enum class Anim : int8 { IDLE, MOVE, JUMP };
@@ -195,12 +193,6 @@ struct SC_RESPAWN_PACKET {
 };
 
 struct SC_PORTAL_DESTROY_PACKET {
-    uint8 size;
-    int8 type;
-    int id;
-};
-
-struct SC_REMOVE_PLAYER_PACKET {
     uint8 size;
     int8 type;
     int id;

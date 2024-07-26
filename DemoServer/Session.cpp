@@ -171,13 +171,22 @@ void Session::send_respawn_packet(Player player)
 	do_send(&respawn);
 }
 
-void Session::send_portal_destroy_paket(Portal portal)
+void Session::send_portal_destroy_packet(Portal portal)
 {
 	SC_PORTAL_DESTROY_PACKET destroy_portal;
 	destroy_portal.size = sizeof(SC_PORTAL_DESTROY_PACKET);
-	destroy_portal.type = SC_PORTAL_DESTROY;
+	destroy_portal.type = SC_DESTROY_PORTAL;
 	destroy_portal.id = portal.m_id;
 	do_send(&destroy_portal);
+}
+
+void Session::send_remove_player_packet(Player player)
+{
+	SC_REMOVE_PLAYER_PACKET remove_player;
+	remove_player.size = sizeof(SC_REMOVE_PLAYER_PACKET);
+	remove_player.type = SC_REMOVE_PLAYER;
+	remove_player.id = player.m_id;
+	do_send(&remove_player);
 }
 
 

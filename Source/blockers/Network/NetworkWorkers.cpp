@@ -273,7 +273,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
             {
                 for (auto& p : Instance->Players) {
                     if (p->id == remove_player.id) {
-                        if (p->id = Instance->MyCharacter->id) {
+                        if (p->id == Instance->MyCharacter->id) {
                             Instance->DisconnectFromGameServer();                            
                         }
                         else { // 제거는 뮤텍스가 필요하지 않을까..
@@ -295,6 +295,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
             });
     }
     default:
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("<<<<Invalide Packet Buffer>>>>")));
         break;
     }
 
