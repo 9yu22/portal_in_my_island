@@ -5,6 +5,7 @@
 #include "../blockersCharacter.h"
 #include "../Network/SGameInstance.h"
 
+
 void ASwordItem::UseItem()
 {
 	APlayerCameraManager* PlayerCameraManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
@@ -18,53 +19,63 @@ void ASwordItem::UseItem()
 
 		FVector endLocation = CameraLocation + CameraRotation.Vector() * 200;	// 거리: 200
 
-		// LineTraceByChannel로 레이를 쏴서 충돌을 감지
-		bHit = GetWorld()->LineTraceSingleByChannel(HitResult, startLocation, endLocation, ECollisionChannel::ECC_Visibility);
 
-		if (bHit)
+		APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+		if (PlayerPawn)
 		{
-			// 디버깅용: line Tracing의 빨간 라인 그리기
-			DrawDebugLine(GetWorld(), startLocation, HitResult.Location, FColor::Red, false, 1.0f, 0, 1.0f);
+			// FCollisionQueryParams를 사용하여 트레이스 파라미터 설정
+			FCollisionQueryParams TraceParams(FName(TEXT("SwordTrace")), true, PlayerPawn);
+			TraceParams.bTraceComplex = true;
+			TraceParams.bReturnPhysicalMaterial = false;
 
-			// 디버깅용: line에 부딪힌 위치에 초록색 구 그리기
-			DrawDebugSphere(GetWorld(), HitResult.Location, 5.0f, 12, FColor::Green, false, 1.0f);
+			// LineTraceByChannel로 레이를 쏴서 충돌을 감지
+			bHit = GetWorld()->LineTraceSingleByChannel(HitResult, startLocation, endLocation, ECollisionChannel::ECC_GameTraceChannel6, TraceParams);
 
-			AblockersCharacter* TargetCharacter = Cast<AblockersCharacter>(HitResult.GetActor());
-
-			if (TargetCharacter)
+			if (bHit)
 			{
-				// 내구도 감소
-				Durability -= Usage;
-				
-				USGameInstance* GameInstance = USGameInstance::GetMyInstance(this);
-				if (GameInstance)
+				// 디버깅용: line Tracing의 빨간 라인 그리기
+				DrawDebugLine(GetWorld(), startLocation, HitResult.Location, FColor::Red, false, 1.0f, 0, 1.0f);
+
+				// 디버깅용: line에 부딪힌 위치에 초록색 구 그리기
+				DrawDebugSphere(GetWorld(), HitResult.Location, 5.0f, 12, FColor::Green, false, 1.0f);
+
+				AblockersCharacter* TargetCharacter = Cast<AblockersCharacter>(HitResult.GetActor());
+
+				if (TargetCharacter)
 				{
-					for (AblockersCharacter* Player : GameInstance->Players)
+					// 내구도 감소
+					Durability -= Usage;
+
+					USGameInstance* GameInstance = USGameInstance::GetMyInstance(this);
+					if (GameInstance)
 					{
-						if (Player == TargetCharacter)
+						for (AblockersCharacter* Player : GameInstance->Players)
 						{
-							//Player->health -= 10;
+							if (Player == TargetCharacter)
+							{
+								//Player->health -= 10;
 
-							if (GameInstance && GameInstance->Socket != nullptr) {
-								CS_CHANGE_PLAYER_HP_PACKET p;
-								p.size = sizeof(p);
-								p.type = CS_CHANGE_PLAYER_HP;
-								p.hit_id = Player->id;
+								if (GameInstance && GameInstance->Socket != nullptr) {
+									CS_CHANGE_PLAYER_HP_PACKET p;
+									p.size = sizeof(p);
+									p.type = CS_CHANGE_PLAYER_HP;
+									p.hit_id = Player->id;
 
-								int BytesSent = 0;
-								GameInstance->Socket->Send((uint8*)&p, sizeof(p), BytesSent);
+									int BytesSent = 0;
+									GameInstance->Socket->Send((uint8*)&p, sizeof(p), BytesSent);
+								}
+
+								break;
 							}
-
-							break;
 						}
 					}
 				}
 			}
-		}
-		else
-		{
-			// 디버깅용: line Tracing의 빨간 라인 그리기
-			DrawDebugLine(GetWorld(), startLocation, endLocation, FColor::Red, false, 1.0f, 0, 1.0f);
+			else
+			{
+				// 디버깅용: line Tracing의 빨간 라인 그리기
+				DrawDebugLine(GetWorld(), startLocation, endLocation, FColor::Red, false, 1.0f, 0, 1.0f);
+			}
 		}
 	}
 }

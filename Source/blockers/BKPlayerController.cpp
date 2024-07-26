@@ -224,7 +224,7 @@ void ABKPlayerController::OnLeftClick(const FInputActionValue& Value)
 		FVector endLocation = CameraLocation + CameraRotation.Vector() * 1000;	// 1000은 거리
 
 		// LineTraceByChannel로 레이를 쏴서 충돌을 감지
-		bHit = GetWorld()->LineTraceSingleByChannel(HitResult, startLocation, endLocation, ECollisionChannel::ECC_Visibility);
+		bHit = GetWorld()->LineTraceSingleByChannel(HitResult, startLocation, endLocation, ECollisionChannel::ECC_GameTraceChannel5);
 
 		if (bHit)
 		{
