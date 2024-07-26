@@ -146,6 +146,51 @@ void AblockersCharacter::BeginPlay()
 	//UHealthBarWidget* HealthBar = Cast<UHealthBarWidget>(HealthWidgetComp->GetUserWidgetObject());
 	//HealthBar->SetOwnerCharacter(this);
 
+	/* Ä³¸¯ÅÍ »ç¸Á µð¹ö±ë¿ë */
+
+	FString BulletBlueprintPath = TEXT("Blueprint'/Game/Blockers/Blueprints/Item/BP_ResourceItem_Bullet.BP_ResourceItem_Bullet_C'");
+	FString PistolBlueprintPath = TEXT("Blueprint'/Game/Blockers/Blueprints/Item/BP_PistolItem_Pistol.BP_PistolItem_Pistol_C'");
+
+	UClass* BulletBlueprint = StaticLoadClass(UObject::StaticClass(), nullptr, *BulletBlueprintPath);
+	UClass* PistolBlueprint = StaticLoadClass(UObject::StaticClass(), nullptr, *PistolBlueprintPath);
+	if (BulletBlueprint)
+	{
+		for (int i = 0; i < 100; ++i)
+		{
+			APickUpItem* BulletItem = GetWorld()->SpawnActor<APickUpItem>(BulletBlueprint);
+
+			if (BulletItem)
+			{
+				AddToInventory(BulletItem);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Failed to spawn Bullet Item.")); 
+			}
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to load Bullet Blueprint."));
+	}
+	if (PistolBlueprint)
+	{
+		APickUpItem* PistolItem = GetWorld()->SpawnActor<APickUpItem>(PistolBlueprint);
+
+		if (PistolItem)
+		{
+			AddToInventory(PistolItem);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Failed to spawn Pistol Item."));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to load Pistol Blueprint."));
+	}
+
 }
 
 void AblockersCharacter::Tick(float DeltaTime) {
