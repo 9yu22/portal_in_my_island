@@ -36,7 +36,7 @@ constexpr char SC_RESPAWN = 19;
 constexpr char SC_DESTROY_PORTAL = 20;
 
 constexpr char CS_DISCONNECT = 50;
-constexpr char SC_DISCONNECT = 51;
+//constexpr char SC_DISCONNECT = 51;
 
 enum OP_TYPE { OP_ACCEPT, OP_RECV, OP_SEND };
 
@@ -135,12 +135,12 @@ struct CS_REMOVE_BLOCK_PACKET {
     char blocktype;
 };
 
-struct ANIM_PACKET {
-    u_char size;
-    char type;
-    int id;
-    char anim_type;
-};
+//struct ANIM_PACKET {
+//    u_char size;
+//    char type;
+//    int id;
+//    char anim_type;
+//};
 
 struct CS_CHANGE_PLAYER_HP_PACKET {
     u_char size;
@@ -176,11 +176,11 @@ struct CS_DISCONNECT_PACKET {
     int id;
 };
 
-struct SC_DISCONNECT_PACKET {
+/*struct SC_DISCONNECT_PACKET {
     u_char size;
     char type;
     int id;
-};
+}*/;
 
 struct SC_ADD_ITEM_PACKET {
     u_char size;
@@ -210,7 +210,7 @@ struct SC_RESPAWN_PACKET {
     float x, y, z;
 };
 
-struct SC_PORTAL_DESTROY_PACKET {
+struct SC_DESTROY_PORTAL_PACKET {
     u_char size;
     char type;
     int id;

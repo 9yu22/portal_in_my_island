@@ -158,41 +158,47 @@ void process_packet(int c_id, char* packet)
 		if (clients[p->hit_id].m_player.m_hp > 0.f) {
 			clients[p->hit_id].m_player.m_hp -= 20.f;
 			std::cout << "클라이언트 " << p->hit_id << " 공격당함, 남은 hp: " << clients[p->hit_id].m_player.m_hp << std::endl;
-			clients[p->hit_id].send_player_hp_packet(clients[p->hit_id].m_player); // 0 보다 크면 자기 자신한테만 전송
-		}
-		else { // 플레이어가 사망했을 경우
-			if (clients[p->hit_id].m_player.portal.m_hp > 0.f) {
-				for (auto& pl : clients) {
-					if (true == pl.b_use)
-						pl.send_respawn_packet(clients[p->hit_id].m_player); // 리스폰만 모두에게 전송
-				}
+			if (clients[p->hit_id].m_player.m_hp > 0.f) {
+				clients[p->hit_id].send_player_hp_packet(clients[p->hit_id].m_player); // 0 보다 크면 자기 자신한테만 전송
+			}		
 
-			}
-			else {
-				// 포탈 제거+사망 시 플레이어 제거 패킷 전송
-				for (auto& pl : clients) {
-					if (true == pl.b_use)
-						pl.send_remove_player_packet(clients[p->hit_id].m_player);
+			else { // 플레이어만 사망했을 경우
+				if (clients[p->hit_id].m_player.portal.m_hp > 0.f) {
+					for (auto& pl : clients) {
+						if (true == pl.b_use)
+							pl.send_respawn_packet(clients[p->hit_id].m_player); // 리스폰만 모두에게 전송
+					}
+					clients[p->hit_id].m_player.m_hp = 100.f;
+				}
+				else {
+					// 포탈 제거 + 플레이어 사망 시 플레이어 제거 패킷 전송
+					for (auto& pl : clients) {
+						if (true == pl.b_use)
+							pl.send_remove_player_packet(clients[p->hit_id].m_player);
+					}
 				}
 			}
 		}
+		
 
 		break;
 	}
 
 	case CS_CHANGE_PORTAL_HP: {
 		CS_CHANGE_PORTAL_HP_PACKET* p = reinterpret_cast<CS_CHANGE_PORTAL_HP_PACKET*>(packet);
-
 		if (clients[p->hit_id].m_player.portal.m_hp > 0.f) {
 			clients[p->hit_id].m_player.portal.m_hp -= 50.f;
 			std::cout << "클라이언트 " << p->hit_id << " 포탈 공격당함, 남은 hp: " << clients[p->hit_id].m_player.portal.m_hp << std::endl;
-			clients[p->hit_id].send_portal_hp_packet(clients[p->hit_id].m_player.portal);
-		}
 
-		else {
-			for (auto& pl : clients) {
-				if (true == pl.b_use)
-					pl.send_portal_destroy_packet(clients[p->hit_id].m_player.portal);
+			if (clients[p->hit_id].m_player.portal.m_hp > 0.f) {
+				clients[p->hit_id].send_portal_hp_packet(clients[p->hit_id].m_player.portal);
+			}	
+
+			else {
+				for (auto& pl : clients) {
+					if (true == pl.b_use)
+						pl.send_destroy_portal_packet(clients[p->hit_id].m_player.portal);
+				}
 			}
 		}
 		break;
@@ -339,13 +345,13 @@ int main()
 			break;
 		}
 		case OP_SEND:
-			if (ex_over->_packet_type == SC_LOGIN_INFO) {
-				std::cout << "GQCS Login Send" << std::endl;
-			}
-				
-			else if (ex_over->_packet_type == SC_ADD_PLAYER) {
-				std::cout << "GQCS Add Send" << std::endl;
-			}
+			//if (ex_over->_packet_type == SC_LOGIN_INFO) {
+			//	std::cout << "GQCS Login Send" << std::endl;
+			//}
+			//	
+			//else if (ex_over->_packet_type == SC_ADD_PLAYER) {
+			//	std::cout << "GQCS Add Send" << std::endl;
+			//}
 				
 			/*else if (ex_over->_packet_type == SC_MOVE_PLAYER)
 				std::cout << "GQCS Move Send" << std::endl;*/

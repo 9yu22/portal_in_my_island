@@ -59,7 +59,7 @@ public:
 	void send_add_item_packet(Item item);
 	void send_remove_item_packet(char* packet);
 	void send_respawn_packet(Player player);
-	void send_portal_destroy_packet(Portal portal);
+	void send_destroy_portal_packet(Portal portal);
 	void send_remove_player_packet(Player player);
 };
 

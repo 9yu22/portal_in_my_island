@@ -46,16 +46,16 @@ void APortal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-    if (Portalhealth == 0)
-    {
-	/*	USGameInstance* instance = USGameInstance::GetMyInstance(this);
-		if (instance) {
-			instance->Portals.Remove(this);
-		}*/	
+	if (Portalhealth == 0)
+	{
+		/*	USGameInstance* instance = USGameInstance::GetMyInstance(this);
+			if (instance) {
+				instance->Portals.Remove(this);
+			}*/
 		SetActorHiddenInGame(true);
 		SetActorEnableCollision(false);
-        //UGameplayStatics::OpenLevel(this, FName("End"));
-    }
+		//UGameplayStatics::OpenLevel(this, FName("End"));
+	}
 
 }
 

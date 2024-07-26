@@ -181,7 +181,7 @@ void ItemSpawnManager::CalculateItemSpawnTime()
 	if (elapsedTime.count() >= 1.0) {
 		// CAS를 하는 이유는 process_packet에서 패킷을 받을 때 마다 시간을 업데이트 하기 때문
 		//if (std::atomic_compare_exchange_strong(&calculateTimeForInt, &compareTimeForInt, changeTime)) {
-			std::cout << "CAS 성공" << std::endl;
+			//std::cout << "CAS 성공" << std::endl;
 			lastUpdateTime = currentTime;
 			UpdateTimeForSpawn(elapsedTime.count());
 		//}

@@ -170,23 +170,23 @@ AblockersCharacter* ABKPlayerController::GetMyCharacter() const
 
 void ABKPlayerController::SendAnimation(int8 anim_type)
 {
-	if (Anim_type != anim_type) {
+	//if (Anim_type != anim_type) {
 
-		USGameInstance* instance = USGameInstance::GetMyInstance(this);
-		//instance->GetMyInstance(this);
-		if (instance) {
-			int BytesSent = 0;
-			ANIM_PACKET p;
-			p.size = sizeof(ANIM_PACKET);
-			p.type = ANIM;
-			p.id = GetMyCharacter()->id;
-			p.anim_type = anim_type;
-			instance->Socket->Send((uint8*)&p, sizeof(p), BytesSent);
-		}
-		else
-			UE_LOG(LogTemp, Log, TEXT("Fail GetInstance"));
-		Anim_type = anim_type;
-	}
+	//	USGameInstance* instance = USGameInstance::GetMyInstance(this);
+	//	//instance->GetMyInstance(this);
+	//	if (instance) {
+	//		int BytesSent = 0;
+	//		ANIM_PACKET p;
+	//		p.size = sizeof(ANIM_PACKET);
+	//		p.type = ANIM;
+	//		p.id = GetMyCharacter()->id;
+	//		p.anim_type = anim_type;
+	//		instance->Socket->Send((uint8*)&p, sizeof(p), BytesSent);
+	//	}
+	//	else
+	//		UE_LOG(LogTemp, Log, TEXT("Fail GetInstance"));
+	//	Anim_type = anim_type;
+	//}
 
 }
 

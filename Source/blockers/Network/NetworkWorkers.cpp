@@ -281,21 +281,37 @@ void FRecvWorker::ProcessPacket(uint8* packet)
                             Instance->Players.Remove(p);
                             remove_character->Destroy();
 
-                            // 포탈 제거(캐릭터에 포함되어 있으면 편한데..)
-                            for (auto& po : Instance->Portals) {
-                                if (po->id == p->id) {
-                                    APortal* remove_portal = po;
-                                    Instance->Portals.Remove(po);
-                                    remove_portal->Destroy();
-                                }
-                            }                            
+                            //// 포탈 제거(캐릭터에 포함되어 있으면 편한데..)
+                            //for (auto& po : Instance->Portals) {
+                            //    if (po->id == p->id) {
+                            //        //APortal* remove_portal = po;
+                            //        //Instance->Portals.Remove(po);
+                            //        //remove_portal->Destroy();
+                            //        //파괴하지 말고 숨기기만 하자. hp가 0이면 틱에서 숨겨지도록 되어 있다.
+                            //        po->Portalhealth = 0.f;
+                            //    }
+                            //}                            
                         }
                     }
                 }
             });
     }
+    case SC_DESTROY_PORTAL: {
+        SC_DESTROY_PORTAL_PACKET destroy_portal;
+        memcpy(&destroy_portal, packet, sizeof(destroy_portal));
+
+        AsyncTask(ENamedThreads::GameThread, [this, destroy_portal]()
+            {
+                for (auto& p : Instance->Portals) {
+                    if (p->id == destroy_portal.id) {
+                        p->Portalhealth = 0;
+                    }
+                }
+            });
+        break;
+    }
     default:
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("<<<<Invalide Packet Buffer>>>>")));
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("<<<<Invalide Packet Buffer>>>>, Packet Type: %d"), packet[1]));
         break;
     }
 
