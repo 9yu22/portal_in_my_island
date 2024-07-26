@@ -2,6 +2,7 @@
 
 
 #include "BKNaiveChunk.h"
+#include "../Network/SGameInstance.h"
 
 #include "Voxel/FastNoiseLite.h"
 
@@ -62,7 +63,14 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				// 기본 맵은 부술 수 없음.
 				Blocks[GetBlockIndex(x, y, z)].isCollapsible = false;
 
-				BKEBlock groundBlock = BKEBlock::Grass;
+				BKEBlock groundBlock;
+				USGameInstance* GameInstance = USGameInstance::GetMyInstance(this);
+				if (GameInstance->selectedMap == 0)
+					groundBlock = BKEBlock::Grass;
+				else if (GameInstance->selectedMap == 1)
+					groundBlock = BKEBlock::Snow;
+				else
+					groundBlock = BKEBlock::HellGround;
 
 				// z = 0
 				// point: (0,0) / radius: 65
@@ -1072,6 +1080,14 @@ int ABKNaiveChunk::GetTextureIndex(BKEBlock Block, FVector Normal) const
 	case BKEBlock::Spruce:
 		if (Normal == FVector::UpVector || Normal == FVector::DownVector) return 11;
 		return 10;
+		break;
+	case BKEBlock::Snow:
+		if (Normal == FVector::UpVector) return 12;
+		if (Normal == FVector::DownVector) return 4;
+		return 13;
+		break;
+	case BKEBlock::HellGround:
+		return 14;
 		break;
 	default:
 		return 255;
