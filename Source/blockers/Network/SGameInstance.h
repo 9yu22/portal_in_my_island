@@ -76,6 +76,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "server")
 	bool IsServerOnline();	// 블루프린트에서 서버 켜져 있는지 확인하는 함수
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "map")
+	int32 selectedMap;
+
 	//TSharedPtr<class PacketSession> GameServerSession;
 	//TSharedPtr<class FRecvWorker> makeRecvThread;
 	//TSharedPtr<class FSendWorker> makeSendThread;
