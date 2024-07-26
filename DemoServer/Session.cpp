@@ -171,4 +171,13 @@ void Session::send_respawn_packet(Player player)
 	do_send(&respawn);
 }
 
+void Session::send_portal_destroy_paket(Portal portal)
+{
+	SC_PORTAL_DESTROY_PACKET destroy_portal;
+	destroy_portal.size = sizeof(SC_PORTAL_DESTROY_PACKET);
+	destroy_portal.type = SC_PORTAL_DESTROY;
+	destroy_portal.id = portal.m_id;
+	do_send(&destroy_portal);
+}
+
 

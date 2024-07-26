@@ -245,7 +245,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
     //    break;
     //}
     
-    case SC_RESPAWN:
+    case SC_RESPAWN: {
         SC_RESPAWN_PACKET respawn;
 
         memcpy(&respawn, packet, sizeof(respawn));
@@ -263,9 +263,42 @@ void FRecvWorker::ProcessPacket(uint8* packet)
                 }
             });
         break;
+    }
+        
+    case SC_REMOVE_PLAYER: {
+        SC_REMOVE_PLAYER_PACKET remove_player;
+        memcpy(&remove_player, packet, sizeof(remove_player));
+
+        AsyncTask(ENamedThreads::GameThread, [this, remove_player]()
+            {
+                for (auto& p : Instance->Players) {
+                    if (p->id == remove_player.id) {
+                        if (p->id = Instance->MyCharacter->id) {
+                            Instance->DisconnectFromGameServer();                            
+                        }
+                        else { // 제거는 뮤텍스가 필요하지 않을까..
+                            AblockersCharacter* remove_character = p;
+                            Instance->Players.Remove(p);
+                            remove_character->Destroy();
+
+                            // 포탈 제거(캐릭터에 포함되어 있으면 편한데..)
+                            for (auto& po : Instance->Portals) {
+                                if (po->id == p->id) {
+                                    APortal* remove_portal = po;
+                                    Instance->Portals.Remove(po);
+                                    remove_portal->Destroy();
+                                }
+                            }                            
+                        }
+                    }
+                }
+            });
+    }
     default:
         break;
     }
+
+    
 }
 
 bool FRecvWorker::Init()

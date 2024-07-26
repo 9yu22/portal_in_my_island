@@ -89,14 +89,14 @@ void process_packet(int c_id, char* packet)
 			clients[c_id].send_add_player_packet(pl.m_player);
 			clients[c_id].send_add_portal_packet(pl.m_player.portal);
 
-			std::cout << "클라이언트 " << c_id <<"에게 " << pl.m_player.m_id << "의 ADD 패킷을 전송" << std::endl;
+			std::cout << "클라이언트 " << c_id << "에게 " << pl.m_player.m_id << "의 ADD 패킷을 전송" << std::endl;
 			//std::cout << "-> id: " << pl.m_player.m_id << " x: " << pl.m_player.location.x << " y: " << pl.m_player.location.y << " z: " << pl.m_player.location.z << std::endl;
 
 		}
 		break;
 	}
 	case CS_MOVE: {
-		
+
 		CS_MOVE_PACKET* p = reinterpret_cast<CS_MOVE_PACKET*>(packet);
 		clients[c_id].m_player.SetWorldLocation(p->x, p->y, p->z);
 		clients[c_id].m_player.SetWorldRotation(p->pitch, p->yaw, p->roll);
@@ -108,13 +108,13 @@ void process_packet(int c_id, char* packet)
 	}
 	case CS_ADD_BLOCK: {
 		CS_ADD_BLOCK_PACKET* p = reinterpret_cast<CS_ADD_BLOCK_PACKET*>(packet);
-		
+
 		std::cout << "추가 ->Chunk Index: " << p->chunk_index << ", Indices: (" << p->ix << ", " << p->iy << ", " << p->iz << ")" << std::endl;
-	/*	if (map.AddBlockToMap(p)) {
-			for (auto& pl : clients)
-				if (true == pl.b_use)
-					pl.send_add_block_packet(packet);
-		}*/
+		/*	if (map.AddBlockToMap(p)) {
+				for (auto& pl : clients)
+					if (true == pl.b_use)
+						pl.send_add_block_packet(packet);
+			}*/
 		if (memcmp(&prev_add, p, sizeof(CS_ADD_BLOCK_PACKET)) == 0) {// 클라에서 같은 패킷이 여러번 올 경우 1번만 보내도록 하기 위함->이유를 알 수가 없다..
 			break;
 		}
@@ -124,19 +124,19 @@ void process_packet(int c_id, char* packet)
 			for (auto& pl : clients) {
 				if (true == pl.b_use)
 					pl.send_add_block_packet(packet);
-			}			
-		}	
-			
+			}
+		}
+
 		break;
 	}
 	case CS_REMOVE_BLOCK: {
 		CS_REMOVE_BLOCK_PACKET* p = reinterpret_cast<CS_REMOVE_BLOCK_PACKET*>(packet);
 		std::cout << "삭제 ->Chunk Index: " << p->chunk_index << ", Indices: (" << p->ix << ", " << p->iy << ", " << p->iz << ")" << std::endl;
-	/*	if (map.RemoveBlockToMap(p)) {
-			for (auto& pl : clients)
-				if (true == pl.b_use)
-					pl.send_remove_block_packet(packet);
-		}	*/	
+		/*	if (map.RemoveBlockToMap(p)) {
+				for (auto& pl : clients)
+					if (true == pl.b_use)
+						pl.send_remove_block_packet(packet);
+			}	*/
 		if (memcmp(&prev_remove, p, sizeof(CS_REMOVE_BLOCK_PACKET)) == 0) {
 			break;
 		}
@@ -146,49 +146,63 @@ void process_packet(int c_id, char* packet)
 			for (auto& pl : clients) {
 				if (true == pl.b_use)
 					pl.send_remove_block_packet(packet);
-			}	
-		}		
-				
+			}
+		}
+
 		break;
 	}
 
 	case CS_CHANGE_PLAYER_HP: {
 		CS_CHANGE_PLAYER_HP_PACKET* p = reinterpret_cast<CS_CHANGE_PLAYER_HP_PACKET*>(packet);
-		clients[p->hit_id].m_player.m_hp -= 20.f;
-		std::cout << "클라이언트 " << p->hit_id << " 공격당함, 남은 hp: " << clients[p->hit_id].m_player.m_hp << std::endl;
-	/*	if (clients[p->hit_id].m_player.m_hp <= 0.f && clients[p->hit_id].m_player.portal.m_hp > 0.f) {
-			clients[p->hit_id].m_player.m_hp = 100.f;
-		}*/
+
 		if (clients[p->hit_id].m_player.m_hp > 0.f) {
+			clients[p->hit_id].m_player.m_hp -= 20.f;
+			std::cout << "클라이언트 " << p->hit_id << " 공격당함, 남은 hp: " << clients[p->hit_id].m_player.m_hp << std::endl;
 			clients[p->hit_id].send_player_hp_packet(clients[p->hit_id].m_player); // 0 보다 크면 자기 자신한테만 전송
 		}
-		else {
+		else { // 플레이어가 사망했을 경우
 			if (clients[p->hit_id].m_player.portal.m_hp > 0.f) {
 				for (auto& pl : clients) {
 					if (true == pl.b_use)
-						clients[p->hit_id].send_respawn_packet(clients[p->hit_id].m_player); // 리스폰만 모두에게 전송
+						pl.send_respawn_packet(clients[p->hit_id].m_player); // 리스폰만 모두에게 전송
 				}
-					
+
 			}
 			else {
-				// 사망 시 disconnect 패킷 전송
+				// 포탈 제거+사망 시 플레이어 제거 패킷 전송
+				for (auto& pl : clients) {
+					if (true == pl.b_use)
+						pl.send_remove_player_packet(clients[p->hit_id].m_player);
+				}
 			}
 		}
-		
+
 		break;
 	}
 
 	case CS_CHANGE_PORTAL_HP: {
 		CS_CHANGE_PORTAL_HP_PACKET* p = reinterpret_cast<CS_CHANGE_PORTAL_HP_PACKET*>(packet);
-		clients[p->hit_id].m_player.portal.m_hp -= 50.f;
-		std::cout << "클라이언트 " << p->hit_id << " 포탈 공격당함, 남은 hp: " << clients[p->hit_id].m_player.portal.m_hp << std::endl;
-		clients[p->hit_id].send_portal_hp_packet(clients[p->hit_id].m_player.portal);
+
+		if (clients[p->hit_id].m_player.portal.m_hp > 0.f) {
+			clients[p->hit_id].m_player.portal.m_hp -= 50.f;
+			std::cout << "클라이언트 " << p->hit_id << " 포탈 공격당함, 남은 hp: " << clients[p->hit_id].m_player.portal.m_hp << std::endl;
+			clients[p->hit_id].send_portal_hp_packet(clients[p->hit_id].m_player.portal);
+		}
+
+		else {
+			for (auto& pl : clients) {
+				if (true == pl.b_use)
+					pl.send_portal_destroy_packet(clients[p->hit_id].m_player.portal);
+			}
+		}
 		break;
 	}
-	case CS_DISCONNECT:
+	case CS_DISCONNECT: {
 		CS_DISCONNECT_PACKET* p = reinterpret_cast<CS_DISCONNECT_PACKET*>(packet);
 		disconnect(p->id);
 		break;
+	}
+
 	}
 }
 

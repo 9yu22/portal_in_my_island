@@ -33,7 +33,12 @@ constexpr char CS_REMOVE_ITEM = 18;
 
 constexpr char SC_RESPAWN = 19;
 
+constexpr char SC_DESTROY_PORTAL = 20;
+
+constexpr char SC_REMOVE_PLAYER = 21;
+
 constexpr char CS_DISCONNECT = 50;
+constexpr char SC_DISCONNECT = 51;
 
 enum OP_TYPE { OP_ACCEPT, OP_RECV, OP_SEND };
 
@@ -173,6 +178,12 @@ struct CS_DISCONNECT_PACKET {
     int id;
 };
 
+struct CS_DISCONNECT_PACKET {
+    u_char size;
+    char type;
+    int id;
+};
+
 struct SC_ADD_ITEM_PACKET {
     u_char size;
     char type;
@@ -199,5 +210,17 @@ struct SC_RESPAWN_PACKET {
     int id;
     float hp;
     float x, y, z;
+};
+
+struct SC_PORTAL_DESTROY_PACKET {
+    u_char size;
+    char type;
+    int id;
+};
+
+struct SC_REMOVE_PLAYER_PACKET {
+    u_char size;
+    char type;
+    int id;
 };
 #pragma pack (pop)

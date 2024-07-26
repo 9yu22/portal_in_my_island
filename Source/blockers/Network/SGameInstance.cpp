@@ -113,6 +113,8 @@ void USGameInstance::DisconnectFromGameServer()
 		SocketSubsystem->DestroySocket(Socket);
 		Socket = nullptr;
 	}
+
+	UGameplayStatics::OpenLevel(this, FName("End"));
 }
 
 USGameInstance* USGameInstance::GetMyInstance(UObject* WorldContextObject)
