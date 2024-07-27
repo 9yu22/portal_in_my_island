@@ -283,6 +283,19 @@ void ABKChunkBase::CreateBlockDestroyEffect(const FVector& world_index, const FV
 						if (BombClass)
 						{
 							AActor* SpawnedBomb = GetWorld()->SpawnActor<AActor>(BombClass, world_index, SpawnRotation);
+
+							FTimerHandle TimerHandle;
+
+							// Create a timer delegate to call DestroyActor function
+							FTimerDelegate TimerDelegate;
+							TimerDelegate.BindLambda([SpawnedBomb]()
+							{
+								SpawnedBomb->Destroy();
+							});
+
+							// Set the timer to call DestroyActor function after the specified delay
+							GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.1f, false);
+
 						}
 					}
 					else
