@@ -2,6 +2,7 @@
 
 
 #include "BKVoxelFunctionLibrary.h"
+#include "BKNaiveChunk.h"
 
 FIntVector UBKVoxelFunctionLibrary::WorldToBlockPosition(const FVector& Position)
 {

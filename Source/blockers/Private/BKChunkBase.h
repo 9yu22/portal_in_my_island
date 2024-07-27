@@ -49,6 +49,9 @@ class BLOCKERS_API ABKChunkBase : public AActor
 	void CreateBlockDestroyEffect(const FVector& world_index, const FVector& normal);
 	int8 GetMyChunkIndex() const;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Block")
+	FString CollapsibleBlockName;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
