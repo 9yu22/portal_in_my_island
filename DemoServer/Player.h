@@ -14,6 +14,9 @@ public:
 	std::array<Item, 1> m_player_items;
 	Portal portal;
 
+	// 스트레스 테스트용
+	int last_move_time;
+
 public:
 	Player();
 	~Player();

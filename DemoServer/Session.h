@@ -1,6 +1,7 @@
 #pragma once
 #include <WS2tcpip.h>
 #include <MSWSock.h>
+#include <mutex>
 #include "Player.h"
 #include "protocol.h"
 #include "ManageItem.h"
@@ -41,6 +42,8 @@ public:
 	int m_prev_remain;
 	bool b_use;
 
+	std::mutex session_mx;
+
 public:
 	Session();
 	~Session();
@@ -61,5 +64,7 @@ public:
 	void send_respawn_packet(Player player);
 	void send_destroy_portal_packet(Portal portal);
 	void send_remove_player_packet(Player player);
+
+	void send_stress_test_packet(Player player);
 };
 

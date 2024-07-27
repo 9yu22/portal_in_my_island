@@ -1,7 +1,7 @@
 #pragma once
 
 constexpr int PORT_NUM = 4040;
-constexpr int BUF_SIZE = 4096; 
+constexpr int BUF_SIZE = 4096;
 constexpr int NAME_SIZE = 20;
 
 constexpr char CS_LOGIN = 0;
@@ -38,7 +38,7 @@ constexpr char CS_DISCONNECT = 50;
 constexpr char CS_STRESS_TEST = 100;
 constexpr char SC_STRESS_TEST = 101;
 
-enum OP_TYPE { OP_ACCEPT, OP_RECV, OP_SEND };
+//enum OP_TYPE { OP_ACCEPT, OP_RECV, OP_SEND };
 
 enum class Anim : char { IDLE, MOVE, JUMP };
 
@@ -50,7 +50,7 @@ enum class BKEBlock : char
 typedef unsigned char u_char;
 
 #pragma pack (push, 1)
-struct CS_STRESS_TEST_PACKET{
+struct CS_STRESS_TEST_PACKET {
     u_char size;
     char type;
     int id;
@@ -138,8 +138,8 @@ struct SC_REMOVE_BLOCK_PACKET {
     char type;
     int chunk_index;
     int ix, iy, iz;
-    float wx, wy, wz; 
-    float nx, ny, nz; 
+    float wx, wy, wz;
+    float nx, ny, nz;
     char blocktype;
 };
 
@@ -149,7 +149,7 @@ struct CS_REMOVE_BLOCK_PACKET {
     int chunk_index;
     int ix, iy, iz;
     float wx, wy, wz;
-    float nx, ny, nz; 
+    float nx, ny, nz;
     char blocktype;
 };
 

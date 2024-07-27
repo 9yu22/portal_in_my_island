@@ -177,4 +177,21 @@ void Session::send_remove_player_packet(Player player)
 	do_send(&remove_player);
 }
 
+void Session::send_stress_test_packet(Player player)
+{
+	SC_STRESS_TEST_PACKET test;
+	test.id = player.m_id;
+	test.size = sizeof(SC_MOVE_PLAYER_PACKET);
+	test.type = SC_STRESS_TEST;
+	test.x = player.location.x;
+	test.y = player.location.y;
+	test.z = player.location.z;
+	test.pitch = player.m_rotation.pitch;
+	test.yaw = player.m_rotation.yaw;
+	test.roll = player.m_rotation.roll;
+	test.move_time = player.last_move_time;
+	//std::cout << "클라이언트 " << c_id << "x:" << p.x << " y : " << p.y << " z : " << p.z << " 무브 패킷 전송" << std::endl << std::endl;
+	do_send(&test);
+}
+
 

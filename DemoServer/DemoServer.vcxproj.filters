@@ -39,6 +39,9 @@
     <ClCompile Include="Portal.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="iocp_server_multi.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DemoServer.h">
