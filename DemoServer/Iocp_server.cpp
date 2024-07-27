@@ -55,6 +55,23 @@ void process_packet(int c_id, char* packet)
 			for (auto& pl : clients) {
 				if (false == pl.b_use) continue;
 				pl.send_add_item_packet(item);
+				//switch (item.item_type) {
+				//case STONE:
+				//	std::cout << "클라이언트 " <<pl.m_player.m_id << "에게 돌 전송" << std::endl;
+				//	break;
+
+				//case AMETHYST:
+				//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 자수정 전송" << std::endl;
+				//	break;
+
+				//case RUBY:
+				//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 루비 전송" << std::endl;
+				//	break;
+
+				//case DIAMOND:
+				//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 다이아 전송" << std::endl;
+				//	break;
+				//}
 			}
 		}
 	}
@@ -109,7 +126,7 @@ void process_packet(int c_id, char* packet)
 	case CS_ADD_BLOCK: {
 		CS_ADD_BLOCK_PACKET* p = reinterpret_cast<CS_ADD_BLOCK_PACKET*>(packet);
 
-		std::cout << "추가 ->Chunk Index: " << p->chunk_index << ", Indices: (" << p->ix << ", " << p->iy << ", " << p->iz << ")" << std::endl;
+		std::cout << "블록 추가 ->Chunk Index: " << p->chunk_index << ", Indices: (" << p->ix << ", " << p->iy << ", " << p->iz << ")" << std::endl;
 		/*	if (map.AddBlockToMap(p)) {
 				for (auto& pl : clients)
 					if (true == pl.b_use)
@@ -131,7 +148,7 @@ void process_packet(int c_id, char* packet)
 	}
 	case CS_REMOVE_BLOCK: {
 		CS_REMOVE_BLOCK_PACKET* p = reinterpret_cast<CS_REMOVE_BLOCK_PACKET*>(packet);
-		std::cout << "삭제 ->Chunk Index: " << p->chunk_index << ", Indices: (" << p->ix << ", " << p->iy << ", " << p->iz << ")" << std::endl;
+		std::cout << "블록 삭제 ->Chunk Index: " << p->chunk_index << ", Indices: (" << p->ix << ", " << p->iy << ", " << p->iz << ")" << std::endl;
 		/*	if (map.RemoveBlockToMap(p)) {
 				for (auto& pl : clients)
 					if (true == pl.b_use)
@@ -208,7 +225,10 @@ void process_packet(int c_id, char* packet)
 		disconnect(p->id);
 		break;
 	}
-
+						
+	default:
+		std::cout << "잘못된 패킷 수신, PacketType: " << packet[1] << std::endl;
+		break;
 	}
 }
 
@@ -264,28 +284,28 @@ int main()
 				clients[client_id].m_player.m_id = client_id;
 				clients[client_id].m_player.portal.m_id = client_id;
 
-				//switch (client_id % 4) {
-				//case 0:
-				//	clients[client_id].m_player.SetWorldLocation(11000.f, 11000.f, 1100.f);
-				//	clients[client_id].m_player.SetRespawnLocation(11000.f, 11000.f, 1100.f);
-				//	clients[client_id].m_player.portal.SetWorldLocation(10500.f, 10500.f, 300.f);
-				//	break;
-				//case 1:
-				//	clients[client_id].m_player.SetWorldLocation(-11000.f, 11000.f, 1100.f);
-				//	clients[client_id].m_player.SetRespawnLocation(-11000.f, 11000.f, 1100.f);
-				//	clients[client_id].m_player.portal.SetWorldLocation(-10500.f, 10500.f, 300.f);
-				//	break;
-				//case 2:
-				//	clients[client_id].m_player.SetWorldLocation(11000.f, -11000.f, 1100.f);
-				//	clients[client_id].m_player.SetRespawnLocation(11000.f, -11000.f, 1100.f);
-				//	clients[client_id].m_player.portal.SetWorldLocation(10500.f, -10500.f, 300.f);
-				//	break;
-				//case 3:
-				//	clients[client_id].m_player.SetWorldLocation(-11000.f, -11000.f, 1100.f);
-				//	clients[client_id].m_player.SetRespawnLocation(-11000.f, -11000.f, 1100.f);
-				//	clients[client_id].m_player.portal.SetWorldLocation(-10500.f, -10500.f, 300.f);
-				//	break;
-				//}
+				/*switch (client_id % 4) {
+				case 0:
+					clients[client_id].m_player.SetWorldLocation(11000.f, 11000.f, 1100.f);
+					clients[client_id].m_player.SetRespawnLocation(11000.f, 11000.f, 1100.f);
+					clients[client_id].m_player.portal.SetWorldLocation(10500.f, 10500.f, 300.f);
+					break;
+				case 1:
+					clients[client_id].m_player.SetWorldLocation(-11000.f, 11000.f, 1100.f);
+					clients[client_id].m_player.SetRespawnLocation(-11000.f, 11000.f, 1100.f);
+					clients[client_id].m_player.portal.SetWorldLocation(-10500.f, 10500.f, 300.f);
+					break;
+				case 2:
+					clients[client_id].m_player.SetWorldLocation(11000.f, -11000.f, 1100.f);
+					clients[client_id].m_player.SetRespawnLocation(11000.f, -11000.f, 1100.f);
+					clients[client_id].m_player.portal.SetWorldLocation(10500.f, -10500.f, 300.f);
+					break;
+				case 3:
+					clients[client_id].m_player.SetWorldLocation(-11000.f, -11000.f, 1100.f);
+					clients[client_id].m_player.SetRespawnLocation(-11000.f, -11000.f, 1100.f);
+					clients[client_id].m_player.portal.SetWorldLocation(-10500.f, -10500.f, 300.f);
+					break;
+				}*/
 
 				// 테스트용 시작 좌표
 				switch (client_id % 4) {

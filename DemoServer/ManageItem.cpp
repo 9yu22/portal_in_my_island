@@ -17,13 +17,13 @@ Item::Item(int item_id, Item_type item_type, int location_number) : item_id(item
 			SetWorldLocation(11000.f, 11000.f, 300.f);
 		}
 		else if (location_number == 1) {
-			SetWorldLocation(11000.f, 11000.f, 300.f);
+			SetWorldLocation(-11000.f, 11000.f, 300.f);
 		}
 		else if (location_number == 2) {
-			SetWorldLocation(11000.f, 11000.f, 300.f);
+			SetWorldLocation(11000.f, -11000.f, 300.f);
 		}
 		else if (location_number == 3) {
-			SetWorldLocation(11000.f, 11000.f, 300.f);
+			SetWorldLocation(-11000.f, -11000.f, 300.f);
 		}
 		break;
 
@@ -32,13 +32,13 @@ Item::Item(int item_id, Item_type item_type, int location_number) : item_id(item
 			SetWorldLocation(11000.f, 11000.f, 300.f);
 		}
 		else if (location_number == 1) {
-			SetWorldLocation(11000.f, 11000.f, 300.f);
+			SetWorldLocation(-11000.f, 11000.f, 300.f);
 		}
 		else if (location_number == 2) {
-			SetWorldLocation(11000.f, 11000.f, 300.f);
+			SetWorldLocation(11000.f, -11000.f, 300.f);
 		}
 		else if (location_number == 3) {
-			SetWorldLocation(11000.f, 11000.f, 300.f);
+			SetWorldLocation(-11000.f, -11000.f, 300.f);
 		}
 		break;
 

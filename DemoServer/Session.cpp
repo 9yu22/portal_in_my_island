@@ -24,6 +24,11 @@ void Session::do_recv()
 void Session::do_send(void* packet)
 {
 	EX_OVERLAPPED* sdata = new EX_OVERLAPPED{ reinterpret_cast<unsigned char*>(packet) };
+	char* data = reinterpret_cast<char*>(packet);
+	if (data[1] > 20) {
+		std::cout << "잘못된 패킷 전송, PacketType: " << data[1] << std::endl;
+	}
+
 	WSASend(m_socket, &sdata->_wsabuf, 1, 0, 0, &sdata->_over, 0);
 }
 
@@ -130,24 +135,7 @@ void Session::send_add_item_packet(Item item)
 	add_item.z = item.location.z;
 	do_send(&add_item);
 
-	switch (item.item_type) {
-	case STONE:
-		std::cout << "돌 아이템 생성" << std::endl;
-		break;
-
-	case AMETHYST:
-		std::cout << "자수정 아이템 생성" << std::endl;
-		break;
-
-	case RUBY:
-		std::cout << "루비 아이템 생성" << std::endl;
-		break;
-
-	case DIAMOND:
-		std::cout << "다이아몬드 아이템 생성" << std::endl;
-		break;
-	}
-	std::cout << std::endl;
+	//std::cout << std::endl;
 }
 
 void Session::send_remove_item_packet(char* packet)
