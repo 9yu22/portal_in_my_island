@@ -40,6 +40,12 @@ AblockersCharacter::AblockersCharacter()
 		GetMesh()->SetSkeletalMesh(SK_blockers.Object);
 	}
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> MontageObj(TEXT("/Game/Blockers/Blueprints/Character/shootingmontage.shootingmontage"));
+	if (MontageObj.Succeeded()) {
+		UE_LOG(LogTemp, Warning, TEXT("Montage OK"));
+		MontageToPlay = MontageObj.Object;
+	}
+
 	static ConstructorHelpers::FObjectFinder<UMaterial> M_blockers(TEXT("/Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin1.M_NPC_Character_Four_Skin1"));
 	//character1:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin1.M_NPC_Character_Four_Skin1
 	//character2:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin2.M_NPC_Character_Four_Skin2
@@ -295,6 +301,37 @@ void AblockersCharacter::Fire()
 	BulletLocation.X += 100.f;
 	ABullet* bullet = GetWorld()->SpawnActor<ABullet>(bulletFactory, BulletLocation, firePosition->GetComponentRotation());
 	bulletNum -= 1;
+}
+
+void AblockersCharacter::SetMontage(int32 montageSectionNum)
+{
+	FName StartSectionName;
+	float PlayRate = 1.0f;
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+	switch (montageSectionNum % 4)
+	{
+	case 0:
+		StartSectionName = "drink";
+		break;
+	case 1:
+		StartSectionName = "Slash";
+		break;
+	case 2:
+		StartSectionName = "Swing";
+		break;
+	case 3:
+		StartSectionName = "Shoot";
+		break;
+	default:
+		break;
+	}
+
+	if (MontageToPlay && AnimInstance)
+	{
+		AnimInstance->Montage_Play(MontageToPlay, PlayRate);
+		AnimInstance->Montage_JumpToSection(StartSectionName, MontageToPlay);
+	}
 }
 
 void AblockersCharacter::UseItem(UItem* Item)

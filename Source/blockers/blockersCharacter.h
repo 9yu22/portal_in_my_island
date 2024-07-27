@@ -89,6 +89,12 @@ private:
 	UFUNCTION(BlueprintCallable, Category = "fire")
 	void Fire();
 
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimMontage* MontageToPlay;
+
+	UFUNCTION(BlueprintCallable)
+	void SetMontage(int32 montageSectionNum);
+
 	UTexture* TextureAssets[4];
 
 	//HP & HealthBar
