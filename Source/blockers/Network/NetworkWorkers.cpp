@@ -4,17 +4,18 @@
 #include "NetworkWorkers.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "../Private/BKChunkBase.h"
+#include "HAL/UnrealMemory.h"
 #include "blockers/blockersGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Protocol.h"
 #include "ProcessQueue.h"
                   
 
-int8 recv_th_count = 0;
+//int8 recv_th_count = 0;
 
 FRecvWorker::FRecvWorker(USGameInstance* Instance) : Instance(Instance)
 {
-    c_Socket = Instance->Socket;
+
 }
 
 FRecvWorker::~FRecvWorker()
@@ -217,7 +218,8 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         SC_ADD_ITEM_PACKET add_item;
 
         memcpy(&add_item, packet, sizeof(add_item));
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Recv Add Item Packet x: %f, y: %f, z: %f"), add_item.x, add_item.y, add_item.z));
+        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Recv Add Item Packet x: %f, y: %f, z: %f"), add_item.x, add_item.y, add_item.z));
+        UE_LOG(LogTemp, Warning, TEXT("Player%d Recv Add Item Packet x: %f, y: %f, z: %f / ItemType: %d"), Instance->MyCharacter->id, add_item.x, add_item.y, add_item.z, add_item.item_type);
         AsyncTask(ENamedThreads::GameThread, [this, add_item]()
             {
                 Instance->GameMode->SpawnItem(add_item);
@@ -328,21 +330,19 @@ uint32 FRecvWorker::Run()
 {
     uint8 recv_buf[BUFFER_SIZE];
 
-    th_num = ++recv_th_count;
+    //th_num = ++recv_th_count;
 
     while (recvRunning) {
-        // 버퍼에 읽어올 데이터가 있는지 확인
-        uint32 bHasPendingData = 0;
-        c_Socket->HasPendingData(bHasPendingData);
+        int32 BytesRead = 0;
+        Instance->Socket->Recv(recv_buf, sizeof(recv_buf), BytesRead);
+        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Data Size: %d"), BytesRead));
+        UE_LOG(LogTemp, Display, TEXT("Player%d Recv Data Size: %d"),Instance->MyCharacter->id, BytesRead);
+        if (BytesRead > 0) {
+            MergePacket(recv_buf, BytesRead);
 
-        if (bHasPendingData > 0) {
-            int32 BytesRead = 0;
-            c_Socket->Recv(recv_buf, sizeof(recv_buf), BytesRead);
-            //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Pavket Recv")));
-            MergePacket(recv_buf, BytesRead);     
-        }
+        } 
 
-        FPlatformProcess::Sleep(0.01);
+        //FPlatformProcess::Sleep(0.01);
     }
     return 0;
 }

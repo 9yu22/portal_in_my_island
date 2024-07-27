@@ -20,10 +20,9 @@ class BLOCKERS_API FRecvWorker : public FRunnable
 {
 private:
     USGameInstance* Instance;
-    FSocket* c_Socket;
     //AblockersCharacter* Character;
     bool recvRunning = true;
-    int8 th_num = 0; // µð¹ö±ë¿ë
+    //int8 th_num = 0; // µð¹ö±ë¿ë
 
 public:
     FRecvWorker(USGameInstance* Instance);

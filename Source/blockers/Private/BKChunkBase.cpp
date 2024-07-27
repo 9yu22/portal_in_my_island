@@ -98,15 +98,15 @@ bool ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
 bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const BKEBlock Block)
 {
 	// 블록 수정 패킷이 여러번 보내지는 것을 방지
-	static FIntVector prevPosition;
-	static BKEBlock prevBlock;
-	if (memcmp(&prevPosition, &Position, sizeof(FIntVector) == 0 && memcmp(&prevPosition, &Position, sizeof(FIntVector) == 0))) {
-		return false;
-	}
-	else {
-		prevPosition = Position;
-		prevBlock = Block;
-	}
+	//static FIntVector prevPosition;
+	//static BKEBlock prevBlock;
+	//if (memcmp(&prevPosition, &Position, sizeof(FIntVector) == 0 && memcmp(&prevPosition, &Position, sizeof(FIntVector) == 0))) {
+	//	return false;
+	//}
+	//else {
+	//	prevPosition = Position;
+	//	prevBlock = Block;
+	//}
 
 	// 조건에 따라 일부 인자는 안쓰인다. 함수를 합쳐놔서 이런 구조로 되어있다.
 	USGameInstance* instance = USGameInstance::GetMyInstance(this);
