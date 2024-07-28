@@ -284,31 +284,31 @@ int main()
 				clients[client_id].m_player.m_id = client_id;
 				clients[client_id].m_player.portal.m_id = client_id;
 
-				/*switch (client_id % 4) {
+				switch (client_id % 4) {
 				case 0:
-					clients[client_id].m_player.SetWorldLocation(11000.f, 11000.f, 1100.f);
-					clients[client_id].m_player.SetRespawnLocation(11000.f, 11000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(10500.f, 10500.f, 300.f);
+					clients[client_id].m_player.SetWorldLocation(7000.f, 7000.f, 1100.f);
+					clients[client_id].m_player.SetRespawnLocation(7000.f, 7000.f, 1100.f);
+					clients[client_id].m_player.portal.SetWorldLocation(7500.f, 7500.f, 300.f);
 					break;
 				case 1:
-					clients[client_id].m_player.SetWorldLocation(-11000.f, 11000.f, 1100.f);
-					clients[client_id].m_player.SetRespawnLocation(-11000.f, 11000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(-10500.f, 10500.f, 300.f);
+					clients[client_id].m_player.SetWorldLocation(-7000.f, 7000.f, 1100.f);
+					clients[client_id].m_player.SetRespawnLocation(-7000.f, 7000.f, 1100.f);
+					clients[client_id].m_player.portal.SetWorldLocation(-7500.f, 7500.f, 300.f);
 					break;
 				case 2:
-					clients[client_id].m_player.SetWorldLocation(11000.f, -11000.f, 1100.f);
-					clients[client_id].m_player.SetRespawnLocation(11000.f, -11000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(10500.f, -10500.f, 300.f);
+					clients[client_id].m_player.SetWorldLocation(7000.f, -7000.f, 1100.f);
+					clients[client_id].m_player.SetRespawnLocation(7000.f, -7000.f, 1100.f);
+					clients[client_id].m_player.portal.SetWorldLocation(7500.f, -7500.f, 300.f);
 					break;
 				case 3:
-					clients[client_id].m_player.SetWorldLocation(-11000.f, -11000.f, 1100.f);
-					clients[client_id].m_player.SetRespawnLocation(-11000.f, -11000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(-10500.f, -10500.f, 300.f);
+					clients[client_id].m_player.SetWorldLocation(-7000.f, -7000.f, 1100.f);
+					clients[client_id].m_player.SetRespawnLocation(-7000.f, -7000.f, 1100.f);
+					clients[client_id].m_player.portal.SetWorldLocation(-7500.f, -7500.f, 300.f);
 					break;
-				}*/
+				}
 
 				// 테스트용 시작 좌표
-				switch (client_id % 4) {
+				/*switch (client_id % 4) {
 				case 0:
 					clients[client_id].m_player.SetWorldLocation(1000.f, 1000.f, 1000.f);
 					clients[client_id].m_player.SetRespawnLocation(1000.f, 1000.f, 1000.f);
@@ -329,7 +329,7 @@ int main()
 					clients[client_id].m_player.SetRespawnLocation(-1000.f, 1000.f, 1000.f);
 					clients[client_id].m_player.portal.SetWorldLocation(-1500.f, 1500.f, 700.f);
 					break;
-				}
+				}*/
 				
 				clients[client_id].m_prev_remain = 0;
 				clients[client_id].m_socket = c_socket;

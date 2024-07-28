@@ -14,31 +14,31 @@ Item::Item(int item_id, Item_type item_type, int location_number) : item_id(item
 	switch (item_type) {
 	case STONE: // 아이템은 종류별로 4가지 위치에 스폰된다.
 		if (location_number == 0) {
-			SetWorldLocation(11000.f, 11000.f, 300.f);
+			SetWorldLocation(7000.f, 7000.f, 300.f);
 		}
 		else if (location_number == 1) {
-			SetWorldLocation(-11000.f, 11000.f, 300.f);
+			SetWorldLocation(-7000.f, 7000.f, 300.f);
 		}
 		else if (location_number == 2) {
-			SetWorldLocation(11000.f, -11000.f, 300.f);
+			SetWorldLocation(7000.f, -7000.f, 300.f);
 		}
 		else if (location_number == 3) {
-			SetWorldLocation(-11000.f, -11000.f, 300.f);
+			SetWorldLocation(-7000.f, -7000.f, 300.f);
 		}
 		break;
 
 	case AMETHYST:
 		if (location_number == 0) {
-			SetWorldLocation(11000.f, 11000.f, 300.f);
+			SetWorldLocation(7000.f, 7000.f, 300.f);
 		}
 		else if (location_number == 1) {
-			SetWorldLocation(-11000.f, 11000.f, 300.f);
+			SetWorldLocation(-7000.f, 7000.f, 300.f);
 		}
 		else if (location_number == 2) {
-			SetWorldLocation(11000.f, -11000.f, 300.f);
+			SetWorldLocation(7000.f, -7000.f, 300.f);
 		}
 		else if (location_number == 3) {
-			SetWorldLocation(-11000.f, -11000.f, 300.f);
+			SetWorldLocation(-7000.f, -7000.f, 300.f);
 		}
 		break;
 
