@@ -1072,7 +1072,7 @@ int ABKNaiveChunk::GetBlockIndex(const int X, const int Y, const int Z) const
 	return Z * Size * Size + Y * Size + X;
 }
 
-FBlockk ABKNaiveChunk::GetBreakingBlock(FIntVector Position)
+FBlockk ABKNaiveChunk::GetBreakingBlock(FIntVector Position, float DamageAmount)
 {
 	const int Index = GetBlockIndex(Position.X, Position.Y, Position.Z);
 
@@ -1082,7 +1082,7 @@ FBlockk ABKNaiveChunk::GetBreakingBlock(FIntVector Position)
 	newBlock.isCollapsible = true;
 
 	if (Blocks[Index].health > 0) {
-		Blocks[Index].health -= 20;
+		Blocks[Index].health -= DamageAmount;
 		newBlock.health = Blocks[Index].health;
 	}
 

@@ -69,7 +69,7 @@ private:
 	int GetBlockIndex(int X, int Y, int Z) const;
 
 	UFUNCTION(BlueprintPure, Category="BlockInfo")
-	FBlockk GetBreakingBlock(FIntVector Position);	// 인자: 블록 포지션 (월드 포지션 X)
+	FBlockk GetBreakingBlock(FIntVector Position, float DamageAmount);	// 인자: 블록 포지션 (월드 포지션 X)
 
 	int GetTextureIndex(BKEBlock Block, FVector Normal) const;
 
