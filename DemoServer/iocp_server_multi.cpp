@@ -138,10 +138,18 @@ void process_packet(int c_id, char* packet)
 		CS_MOVE_PACKET* p = reinterpret_cast<CS_MOVE_PACKET*>(packet);
 		clients[c_id].m_player.SetWorldLocation(p->x, p->y, p->z);
 		clients[c_id].m_player.SetWorldRotation(p->pitch, p->yaw, p->roll);
-		//std::cout << "클라이언트 " <<c_id << "x:" << p->x << " y : " << p->y << " z : " << p->z << " 무브 패킷 도착" << std::endl;
-		for (auto& pl : clients)
-			if (true == pl.b_use && pl.m_player.m_id != c_id)
-				pl.send_move_player_packet(clients[c_id].m_player);
+		if (clients[c_id].m_player.location.z < -100.0f) {
+			for (auto& pl : clients) {
+				if (true == pl.b_use)
+					pl.send_respawn_packet(clients[c_id].m_player);
+			}
+		}
+		else {
+			//std::cout << "클라이언트 " <<c_id << "x:" << p->x << " y : " << p->y << " z : " << p->z << " 무브 패킷 도착" << std::endl;
+			for (auto& pl : clients)
+				if (true == pl.b_use && pl.m_player.m_id != c_id)
+					pl.send_move_player_packet(clients[c_id].m_player);
+		}	
 		break;
 	}
 	case CS_ADD_BLOCK: {
