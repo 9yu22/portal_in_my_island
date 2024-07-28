@@ -217,8 +217,10 @@ void process_packet(int c_id, char* packet)
 				else {
 					// 포탈 제거 + 플레이어 사망 시 플레이어 제거 패킷 전송
 					for (auto& pl : clients) {
-						if (true == pl.b_use)
-							pl.send_remove_player_packet(clients[p->hit_id].m_player);
+						if (true == pl.b_use) {
+							clients[p->hit_id].m_player.m_hp = -10.f;
+							clients[p->hit_id].send_player_hp_packet(clients[p->hit_id].m_player);
+						}
 					}
 				}
 			}
@@ -231,7 +233,7 @@ void process_packet(int c_id, char* packet)
 	case CS_CHANGE_PORTAL_HP: {
 		CS_CHANGE_PORTAL_HP_PACKET* p = reinterpret_cast<CS_CHANGE_PORTAL_HP_PACKET*>(packet);
 		if (clients[p->hit_id].m_player.portal.m_hp > 0.f) {
-			clients[p->hit_id].m_player.portal.m_hp -= 50.f;
+			clients[p->hit_id].m_player.portal.m_hp -= 500.f;
 			std::cout << "클라이언트 " << p->hit_id << " 포탈 공격당함, 남은 hp: " << clients[p->hit_id].m_player.portal.m_hp << std::endl;
 
 			if (clients[p->hit_id].m_player.portal.m_hp > 0.f) {
