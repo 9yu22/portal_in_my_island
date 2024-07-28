@@ -241,6 +241,14 @@ void process_packet(int c_id, char* packet)
 		}
 		break;
 	}
+
+	case ANIM:
+		ANIM_PACKET* anim = reinterpret_cast<ANIM_PACKET*>(packet);
+		for (auto& pl : clients) {
+			if (true == pl.b_use && c_id == anim->id);
+				pl.send_anim_packet(anim);
+		}
+
 	case CS_DISCONNECT: {
 		CS_DISCONNECT_PACKET* p = reinterpret_cast<CS_DISCONNECT_PACKET*>(packet);
 		disconnect(p->id);

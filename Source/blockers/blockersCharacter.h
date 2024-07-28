@@ -84,6 +84,9 @@ public:
 	void SendMovePacket();
 	void SetTextureForCharacter(int Character_id);
 
+	UFUNCTION(BlueprintCallable)
+	void SetMontage(int32 montageSectionNum);
+
 	//bullet
 private:
 	UFUNCTION(BlueprintCallable, Category = "fire")
@@ -91,9 +94,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	UAnimMontage* MontageToPlay;
-
-	UFUNCTION(BlueprintCallable)
-	void SetMontage(int32 montageSectionNum);
 
 	UTexture* TextureAssets[4];
 

@@ -158,10 +158,10 @@ void AblockersCharacter::Tick(float DeltaTime) {
 
 	Super::Tick(DeltaTime);
 
-	SendMovePacketTime += DeltaTime;
-	if (IsSelf == true && SendMovePacketTime >= 0.2f) {
-		SendMovePacket();
-	}
+	//SendMovePacketTime += DeltaTime;
+	//if (IsSelf == true && SendMovePacketTime >= 0.2f) {
+	//	SendMovePacket();
+	//}
 
 	//health = FMath::Clamp<float>(health, 1, MaxHealth); //시간에 따라 줄어들도록 설정.
 	if (health < 1.f) {
@@ -172,7 +172,7 @@ void AblockersCharacter::Tick(float DeltaTime) {
 
 	if (instance->Socket != nullptr) {
 		SendMovePacketTime += DeltaTime;
-		if (IsSelf == true && SendMovePacketTime >= 0.1f) {
+		if (IsSelf == true && SendMovePacketTime >= 0.2f) {
 			SendMovePacket();
 		}
 
@@ -325,6 +325,19 @@ void AblockersCharacter::SetMontage(int32 montageSectionNum)
 		break;
 	default:
 		break;
+	}
+
+	USGameInstance * instance = USGameInstance::GetMyInstance(this);
+	
+	if (instance->MyCharacter->id == id) { // 내 애니메이션 변화만 전송
+		ANIM_PACKET anim;
+		anim.size = sizeof(ANIM_PACKET);
+		anim.type = ANIM;
+		anim.anim_type = static_cast<int8>(montageSectionNum);
+		anim.id = instance->MyCharacter->id;
+
+		int BytesRead = 0;
+		instance->Socket->Send((uint8*)&anim, sizeof(anim), BytesRead);
 	}
 
 	if (MontageToPlay && AnimInstance)

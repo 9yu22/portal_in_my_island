@@ -64,6 +64,7 @@ public:
 	void send_respawn_packet(Player player);
 	void send_destroy_portal_packet(Portal portal);
 	void send_remove_player_packet(Player player);
+	void send_anim_packet(ANIM_PACKET* anim);
 
 	void send_stress_test_packet(Player player);
 	void send_stress_test_packet2(char* packet);

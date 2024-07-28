@@ -173,17 +173,18 @@ void FRecvWorker::ProcessPacket(uint8* packet)
     }
 
     case ANIM: {
-        //ANIM_PACKET new_anim;
+        ANIM_PACKET new_anim;
+        memcpy(&new_anim, packet, sizeof(new_anim));
 
-        //memcpy(&new_anim, packet, sizeof(new_anim));
-        ////GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Add Block Packet x: %d, y: %d, z: %d"), new_block.ix, new_block.iy, new_block.iz));
-
-        //AnimInfo anim;
-        //anim.id = new_anim.id;
-        //anim.type = static_cast<Anim>(new_anim.anim_type);
-
-        //Instance->AnimQueue.Enqueue(anim);
-        //UE_LOG(LogTemp, Warning, TEXT("Anim ENQ"));
+        AsyncTask(ENamedThreads::GameThread, [this, new_anim]()
+            {
+                for (auto p : Instance->Players) {
+                    if (p->id == new_anim.id) {
+                        p->SetMontage(static_cast<int32>(new_anim.anim_type));
+                        break;
+                    }
+                }
+            });
         break;
     }
     case SC_CHANGE_PLAYER_HP: {

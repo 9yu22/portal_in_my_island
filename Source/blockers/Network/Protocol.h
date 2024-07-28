@@ -123,12 +123,12 @@ struct CS_REMOVE_BLOCK_PACKET {
     int8 blocktype;
 };
 
-//struct ANIM_PACKET {
-//    uint8 size;
-//    int8 type;
-//    int id;
-//    int8 anim_type;
-//};
+struct ANIM_PACKET {
+    uint8 size;
+    int8 type;
+    int id;
+    int8 anim_type;
+};
 
 struct CS_CHANGE_PLAYER_HP_PACKET {
     uint8 size;
