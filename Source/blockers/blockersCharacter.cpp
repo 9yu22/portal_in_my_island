@@ -23,11 +23,8 @@
 
 
 #include "BKPlayerController.h"
-#include "../blockers/Public/InventoryComponent.h"
-#include "../blockers/Public/Item.h"
 #include "blockersGameMode.h"
 #include "Bullet.h"
-#include "HealthBarWidget.h"
 
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -47,13 +44,6 @@ AblockersCharacter::AblockersCharacter()
 	}
 
 	static ConstructorHelpers::FObjectFinder<UMaterial> M_blockers(TEXT("/Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin1.M_NPC_Character_Four_Skin1"));
-	//character1:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin1.M_NPC_Character_Four_Skin1
-	//character2:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin2.M_NPC_Character_Four_Skin2
-	//character3:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin3.M_NPC_Character_Four_Skin3
-	//character4:: /Game/NPC_Character_Four/Materials/M_NPC_Character_Four_Skin4.M_NPC_Character_Four_Skin4
-	//if (M_blockers.Succeeded()) {
-	//	GetMesh()->SetMaterial(0, M_blockers.Object);
-	//}
 
 	static ConstructorHelpers::FObjectFinder<UTexture> TextureAsset1(TEXT("/Game/NPC_Character_Four/Textures/T_NPC_Character_Four_BaseColor_Skin_1.T_NPC_Character_Four_BaseColor_Skin_1"));
 	static ConstructorHelpers::FObjectFinder<UTexture> TextureAsset2(TEXT("/Game/NPC_Character_Four/Textures/T_NPC_Character_Four_BaseColor_Skin_2.T_NPC_Character_Four_BaseColor_Skin_2"));
@@ -78,10 +68,6 @@ AblockersCharacter::AblockersCharacter()
 	GetMesh()->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
 	FRotator NewRotation = FRotator(0.0f, -90.0f, 0.0f);
 	GetMesh()->SetRelativeRotation(NewRotation);
-
-	//boxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
-	//SetRootComponent(boxComp);
-	//boxComp->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
 		
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -118,39 +104,17 @@ AblockersCharacter::AblockersCharacter()
 	//총구 표시 컴포넌트를 생성하고 박스 컴포넌트의 자식컴포넌트로 설정한다.
 	firePosition = CreateDefaultSubobject<UArrowComponent>(TEXT("Fire Position"));
 
-	//HealthWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
-	//HealthWidgetComp->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 	health = MaxHealth;
-
-	Inventory = CreateDefaultSubobject<UInventoryComponent>("Inventory");
-	Inventory->Capacity = 20; //you can input 20 items
 
 }
 
 void AblockersCharacter::BeginPlay()
 {
-
 	Super::BeginPlay();
-
-	/*TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AblockersCharacter::StaticClass(), FoundActors);
-
-	for (AActor* Actor : FoundActors)
-	{
-		AblockersCharacter* Character = Cast<AblockersCharacter>(Actor);
-		if (Character)
-		{
-			Players.Add(Character);
-		}
-	}*/
 
 	PacketLocation = GetActorLocation();
 	PacketRotation = GetActorRotation();
-	//UE_LOG(LogTemp, Warning, TEXT("Number of characters in PlayerSet: %d"), PlayerSet.Num());
-
-	//UHealthBarWidget* HealthBar = Cast<UHealthBarWidget>(HealthWidgetComp->GetUserWidgetObject());
-	//HealthBar->SetOwnerCharacter(this);
 
 }
 
@@ -158,12 +122,6 @@ void AblockersCharacter::Tick(float DeltaTime) {
 
 	Super::Tick(DeltaTime);
 
-	//SendMovePacketTime += DeltaTime;
-	//if (IsSelf == true && SendMovePacketTime >= 0.2f) {
-	//	SendMovePacket();
-	//}
-
-	//health = FMath::Clamp<float>(health, 1, MaxHealth); //시간에 따라 줄어들도록 설정.
 	if (health < 1.f) {
 		health = MaxHealth;
 	}
@@ -204,7 +162,6 @@ void AblockersCharacter::Tick(float DeltaTime) {
 
 void AblockersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Hello"));
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AblockersCharacter::Fire);
 
 }
@@ -351,14 +308,6 @@ void AblockersCharacter::SetMontage(int32 montageSectionNum)
 	{
 		AnimInstance->Montage_Play(MontageToPlay, PlayRate);
 		AnimInstance->Montage_JumpToSection(StartSectionName, MontageToPlay);
-	}
-}
-
-void AblockersCharacter::UseItem(UItem* Item)
-{
-	if (Item) {
-		Item->Use(this);
-		Item->OnUse(this); //BP EVENT
 	}
 }
 
