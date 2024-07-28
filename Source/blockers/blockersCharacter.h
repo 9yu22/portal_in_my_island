@@ -109,9 +109,6 @@ public:
 	float GetMaxHealth() const { return MaxHealth; }
 	void SetMaxHealth(float val) { health = val; }
 
-	// 서버 애니메이션
-	void SendAnimationPacket(int32 anim_type);
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	float health;
 

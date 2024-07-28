@@ -490,7 +490,7 @@ void ABKNaiveChunk::CreateObjects(int32 x, int32 y, int32 z, FVector Position)
 		}
 		else
 		{
-			// 얼음기둥을 생성할 위치 목록
+			// 기둥을 생성할 위치 목록
 			TArray<FVector> positionsToCheckPillar = {
 				{80, -10, 4}, {80, 10, 4}, {60, -10, 4}, {60, 10, 4},
 				{-80, -10, 4}, {-80, 10, 4}, {-60, -10, 4}, {-60, 10, 4},
@@ -505,15 +505,13 @@ void ABKNaiveChunk::CreateObjects(int32 x, int32 y, int32 z, FVector Position)
 					&& y + offset.Y - Position.Y >= 0 && y + offset.Y - Position.Y < (float)Size
 					&& z + offset.Z - Position.Z >= 0 && z + offset.Z - Position.Z < (float)Size)
 
-					CreatePillarAtPosition(x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z, BKEBlock::HellPillar);
+					CreatePillarAtPosition(x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z, BKEBlock::HellGround);
 			}
 
-			// 얼음기둥을 생성할 위치 목록
 			TArray<FVector> positionsToCheck = {
 				{70, 0, 4}, {0, 70, 4}, {-70, 0, 4}, {0, -70, 4}
 			};
 			
-			// 각 위치에 기둥을 생성
 			for (const FVector& offset : positionsToCheck)
 			{
 				if (x + offset.X - Position.X >= 0 && x + offset.X - Position.X < (float)Size
@@ -1004,18 +1002,18 @@ FVector ABKNaiveChunk::GetNormal(const BKEDirection Direction) const
 	}
 }
 
-bool ABKNaiveChunk::ModifyVoxelData(const FIntVector Position, const BKEBlock Block)
+bool ABKNaiveChunk::ModifyVoxelData(const FIntVector Position, const FBlockk Block)
 {
 	const int Index = GetBlockIndex(Position.X, Position.Y, Position.Z);
 
 	// 삭제하려 했지만 삭제할 수 없는 블록이면 패스
-	if (Block == BKEBlock::Air) {
+	if (Block.block == BKEBlock::Air) {
 		if (Blocks[Index].isCollapsible == false) { return false; }
 		else {
 			/*if (Blocks[Index].health > 0) {
 				Blocks[Index].health -= 20;
 			}*/
-			Blocks[Index].block = Block;
+			Blocks[Index].block = Block.block;
 			Blocks[Index].health = -1;
 
 			return true;
@@ -1062,7 +1060,8 @@ bool ABKNaiveChunk::ModifyVoxelData(const FIntVector Position, const BKEBlock Bl
 			Blocks[Index].isCollapsible = true;
 			Blocks[Index].health = 100;
 		}
-		Blocks[Index].block = Block;
+		Blocks[Index].block = Block.block;
+		Blocks[Index].health = Block.health;
 		return true;
 	}
 	return false;
@@ -1073,15 +1072,22 @@ int ABKNaiveChunk::GetBlockIndex(const int X, const int Y, const int Z) const
 	return Z * Size * Size + Y * Size + X;
 }
 
-BKEBlock ABKNaiveChunk::GetBreakingBlock(FIntVector Position)
+FBlockk ABKNaiveChunk::GetBreakingBlock(FIntVector Position)
 {
 	const int Index = GetBlockIndex(Position.X, Position.Y, Position.Z);
 
+	FBlockk newBlock;
+	newBlock.block = Blocks[Index].block;
+	newBlock.backDir = BKEDirection::Back;
+	newBlock.isCollapsible = true;
+
 	if (Blocks[Index].health > 0) {
 		Blocks[Index].health -= 20;
+		newBlock.health = Blocks[Index].health;
 	}
 
 	if (Blocks[Index].health <= 0) {
+		newBlock.health = 0;
 		if (Blocks[Index].block == BKEBlock::StoneB3)
 			CollapsibleBlockName = "Stone";
 		else if (Blocks[Index].block == BKEBlock::AmethystB3)
@@ -1090,39 +1096,39 @@ BKEBlock ABKNaiveChunk::GetBreakingBlock(FIntVector Position)
 			CollapsibleBlockName = "Ruby";
 		else if (Blocks[Index].block == BKEBlock::DiamondB3)
 			CollapsibleBlockName = "Diamond";
-		return BKEBlock::Air;
+		newBlock.block = BKEBlock::Air;
 	}
 	else if (Blocks[Index].health <= 25) {
 		if (Blocks[Index].block == BKEBlock::StoneB2)
-			return BKEBlock::StoneB3;
+			newBlock.block = BKEBlock::StoneB3;
 		else if (Blocks[Index].block == BKEBlock::AmethystB2)
-			return BKEBlock::AmethystB3;
+			newBlock.block = BKEBlock::AmethystB3;
 		else if (Blocks[Index].block == BKEBlock::RubyB2)
-			return BKEBlock::RubyB3;
+			newBlock.block = BKEBlock::RubyB3;
 		else if (Blocks[Index].block == BKEBlock::DiamondB2)
-			return BKEBlock::DiamondB3;
+			newBlock.block = BKEBlock::DiamondB3;
 	}
 	else if (Blocks[Index].health <= 50) {
 		if (Blocks[Index].block == BKEBlock::StoneB1)
-			return BKEBlock::StoneB2;
+			newBlock.block = BKEBlock::StoneB2;
 		else if (Blocks[Index].block == BKEBlock::AmethystB1)
-			return BKEBlock::AmethystB2;
+			newBlock.block = BKEBlock::AmethystB2;
 		else if (Blocks[Index].block == BKEBlock::RubyB1)
-			return BKEBlock::RubyB2;
+			newBlock.block = BKEBlock::RubyB2;
 		else if (Blocks[Index].block == BKEBlock::DiamondB1)
-			return BKEBlock::DiamondB2;
+			newBlock.block = BKEBlock::DiamondB2;
 	}
 	else if (Blocks[Index].health <= 75) {
 		if (Blocks[Index].block == BKEBlock::Stone)
-			return BKEBlock::StoneB1;
+			newBlock.block = BKEBlock::StoneB1;
 		else if (Blocks[Index].block == BKEBlock::Amethyst)
-			return BKEBlock::AmethystB1;
+			newBlock.block = BKEBlock::AmethystB1;
 		else if (Blocks[Index].block == BKEBlock::Ruby)
-			return BKEBlock::RubyB1;
+			newBlock.block = BKEBlock::RubyB1;
 		else if (Blocks[Index].block == BKEBlock::Diamond)
-			return BKEBlock::DiamondB1;
+			newBlock.block = BKEBlock::DiamondB1;
 	}
-	return Blocks[Index].block;
+	return newBlock;
 }
 
 int ABKNaiveChunk::GetTextureIndex(BKEBlock Block, FVector Normal) const
@@ -1213,13 +1219,10 @@ int ABKNaiveChunk::GetTextureIndex(BKEBlock Block, FVector Normal) const
 	case BKEBlock::IcePillar:
 		return 27;
 		break;
-	case BKEBlock::HellPillar:
-		return 28;
-		break;
 	case BKEBlock::JackOLantern:
-		if (Normal == FVector::UpVector || Normal == FVector::DownVector) return 29;
-		if (Normal == FVector::ForwardVector) return 31;
-		return 30;
+		if (Normal == FVector::UpVector || Normal == FVector::DownVector) return 28;
+		if (Normal == FVector::ForwardVector) return 30;
+		return 29;
 		break;
 	default:
 		return 255;

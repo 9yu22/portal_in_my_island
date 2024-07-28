@@ -26,7 +26,7 @@ protected:
 	virtual void Generate2DHeightMap(FVector Position) override;
 	virtual void Generate3DHeightMap(FVector Position) override;
 	virtual void GenerateMesh() override;
-	virtual bool ModifyVoxelData(const FIntVector Position, BKEBlock Block) override;
+	virtual bool ModifyVoxelData(const FIntVector Position, FBlockk Block) override;
 
 	void CreateTreeAtPosition(double x, double y, double z);
 	void CreatePillarAtPosition(double x, double y, double z, BKEBlock block);
@@ -69,7 +69,7 @@ private:
 	int GetBlockIndex(int X, int Y, int Z) const;
 
 	UFUNCTION(BlueprintPure, Category="BlockInfo")
-	BKEBlock GetBreakingBlock(FIntVector Position);	// 인자: 블록 포지션 (월드 포지션 X)
+	FBlockk GetBreakingBlock(FIntVector Position);	// 인자: 블록 포지션 (월드 포지션 X)
 
 	int GetTextureIndex(BKEBlock Block, FVector Normal) const;
 

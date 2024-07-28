@@ -82,15 +82,17 @@ void ABKChunkBase::ClearMesh()
 bool ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
 {
 	// 서버 연결 안되어도 블록 설치는 가능하게 일단 아래 코드는 유지
-	bool removingSuccess = ModifyVoxelData(Position, Block);
 
-	ClearMesh();
+	//bool removingSuccess = ModifyVoxelData(Position, Block);
 
-	GenerateMesh();
+	//ClearMesh();
 
-	ApplyMesh();
+	//GenerateMesh();
 
-	return removingSuccess;
+	//ApplyMesh();
+
+	//return removingSuccess;
+	return false;
 }
 
 bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const FBlockk Block)
@@ -156,8 +158,8 @@ bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector
 		//}
 	}
 	if(instance && instance->Socket == nullptr) {
-		bool removingSuccess = ModifyVoxel(Position, Block.block);
-		return removingSuccess;
+		/*bool removingSuccess = ModifyVoxel(Position, Block.block);
+		return removingSuccess;*/
 	}
 	//ModifyVoxel(Position, Block);
 	return false;
@@ -267,7 +269,9 @@ void ABKChunkBase::AddBlock(const SC_ADD_BLOCK_PACKET& add_block)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Enter AddBlock Method")));
 	FIntVector Position{ add_block.ix, add_block.iy, add_block.iz };
-	BKEBlock Block = static_cast<BKEBlock>(add_block.blocktype);
+	FBlockk Block;
+	Block.block = static_cast<BKEBlock>(add_block.blocktype);
+	Block.health = add_block.block_hp;
 
 	bool modifySuccess = ModifyVoxelData(Position, Block);
 
@@ -287,7 +291,9 @@ void ABKChunkBase::RemoveBlock(const SC_REMOVE_BLOCK_PACKET& remove_block)
 	FIntVector Position{ remove_block.ix, remove_block.iy, remove_block.iz };
 	FVector world_index{ remove_block.wx, remove_block.wy, remove_block.wz };
 	FVector normal{ remove_block.nx, remove_block.ny, remove_block.nz };
-	BKEBlock Block = static_cast<BKEBlock>(remove_block.blocktype);
+	FBlockk Block;
+	Block.block = static_cast<BKEBlock>(remove_block.blocktype);
+
 
 	bool modifySuccess = ModifyVoxelData(Position, Block);
 
