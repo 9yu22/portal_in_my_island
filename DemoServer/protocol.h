@@ -155,12 +155,12 @@ struct CS_REMOVE_BLOCK_PACKET {
     char blocktype;
 };
 
-//struct ANIM_PACKET {
-//    u_char size;
-//    char type;
-//    int id;
-//    char anim_type;
-//};
+struct ANIM_PACKET {
+    u_char size;
+    char type;
+    int id;
+    char anim_type;
+};
 
 struct CS_CHANGE_PLAYER_HP_PACKET {
     u_char size;

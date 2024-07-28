@@ -249,6 +249,22 @@ void AblockersCharacter::SendMovePacket()
 		UE_LOG(LogTemp, Log, TEXT("Fail GetInstance"));
 }
 
+void AblockersCharacter::SendAnimationPacket(int32 anim_type)
+{
+	USGameInstance* instance = USGameInstance::GetMyInstance(this);
+
+	if (instance && instance->MyCharacter->id == id) { // 내 애니메이션 변화만 전송
+		ANIM_PACKET anim;
+		anim.size = sizeof(ANIM_PACKET);
+		anim.type = ANIM;
+		anim.anim_type = static_cast<int8>(anim_type);
+		anim.id = instance->MyCharacter->id;
+
+		int BytesRead = 0;
+		instance->Socket->Send((uint8*)&anim, sizeof(anim), BytesRead);
+	}
+}
+
 void AblockersCharacter::SetTextureForCharacter(int Character_id)
 {
 	UMaterial* Material = nullptr;
@@ -313,31 +329,22 @@ void AblockersCharacter::SetMontage(int32 montageSectionNum)
 	{
 	case 0:
 		StartSectionName = "drink";
+		SendAnimationPacket(montageSectionNum % 4);
 		break;
 	case 1:
 		StartSectionName = "Slash";
+		SendAnimationPacket(montageSectionNum % 4);
 		break;
 	case 2:
 		StartSectionName = "Swing";
+		SendAnimationPacket(montageSectionNum % 4);
 		break;
 	case 3:
 		StartSectionName = "Shoot";
+		SendAnimationPacket(montageSectionNum % 4);
 		break;
 	default:
 		break;
-	}
-
-	USGameInstance * instance = USGameInstance::GetMyInstance(this);
-	
-	if (instance->MyCharacter->id == id) { // 내 애니메이션 변화만 전송
-		ANIM_PACKET anim;
-		anim.size = sizeof(ANIM_PACKET);
-		anim.type = ANIM;
-		anim.anim_type = static_cast<int8>(montageSectionNum);
-		anim.id = instance->MyCharacter->id;
-
-		int BytesRead = 0;
-		instance->Socket->Send((uint8*)&anim, sizeof(anim), BytesRead);
 	}
 
 	if (MontageToPlay && AnimInstance)
