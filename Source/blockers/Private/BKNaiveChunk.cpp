@@ -513,6 +513,60 @@ void ABKNaiveChunk::CreateTreeAtPosition(double x, double y, double z)
 	}
 }
 
+void ABKNaiveChunk::CreatePillarAtPosition(double x, double y, double z)
+{
+	// 기본 기둥을 구성하는 좌표
+	TArray<FVector> baseCoordinates = {
+
+		{0, 0, 0}, {1, 0, 0}, {2, 0, 0},
+		{0, 1, 0}, {1, 1, 0}, {2, 1, 0},
+		{0, 2, 0}, {1, 2, 0}, {2, 2, 0},
+
+		{0, 0, 1}, {1, 0, 1}, {2, 0, 1},
+		{0, 1, 1}, {1, 1, 1}, {2, 1, 1},
+		{0, 2, 1}, {1, 2, 1}, {2, 2, 1},
+
+		{0, 0, 2}, {1, 0, 2}, {2, 0, 2},
+		{0, 1, 2}, {1, 1, 2}, {2, 1, 2},
+		{0, 2, 2}, {1, 2, 2}, {2, 2, 2}
+	};
+
+	// 기본 기둥 외에 상하좌우 추가 블럭을 구성하는 좌표
+	TArray<FVector> decoCoordinates = {
+		{1, 1, 3}, {0, 1, 3}, {1, 0, 3}, {2, 1, 3}, {1, 2, 3}, {1, 1, 4},
+
+		{0, 3, 0}, {1, 3, 0}, {2, 3, 0}, {1, 3, 1},
+
+		{3, 0, 0}, {3, 1, 0}, {3, 2, 0}, {3, 1, 1},
+
+		{-1, 0, 0}, {-1, 1, 0}, {-1, 2, 0}, {-1, 1, 1},
+
+		{0, -1, 0}, {1, -1, 0}, {2, -1, 0}, {1, -1, 1}
+	};
+
+	// 기본 블록 생성
+	for (const FVector& coord : baseCoordinates)
+	{
+		int32 targetX = x + coord.X;
+		int32 targetY = y + coord.Y;
+		int32 targetZ = z + coord.Z;
+
+		if (targetX >= 0 && targetY >= 0 && targetZ >= 0)
+			Blocks[GetBlockIndex(targetX, targetY, targetZ)].block = BKEBlock::Leaves;
+	}
+
+	// 추가 블록 생성
+	for (const FVector& coord : decoCoordinates)
+	{
+		int32 targetX = x + coord.X;
+		int32 targetY = y + coord.Y;
+		int32 targetZ = z + coord.Z;
+
+		if (targetX >= 0 && targetY >= 0 && targetZ >= 0)
+			Blocks[GetBlockIndex(targetX, targetY, targetZ)].block = BKEBlock::Leaves;
+	}
+}
+
 
 void ABKNaiveChunk::CreateObjects(int32 x, int32 y, int32 z, FVector Position)
 {
@@ -538,6 +592,22 @@ void ABKNaiveChunk::CreateObjects(int32 x, int32 y, int32 z, FVector Position)
 			CreateTreeAtPosition(x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z);
 		}
 	}
+
+	// 얼음기둥을 생성할 위치 목록
+	TArray<FVector> positionsToCheckPillar = {
+		{60, 10, 4}, {60, -10, 4}, {-65, 10, 4}, {-65, -10, 4}
+	};
+
+	// 각 위치에 얼음기둥을 생성
+	for (const FVector& offset : positionsToCheckPillar)
+	{
+		if (x + offset.X - Position.X >= 0 && x + offset.X - Position.X < (float)Size
+			&& y + offset.Y - Position.Y >= 0 && y + offset.Y - Position.Y < (float)Size
+			&& z + offset.Z - Position.Z >= 0 && z + offset.Z - Position.Z < (float)Size)
+
+			CreatePillarAtPosition(x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z);
+	}
+
 }
 
 void ABKNaiveChunk::GenerateMesh()
