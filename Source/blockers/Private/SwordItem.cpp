@@ -3,6 +3,7 @@
 
 #include "SwordItem.h"
 #include "../blockersCharacter.h"
+#include "BKChunkBase.h"
 #include "../Network/SGameInstance.h"
 
 
@@ -69,6 +70,14 @@ void ASwordItem::UseItem()
 							}
 						}
 					}
+				}
+
+				ABKChunkBase* TargetChunk = Cast<ABKChunkBase>(HitResult.GetActor());
+
+				if (TargetChunk)
+				{
+					// 내구도 감소
+					Durability -= Usage;
 				}
 			}
 			else
