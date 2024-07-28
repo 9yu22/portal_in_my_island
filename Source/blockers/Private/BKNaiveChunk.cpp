@@ -552,7 +552,7 @@ void ABKNaiveChunk::CreatePillarAtPosition(double x, double y, double z)
 		int32 targetZ = z + coord.Z;
 
 		if (targetX >= 0 && targetY >= 0 && targetZ >= 0)
-			Blocks[GetBlockIndex(targetX, targetY, targetZ)].block = BKEBlock::Leaves;
+			Blocks[GetBlockIndex(targetX, targetY, targetZ)].block = BKEBlock::IcePillar;
 	}
 
 	// 추가 블록 생성
@@ -563,7 +563,7 @@ void ABKNaiveChunk::CreatePillarAtPosition(double x, double y, double z)
 		int32 targetZ = z + coord.Z;
 
 		if (targetX >= 0 && targetY >= 0 && targetZ >= 0)
-			Blocks[GetBlockIndex(targetX, targetY, targetZ)].block = BKEBlock::Leaves;
+			Blocks[GetBlockIndex(targetX, targetY, targetZ)].block = BKEBlock::IcePillar;
 	}
 }
 
@@ -1293,6 +1293,9 @@ int ABKNaiveChunk::GetTextureIndex(BKEBlock Block, FVector Normal) const
 		break;
 	case BKEBlock::DiamondB3:
 		return 26;
+		break;
+	case BKEBlock::IcePillar:
+		return 27;
 		break;
 	default:
 		return 255;
