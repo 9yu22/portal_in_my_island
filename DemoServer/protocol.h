@@ -140,6 +140,7 @@ struct SC_REMOVE_BLOCK_PACKET {
     int ix, iy, iz;
     float wx, wy, wz; 
     float nx, ny, nz; 
+    int block_hp;
     char blocktype;
 };
 
@@ -150,6 +151,7 @@ struct CS_REMOVE_BLOCK_PACKET {
     int ix, iy, iz;
     float wx, wy, wz;
     float nx, ny, nz; 
+    int block_hp;
     char blocktype;
 };
 
