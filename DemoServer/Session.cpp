@@ -23,11 +23,11 @@ void Session::do_recv()
 
 void Session::do_send(void* packet)
 {
-	EX_OVERLAPPED* sdata = new EX_OVERLAPPED{ reinterpret_cast<unsigned char*>(packet) };
-	char* data = reinterpret_cast<char*>(packet);
-	if (data[1] > 20) {
-		std::cout << "잘못된 패킷 전송, PacketType: " << data[1] << std::endl;
-	}
+	EX_OVERLAPPED* sdata = new EX_OVERLAPPED{ reinterpret_cast<char*>(packet) };
+	//char* data = reinterpret_cast<char*>(packet);
+	//if (data[1] > 20) {
+	//	std::cout << "잘못된 패킷 전송, PacketType: " << data[1] << std::endl;
+	//}
 
 	WSASend(m_socket, &sdata->_wsabuf, 1, 0, 0, &sdata->_over, 0);
 }
@@ -181,7 +181,7 @@ void Session::send_stress_test_packet(Player player)
 {
 	SC_STRESS_TEST_PACKET test;
 	test.id = player.m_id;
-	test.size = sizeof(SC_MOVE_PLAYER_PACKET);
+	test.size = sizeof(SC_STRESS_TEST_PACKET);
 	test.type = SC_STRESS_TEST;
 	test.x = player.location.x;
 	test.y = player.location.y;
@@ -190,7 +190,14 @@ void Session::send_stress_test_packet(Player player)
 	test.yaw = player.m_rotation.yaw;
 	test.roll = player.m_rotation.roll;
 	test.move_time = player.last_move_time;
-	//std::cout << "클라이언트 " << c_id << "x:" << p.x << " y : " << p.y << " z : " << p.z << " 무브 패킷 전송" << std::endl << std::endl;
+	do_send(&test);
+}
+
+void Session::send_stress_test_packet2(char* packet)
+{
+	SC_STRESS_TEST_PACKET test;
+	test.size = sizeof(SC_STRESS_TEST_PACKET);
+	test.type = SC_STRESS_TEST;
 	do_send(&test);
 }
 

@@ -1,11 +1,11 @@
 ﻿  Graduate_stress_test.cpp
-C:\Users\givoo\Downloads\STRESS_TEST (1)\STRESS_TEST\STRESS_TEST\Graduate_stress_test.cpp(178,37): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\givoo\Downloads\STRESS_TEST (1)\STRESS_TEST\STRESS_TEST\Graduate_stress_test.cpp(179,37): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\givoo\Downloads\STRESS_TEST (1)\STRESS_TEST\STRESS_TEST\Graduate_stress_test.cpp(198,36): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\givoo\Downloads\STRESS_TEST (1)\STRESS_TEST\STRESS_TEST\Graduate_stress_test.cpp(199,36): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\givoo\Documents\GitHub\portal_in_my_island\DemoServer\STRESS_TEST\STRESS_TEST\Graduate_stress_test.cpp(137,42): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\givoo\Documents\GitHub\portal_in_my_island\DemoServer\STRESS_TEST\STRESS_TEST\Graduate_stress_test.cpp(138,42): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\givoo\Documents\GitHub\portal_in_my_island\DemoServer\STRESS_TEST\STRESS_TEST\Graduate_stress_test.cpp(160,36): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\givoo\Documents\GitHub\portal_in_my_island\DemoServer\STRESS_TEST\STRESS_TEST\Graduate_stress_test.cpp(161,36): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다.
   2 of 200 functions ( 1.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     1 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
-  STRESS_TEST.vcxproj -> C:\Users\givoo\Downloads\STRESS_TEST (1)\STRESS_TEST\x64\Release\STRESS_TEST.exe
+  STRESS_TEST.vcxproj -> C:\Users\givoo\Documents\GitHub\portal_in_my_island\DemoServer\STRESS_TEST\STRESS_TEST\x64\Release\STRESS_TEST.exe

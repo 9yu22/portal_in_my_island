@@ -8,6 +8,8 @@ Player::Player()
 	m_rotation.pitch = 0.f;
 	m_rotation.yaw = 0.f;
 	m_rotation.roll = 0.f;
+
+	last_move_time = 999;
 }
 
 Player::~Player()

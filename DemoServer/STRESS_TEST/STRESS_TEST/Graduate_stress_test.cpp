@@ -127,67 +127,29 @@ void SendPacket(int cl, void* packet)
 
 void ProcessPacket(int ci, unsigned char packet[])
 {
-	//switch (packet[1]) {
-	//case SC_STRESS_TEST: {
-	//	SC_STRESS_TEST_PACKET* move_packet = reinterpret_cast<SC_STRESS_TEST_PACKET*>(packet);
-	//	if (move_packet->id < MAX_CLIENTS) {
-	//		int my_id = client_map[move_packet->id];
-	//		if (-1 != my_id) {
-	//			g_clients[my_id].x = move_packet->x;
-	//			g_clients[my_id].y = move_packet->y;
-	//		}
-	//		if (ci == my_id) {
-	//			if (0 != move_packet->move_time) {
-	//				auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - move_packet->move_time;
-
-	//				if (global_delay < d_ms) global_delay++;
-	//				else if (global_delay > d_ms) global_delay--;
-	//			}
-	//		}
-	//	}
-	//}
-	//				   break;
-	//case SC_ADD_PLAYER: break;
-	//case SC_REMOVE_PLAYER: break;
-	//case SC_LOGIN_INFO:
-	//{
-	//	g_clients[ci].connected = true;
-	//	active_clients++;
-	//	SC_LOGIN_INFO_PACKET* login_packet = reinterpret_cast<SC_LOGIN_INFO_PACKET*>(packet);
-	//	int my_id = ci;
-	//	client_map[login_packet->id] = my_id;
-	//	g_clients[my_id].id = login_packet->id;
-	//	g_clients[my_id].x = login_packet->x;
-	//	g_clients[my_id].y = login_packet->y;
-
-	//	//cs_packet_teleport t_packet;
-	//	//t_packet.size = sizeof(t_packet);
-	//	//t_packet.type = CS_TELEPORT;
-	//	//SendPacket(my_id, &t_packet);
-	//}
-	//break;
-	//default: MessageBox(hWnd, L"Unknown Packet Type", L"ERROR", 0);
-	//	while (true);
-	//}
 	switch (packet[1]) {
 	case SC_STRESS_TEST: {
-		SC_STRESS_TEST_PACKET* move_packet = reinterpret_cast<SC_STRESS_TEST_PACKET*>(packet);
-		if (move_packet->id < MAX_CLIENTS) {
-			int my_id = client_map[move_packet->id];
+		SC_STRESS_TEST_PACKET* test_move_packet = reinterpret_cast<SC_STRESS_TEST_PACKET*>(packet);
+		//std::cout << "packet_time: " << test_move_packet->move_time << std::endl;
+		if (test_move_packet->id < MAX_CLIENTS) {
+			int my_id = client_map[test_move_packet->id];
 			if (-1 != my_id) {
-				g_clients[my_id].x = move_packet->x;
-				g_clients[my_id].y = move_packet->y;
+				g_clients[my_id].x = test_move_packet->x;
+				g_clients[my_id].y = test_move_packet->y;
 			}
 			if (ci == my_id) {
-				if (0 != move_packet->move_time) {
-					auto d_ms = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count() - move_packet->move_time;
+				if (0 != test_move_packet->move_time) {
+					auto now = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch()).count();
+					auto d_ms = now - test_move_packet->move_time;
 
 					if (global_delay < d_ms) global_delay++;
 					else if (global_delay > d_ms) global_delay--;
 				}
 			}
 		}
+		break;
 	}
+					   
 	case SC_LOGIN_INFO: {
 		g_clients[ci].connected = true;
 		active_clients++;
@@ -204,7 +166,7 @@ void ProcessPacket(int ci, unsigned char packet[])
 		//SendPacket(my_id, &t_packet);
 		break;
 	}
-
+					 
 	case SC_MOVE_PLAYER: {
 		break;
 	}
@@ -253,7 +215,8 @@ void ProcessPacket(int ci, unsigned char packet[])
 		break;
 	}
 
-	default: MessageBox(hWnd, L"Unknown Packet Type", L"ERROR", 0);
+	default: 
+		MessageBox(hWnd, L"Unknown Packet Type", L"ERROR", 0);
 		while (true);
 	}
 }
@@ -360,7 +323,7 @@ void Adjust_Number_Of_Client()
 			max_limit = active_clients;
 			increasing = false;
 		}
-		if (100 > active_clients) return;
+		if (10 > active_clients) return;
 		if (ACCEPT_DELY * 10 > duration_cast<milliseconds>(duration).count()) return;
 		last_connect_time = high_resolution_clock::now();
 		DisconnectClient(client_to_close);
@@ -433,7 +396,7 @@ void Test_Thread()
 
 		for (int i = 0; i < num_connections; ++i) {
 			if (false == g_clients[i].connected) continue;
-			if (g_clients[i].last_move_time + 200ms > high_resolution_clock::now()) continue;
+			if (g_clients[i].last_move_time + 1s > high_resolution_clock::now()) continue;
 			g_clients[i].last_move_time = high_resolution_clock::now();
 			CS_STRESS_TEST_PACKET my_packet;
 			std::memset(&my_packet, 0, sizeof(CS_STRESS_TEST_PACKET));

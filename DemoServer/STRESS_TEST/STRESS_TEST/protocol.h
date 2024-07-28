@@ -56,7 +56,7 @@ struct CS_STRESS_TEST_PACKET {
     int id;
     float x, y, z;
     float pitch, yaw, roll;
-    unsigned int move_time;
+    unsigned move_time;
 };
 
 struct SC_STRESS_TEST_PACKET {
@@ -65,7 +65,7 @@ struct SC_STRESS_TEST_PACKET {
     int id;
     float x, y, z;
     float pitch, yaw, roll;
-    unsigned int move_time;
+    unsigned move_time;
 };
 
 struct CS_LOGIN_PACKET {

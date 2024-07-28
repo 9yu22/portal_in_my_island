@@ -10,7 +10,7 @@
 #pragma comment(lib, "WS2_32.lib")
 #pragma comment(lib, "MSWSock.lib")
 using namespace std;
-constexpr int MAX_USER = 500;
+constexpr int MAX_USER = 5000;
 
 SOCKET c_socket, server;
 EX_OVERLAPPED a_over;
@@ -59,42 +59,42 @@ void process_packet(int c_id, char* packet)
 	static CS_ADD_BLOCK_PACKET prev_add;
 	static CS_REMOVE_BLOCK_PACKET prev_remove;
 
-	if (!is_timer) {
-		item_manager.InitStartTime();
-		is_timer = true;
-	}
+	//if (!is_timer) {
+	//	item_manager.InitStartTime();
+	//	is_timer = true;
+	//}
 
-	// 일단 임시로 여기에..
-	item_manager.CalculateItemSpawnTime(); // 시간 계산
-	Item_type type = item_manager.CheckCanSpawn(); // 스폰 시간이 된 아이템을 반환
+	//// 일단 임시로 여기에..
+	//item_manager.CalculateItemSpawnTime(); // 시간 계산
+	//Item_type type = item_manager.CheckCanSpawn(); // 스폰 시간이 된 아이템을 반환
 
-	if (type != NONE) { // 모든 클라에게 해당 아이템(4개 위치) 전송
-		for (int i = 0; i < 4; i++) {
-			Item item(++set_item_id, type, i);
+	//if (type != NONE) { // 모든 클라에게 해당 아이템(4개 위치) 전송
+	//	for (int i = 0; i < 4; i++) {
+	//		Item item(++set_item_id, type, i);
 
-			for (auto& pl : clients) {
-				if (false == pl.b_use) continue;
-				pl.send_add_item_packet(item);
-				//switch (item.item_type) {
-				//case STONE:
-				//	std::cout << "클라이언트 " <<pl.m_player.m_id << "에게 돌 전송" << std::endl;
-				//	break;
+	//		for (auto& pl : clients) {
+	//			if (false == pl.b_use) continue;
+	//			pl.send_add_item_packet(item);
+	//			//switch (item.item_type) {
+	//			//case STONE:
+	//			//	std::cout << "클라이언트 " <<pl.m_player.m_id << "에게 돌 전송" << std::endl;
+	//			//	break;
 
-				//case AMETHYST:
-				//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 자수정 전송" << std::endl;
-				//	break;
+	//			//case AMETHYST:
+	//			//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 자수정 전송" << std::endl;
+	//			//	break;
 
-				//case RUBY:
-				//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 루비 전송" << std::endl;
-				//	break;
+	//			//case RUBY:
+	//			//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 루비 전송" << std::endl;
+	//			//	break;
 
-				//case DIAMOND:
-				//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 다이아 전송" << std::endl;
-				//	break;
-				//}
-			}
-		}
-	}
+	//			//case DIAMOND:
+	//			//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 다이아 전송" << std::endl;
+	//			//	break;
+	//			//}
+	//		}
+	//	}
+	//}
 
 	//for (int i = 0; i < 4; i++)
 	//{
@@ -118,7 +118,7 @@ void process_packet(int c_id, char* packet)
 			if (pl.m_player.m_id == c_id) continue;
 			pl.send_add_player_packet(clients[c_id].m_player);
 			pl.send_add_portal_packet(clients[c_id].m_player.portal);
-			std::cout << "클라이언트 " << pl.m_player.m_id << "에게 " << c_id << "의 ADD 패킷을 전송" << std::endl;
+			//std::cout << "클라이언트 " << pl.m_player.m_id << "에게 " << c_id << "의 ADD 패킷을 전송" << std::endl;
 			//std::cout << "-> id: " << c_id << " x: " << clients[c_id].m_player.location.x << " y: "<< clients[c_id].m_player.location.y << " z: " << clients[c_id].m_player.location.z << std::endl;
 		}
 		for (auto& pl : clients) { // 새로 추가된 클라에게 모두 전송
@@ -127,7 +127,7 @@ void process_packet(int c_id, char* packet)
 			clients[c_id].send_add_player_packet(pl.m_player);
 			clients[c_id].send_add_portal_packet(pl.m_player.portal);
 
-			std::cout << "클라이언트 " << c_id << "에게 " << pl.m_player.m_id << "의 ADD 패킷을 전송" << std::endl;
+			//std::cout << "클라이언트 " << c_id << "에게 " << pl.m_player.m_id << "의 ADD 패킷을 전송" << std::endl;
 			//std::cout << "-> id: " << pl.m_player.m_id << " x: " << pl.m_player.location.x << " y: " << pl.m_player.location.y << " z: " << pl.m_player.location.z << std::endl;
 
 		}
@@ -248,15 +248,16 @@ void process_packet(int c_id, char* packet)
 	}
 
 	case CS_STRESS_TEST: {
-		CS_STRESS_TEST_PACKET* p = reinterpret_cast<CS_STRESS_TEST_PACKET*>(packet);
-		
-		clients[c_id].m_player.SetWorldLocation(p->x, p->y, p->z);
-		clients[c_id].m_player.SetWorldRotation(p->pitch, p->yaw, p->roll);
-		clients[c_id].m_player.last_move_time = p->move_time;
+		//CS_STRESS_TEST_PACKET* p = reinterpret_cast<CS_STRESS_TEST_PACKET*>(packet);
+		//clients[c_id].m_player.last_move_time = p->move_time;
+		////std::cout << p->move_time << std::endl; // -> 잘 옴
+		//clients[c_id].m_player.SetWorldLocation(p->x, p->y, p->z);
+		//clients[c_id].m_player.SetWorldRotation(p->pitch, p->yaw, p->roll);	
 		//std::cout << "클라이언트 " <<c_id << "x:" << p->x << " y : " << p->y << " z : " << p->z << " 무브 패킷 도착" << std::endl;
 		for (auto& pl : clients)
 			if (true == pl.b_use)
 				pl.send_stress_test_packet(clients[c_id].m_player);
+				//pl.send_stress_test_packet2(packet);
 		break;
 	}
 

@@ -159,7 +159,7 @@ void AblockersCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
 	SendMovePacketTime += DeltaTime;
-	if (IsSelf == true && SendMovePacketTime >= 0.1f) {
+	if (IsSelf == true && SendMovePacketTime >= 0.2f) {
 		SendMovePacket();
 	}
 

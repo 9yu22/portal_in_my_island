@@ -20,7 +20,7 @@ public:
 		_op_type = OP_RECV;
 		ZeroMemory(&_over, sizeof(_over));
 	}
-	EX_OVERLAPPED(unsigned char* packet)
+	EX_OVERLAPPED(char* packet)
 	{
 		_wsabuf.len = packet[0];
 		_wsabuf.buf = _send_buf;
@@ -66,5 +66,6 @@ public:
 	void send_remove_player_packet(Player player);
 
 	void send_stress_test_packet(Player player);
+	void send_stress_test_packet2(char* packet);
 };
 
