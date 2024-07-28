@@ -56,8 +56,6 @@ protected:
 	UFUNCTION()
 	void Look(const FInputActionValue& Value);
 
-	UFUNCTION()
-	void OnLeftClick(const FInputActionValue& Value);
 
 	UPROPERTY()
 	UInputMappingContext* DefaultMappingContext;
@@ -67,8 +65,6 @@ protected:
 	//// 컨트롤하는 캐릭터를 반환
 	AblockersCharacter* GetMyCharacter() const;
 
-	//// 입력 키를 전송하는 함수
-	void SendAnimation(int8 anim_type);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

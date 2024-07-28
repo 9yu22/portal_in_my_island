@@ -144,6 +144,7 @@ struct SC_REMOVE_BLOCK_PACKET {
     float nx, ny, nz; 
     int block_hp;
     char blocktype;
+    char collapsibleType;
 };
 
 struct CS_REMOVE_BLOCK_PACKET {
@@ -155,6 +156,7 @@ struct CS_REMOVE_BLOCK_PACKET {
     float nx, ny, nz; 
     int block_hp;
     char blocktype;
+    char collapsibleType;
 };
 
 struct ANIM_PACKET {

@@ -153,7 +153,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
         SC_REMOVE_BLOCK_PACKET remove_block;
 
         memcpy(&remove_block, packet, sizeof(remove_block));
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Remove Block Packet chunk index:%d, x: %d, y: %d, z: %d"), remove_block.chunk_index, remove_block.ix, remove_block.iy, remove_block.iz));
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Recv Remove Block Packet chunk index:%d, x: %d, y: %d, z: %d, collapsible: %d"), remove_block.chunk_index, remove_block.ix, remove_block.iy, remove_block.iz, remove_block.collapsibleType));
 
         //BlockInfo block;
         //block.chunk_index = remove_block.chunk_index;

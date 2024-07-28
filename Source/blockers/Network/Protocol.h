@@ -114,6 +114,7 @@ struct SC_REMOVE_BLOCK_PACKET {
     float wx, wy, wz; // 히트된 부분의 월드 좌표 벡터
     float nx, ny, nz; // 히트된 부분의 노멀 벡터
     int8 blocktype;
+    int8 collapsibleType;
 };
 
 struct CS_REMOVE_BLOCK_PACKET {
@@ -125,6 +126,7 @@ struct CS_REMOVE_BLOCK_PACKET {
     float wx, wy, wz; // 히트된 부분의 월드 좌표 벡터
     float nx, ny, nz; // 히트된 부분의 노멀 벡터
     int8 blocktype;
+    int8 collapsibleType;
 };
 
 struct ANIM_PACKET {
