@@ -177,6 +177,11 @@ void Session::send_remove_player_packet(Player player)
 	do_send(&remove_player);
 }
 
+void Session::send_anim_packet(ANIM_PACKET* anim)
+{
+	do_send(anim);
+}
+
 void Session::send_stress_test_packet(Player player)
 {
 	SC_STRESS_TEST_PACKET test;

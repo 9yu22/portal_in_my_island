@@ -157,12 +157,10 @@ void process_packet(int c_id, char* packet)
 			break;
 		}
 
-		else {
-			std::memcpy(&prev_add, p, sizeof(CS_ADD_BLOCK_PACKET));
-			for (auto& pl : clients) {
-				if (true == pl.b_use)
-					pl.send_add_block_packet(packet);
-			}
+		std::memcpy(&prev_add, p, sizeof(CS_ADD_BLOCK_PACKET));
+		for (auto& pl : clients) {
+			if (true == pl.b_use)
+				pl.send_add_block_packet(packet);
 		}
 
 		break;
@@ -170,14 +168,13 @@ void process_packet(int c_id, char* packet)
 	case CS_REMOVE_BLOCK: {
 		CS_REMOVE_BLOCK_PACKET* p = reinterpret_cast<CS_REMOVE_BLOCK_PACKET*>(packet);
 		std::cout << "블록 삭제 ->Chunk Index: " << p->chunk_index << ", Indices: (" << p->ix << ", " << p->iy << ", " << p->iz << ")" << std::endl;
-		/*	if (map.RemoveBlockToMap(p)) {
+	/*		if (map.RemoveBlockToMap(p)) {
 				for (auto& pl : clients)
 					if (true == pl.b_use)
 						pl.send_remove_block_packet(packet);
 			}	*/
-		if (memcmp(&prev_remove, p, sizeof(CS_REMOVE_BLOCK_PACKET)) == 0) {
+		if (memcmp(&prev_remove, p, sizeof(CS_REMOVE_BLOCK_PACKET)) == 0) 
 			break;
-		}
 
 		else {
 			std::memcpy(&prev_add, p, sizeof(CS_REMOVE_BLOCK_PACKET));
@@ -242,12 +239,15 @@ void process_packet(int c_id, char* packet)
 		break;
 	}
 
-	case ANIM:
+	case ANIM: {
 		ANIM_PACKET* anim = reinterpret_cast<ANIM_PACKET*>(packet);
 		for (auto& pl : clients) {
-			if (true == pl.b_use && c_id == anim->id);
+			if (true == pl.b_use && c_id == anim->id)
 				pl.send_anim_packet(anim);
 		}
+		break;
+	}
+		
 
 	case CS_DISCONNECT: {
 		CS_DISCONNECT_PACKET* p = reinterpret_cast<CS_DISCONNECT_PACKET*>(packet);

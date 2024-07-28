@@ -110,14 +110,96 @@ bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector
 	USGameInstance* instance = USGameInstance::GetMyInstance(this);
 	if (instance && instance->Socket != nullptr) {
 		int BytesSent = 0;
-		if (Block.block != BKEBlock::Air) // 블록 추가에는 인덱스와 블록 타입만 쓰인다.
-		{
+
+		int8 index = GetMyChunkIndex();
+		CS_ADD_BLOCK_PACKET new_block;
+		new_block.chunk_index = index;
+		new_block.size = sizeof(new_block);
+		new_block.type = CS_ADD_BLOCK;
+
+		new_block.block_hp = 
+		new_block.ix = Position.X;
+		new_block.iy = Position.Y;
+		new_block.iz = Position.Z;
+		BKEBlock block = Block.block;
+		new_block.blocktype = static_cast<int8>(block);
+
+		instance->Socket->Send((uint8*)&new_block, sizeof(new_block), BytesSent);
+
+		//else { // 블록 제거에는 월드 좌표와 월드 노멀, 블록 타입만 쓰인다. 인덱스는 패킷으로 받아온 월드 값을 클라에서 계산하도록 해 네트워크 부하를 줄인다.
+		//	int8 index = GetMyChunkIndex();
+		//	CS_REMOVE_BLOCK_PACKET remove_block;
+
+		//	remove_block.chunk_index = index;
+		//	remove_block.size = sizeof(remove_block);
+		//	remove_block.type = CS_REMOVE_BLOCK;
+
+		//	remove_block.ix = Position.X;
+		//	remove_block.iy = Position.Y;
+		//	remove_block.iz = Position.Z;
+
+		//	remove_block.wx = World_Position.X;
+		//	remove_block.wy = World_Position.Y;
+		//	remove_block.wz = World_Position.Z;
+
+		//	remove_block.nx = World_Normal.X;
+		//	remove_block.ny = World_Normal.Y;
+		//	remove_block.nz = World_Normal.Z;
+
+		//	BKEBlock block = Block.block;
+		//	remove_block.blocktype = static_cast<int8>(block);
+
+		//	instance->Socket->Send((uint8*)&remove_block, sizeof(remove_block), BytesSent);
+		//	//UE_LOG(LogTemp, Warning, TEXT("Send Block"));
+
+		//	//ModifyVoxel(Position, Block);
+		//}
+	}
+	if(instance && instance->Socket == nullptr) {
+		bool removingSuccess = ModifyVoxel(Position, Block.block);
+		return removingSuccess;
+	}
+	//ModifyVoxel(Position, Block);
+	return false;
+}
+
+void ABKChunkBase::SendAddBlockPacket(const FIntVector Position, const FBlockk Block)
+{
+	USGameInstance* instance = USGameInstance::GetMyInstance(this);
+	if (instance && instance->Socket != nullptr) {
+		int BytesSent = 0;
+
+		int8 index = GetMyChunkIndex();
+		CS_ADD_BLOCK_PACKET new_block;
+		new_block.chunk_index = index;
+		new_block.size = sizeof(new_block);
+		new_block.type = CS_ADD_BLOCK;
+
+		new_block.block_hp = Block.health;
+		new_block.ix = Position.X;
+		new_block.iy = Position.Y;
+		new_block.iz = Position.Z;
+		BKEBlock block = Block.block;
+		new_block.blocktype = static_cast<int8>(block);
+
+		instance->Socket->Send((uint8*)&new_block, sizeof(new_block), BytesSent);
+	}
+}
+
+void ABKChunkBase::SendModifiedBlockPacket(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const FBlockk Block)
+{
+	USGameInstance* instance = USGameInstance::GetMyInstance(this);
+	if (instance && instance->Socket != nullptr) {
+		int BytesSent = 0;
+
+		if (Block.health > 0) {
 			int8 index = GetMyChunkIndex();
 			CS_ADD_BLOCK_PACKET new_block;
 			new_block.chunk_index = index;
 			new_block.size = sizeof(new_block);
 			new_block.type = CS_ADD_BLOCK;
 
+			new_block.block_hp = Block.health;
 			new_block.ix = Position.X;
 			new_block.iy = Position.Y;
 			new_block.iz = Position.Z;
@@ -125,12 +207,9 @@ bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector
 			new_block.blocktype = static_cast<int8>(block);
 
 			instance->Socket->Send((uint8*)&new_block, sizeof(new_block), BytesSent);
-			//UE_LOG(LogTemp, Warning, TEXT("Send Block"));
-
-			//ModifyVoxel(Position, Block);
 		}
 
-		else { // 블록 제거에는 월드 좌표와 월드 노멀, 블록 타입만 쓰인다. 인덱스는 패킷으로 받아온 월드 값을 클라에서 계산하도록 해 네트워크 부하를 줄인다.
+		else {
 			int8 index = GetMyChunkIndex();
 			CS_REMOVE_BLOCK_PACKET remove_block;
 
@@ -154,17 +233,10 @@ bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector
 			remove_block.blocktype = static_cast<int8>(block);
 
 			instance->Socket->Send((uint8*)&remove_block, sizeof(remove_block), BytesSent);
-			//UE_LOG(LogTemp, Warning, TEXT("Send Block"));
-
-			//ModifyVoxel(Position, Block);
 		}
 	}
-	if(instance && instance->Socket == nullptr) {
-		bool removingSuccess = ModifyVoxel(Position, Block.block);
-		return removingSuccess;
-	}
-	//ModifyVoxel(Position, Block);
-	return false;
+	
+	
 }
 
 void ABKChunkBase::SetOwningChunkWorld(ABKChunkWorld* NewOwner)

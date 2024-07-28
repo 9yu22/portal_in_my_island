@@ -82,6 +82,7 @@ public:
 	bool IsSelf = false;
 	void InterpolateCharacter(FVector NewLocation, FRotator NewRotation, float DeltaTime);
 	void SendMovePacket();
+	void SendAnimationPacket(int32 anim_type);
 	void SetTextureForCharacter(int Character_id);
 
 	void SendAnimationPacket(int32 anim_type);
