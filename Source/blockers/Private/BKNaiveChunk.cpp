@@ -44,10 +44,10 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 			for (int z = 0; z < Size; ++z)
 			{
 				auto distanceFromCenter = sqrt((x + Position.X) * (x + Position.X) + (y + Position.Y) * (y + Position.Y));
-				auto distanceFromPoint1 = sqrt((x + Position.X - 110) * (x + Position.X - 110) + (y + Position.Y - 110) * (y + Position.Y - 110));	// point: (110,110)
-				auto distanceFromPoint2 = sqrt((x + Position.X + 110) * (x + Position.X + 110) + (y + Position.Y - 110) * (y + Position.Y - 110));	// point: (-110,110)
-				auto distanceFromPoint3 = sqrt((x + Position.X - 110) * (x + Position.X - 110) + (y + Position.Y + 110) * (y + Position.Y + 110));	// point: (110,-110)
-				auto distanceFromPoint4 = sqrt((x + Position.X + 110) * (x + Position.X + 110) + (y + Position.Y + 110) * (y + Position.Y + 110));	// point: (-110,-110)
+				auto distanceFromPoint1 = sqrt((x + Position.X - 70) * (x + Position.X - 70) + (y + Position.Y - 70) * (y + Position.Y - 70));	// point: (50,50)
+				auto distanceFromPoint2 = sqrt((x + Position.X + 70) * (x + Position.X + 70) + (y + Position.Y - 70) * (y + Position.Y - 70));	// point: (-50,50)
+				auto distanceFromPoint3 = sqrt((x + Position.X - 70) * (x + Position.X - 70) + (y + Position.Y + 70) * (y + Position.Y + 70));	// point: (50,-50)
+				auto distanceFromPoint4 = sqrt((x + Position.X + 70) * (x + Position.X + 70) + (y + Position.Y + 70) * (y + Position.Y + 70));	// point: (-50,-50)
 
 				auto distanceFromPoint5 = sqrt((x + Position.X) * (x + Position.X) + (y + Position.Y - 70) * (y + Position.Y - 70));	// point: (0, 70)
 				auto distanceFromPoint6 = sqrt((x + Position.X) * (x + Position.X) + (y + Position.Y + 70) * (y + Position.Y + 70));	// point: (0, -70)
