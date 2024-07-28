@@ -305,158 +305,10 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				else if (z + Position.Z == 5 && distanceFromPoint12 < 7) {
 					Blocks[GetBlockIndex(x, y, z)].block = groundBlock;
 				}
-				// 나무
-				/*else if (ableToCreateObject(x, y, z, Position, {-20, -20, 6}, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -20, -20, 6 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 20, 20, 6 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 20, 20, 6 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -20, 20, 6 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -20, 20, 6 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 20, -20, 6 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 20, -20, 6 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 0, -35, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 0, -35, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 0, 35, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 0, 35, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -35, 0, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -35, 0, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 35, 0, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 35, 0, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}*/
-				/*else if (ableToCreateObject(x, y, z, Position, { 40, 40, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 40, 40, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 35, 44, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 35, 44, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 44, 35, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 44, 35, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 30, 48, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 30, 48, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 48, 30, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { 48, 30, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}*/
-				/*else if (ableToCreateObject(x, y, z, Position, { -40, -40, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -40, -40, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -35, -44, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -35, -44, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -44, -35, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -44, -35, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -30, -48, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -30, -48, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -48, -30, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -48, -30, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -40, 40, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -40, 40, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -35, 44, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -35, 44, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -44, 35, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -44, 35, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -30, 48, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -30, 48, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -48, 30, 1 }, "spruce")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Spruce;
-				}
-				else if (ableToCreateObject(x, y, z, Position, { -48, 30, 1 }, "leaves")) {
-					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Leaves;
-				}*/
 				else {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Air;
 					Blocks[GetBlockIndex(x, y, z)].health = -1;		// 부술 수 있는 블록의 health
 				}
-				//const auto NoiseValue = Noise->GetNoise(x + Position.X, y + Position.Y, z + Position.Z);
-				//if (NoiseValue >= 0)
-				//{
-				//	Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Air;
-				//}
-				//else
-				//{
-				//	Blocks[GetBlockIndex(x, y, z)] = BKEBlock::Stone;
-				//}
 			}
 		}
 	}
@@ -570,44 +422,67 @@ void ABKNaiveChunk::CreatePillarAtPosition(double x, double y, double z)
 
 void ABKNaiveChunk::CreateObjects(int32 x, int32 y, int32 z, FVector Position)
 {
-	// 나무를 생성할 위치 목록
-	TArray<FVector> positionsToCheck = {
-		{-20, -20, 6}, {20, 20, 6}, {-20, 20, 6}, {20, -20, 6},
-		//{0, -35, 1}, {0, 35, 1}, {-35, 0, 1}, {35, 0, 1},
-		{40, 40, 1}, {35, 44, 1}, {44, 35, 1}, {30, 48, 1}, {48, 30, 1},
-		{-40, 40, 1}, {-35, 44, 1}, {-44, 35, 1}, {-30, 48, 1}, {-48, 30, 1},
-		{40, -40, 1}, {35, -44, 1}, {44, -35, 1}, {30, -48, 1}, {48, -30, 1},
-		{-40, -40, 1}, {-35, -44, 1}, {-44, -35, 1}, {-30, -48, 1}, {-48, -30, 1}
-	};
-
-	// 각 위치에 나무를 생성
-	for (const FVector& offset : positionsToCheck)
+	USGameInstance* GameInstance = USGameInstance::GetMyInstance(this);
+	if (GameInstance)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Making Map... x:%f, y:%f, z:%f"), x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z);
-		if (x + offset.X - Position.X >= 0 && x + offset.X - Position.X < (float)Size
-			&& y + offset.Y - Position.Y >= 0 && y + offset.Y - Position.Y < (float)Size
-			&& z + offset.Z - Position.Z >= 0 && z + offset.Z - Position.Z < (float)Size)
+		if (GameInstance->selectedMap == 0)
 		{
-			
-			CreateTreeAtPosition(x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z);
+			// 나무를 생성할 위치 목록
+			TArray<FVector> positionsToCheck = {
+				{40, 40, 1}, {35, 44, 1}, {44, 35, 1}, {30, 48, 1}, {48, 30, 1},
+				{-40, 40, 1}, {-35, 44, 1}, {-44, 35, 1}, {-30, 48, 1}, {-48, 30, 1},
+				{40, -40, 1}, {35, -44, 1}, {44, -35, 1}, {30, -48, 1}, {48, -30, 1},
+				{-40, -40, 1}, {-35, -44, 1}, {-44, -35, 1}, {-30, -48, 1}, {-48, -30, 1},
+
+				{80, -10, 4}, {80, 10, 4}, {60, -10, 4}, {60, 10, 4},
+				{-80, -10, 4}, {-80, 10, 4}, {-60, -10, 4}, {-60, 10, 4},
+				{-10, 80, 4}, {-10, 80, 4}, {-10, 60, 4}, {10, 60, 4},
+				{-10, -80, 4}, {-10, -80, 4}, {-10, -60, 4}, {10, -60, 4},
+
+				{73, -3, 4}, {73, 3, 4}, {67, -3, 4}, {67, 3, 4},
+				{-73, -3, 4}, {-73, 3, 4}, {-67, -3, 4}, {-67, 3, 4},
+				{-3, 73, 4}, {-3, 73, 4}, {-3, 67, 4}, {3, 67, 4},
+				{-3, -73, 4}, {-3, -73, 4}, {-3, -67, 4}, {3, -67, 4}
+			};
+
+			// 각 위치에 나무를 생성
+			for (const FVector& offset : positionsToCheck)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Making Map... x:%f, y:%f, z:%f"), x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z);
+				if (x + offset.X - Position.X >= 0 && x + offset.X - Position.X < (float)Size
+					&& y + offset.Y - Position.Y >= 0 && y + offset.Y - Position.Y < (float)Size
+					&& z + offset.Z - Position.Z >= 0 && z + offset.Z - Position.Z < (float)Size)
+				{
+
+					CreateTreeAtPosition(x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z);
+				}
+			}
+		}
+		else if (GameInstance->selectedMap == 1)
+		{
+			// 얼음기둥을 생성할 위치 목록
+			TArray<FVector> positionsToCheckPillar = {
+				{80, -10, 4}, {80, 10, 4}, {60, -10, 4}, {60, 10, 4},
+				{-80, -10, 4}, {-80, 10, 4}, {-60, -10, 4}, {-60, 10, 4},
+				{-10, 80, 4}, {-10, 80, 4}, {-10, 60, 4}, {10, 60, 4},
+				{-10, -80, 4}, {-10, -80, 4}, {-10, -60, 4}, {10, -60, 4}
+			};
+
+			// 각 위치에 얼음기둥을 생성
+			for (const FVector& offset : positionsToCheckPillar)
+			{
+				if (x + offset.X - Position.X >= 0 && x + offset.X - Position.X < (float)Size
+					&& y + offset.Y - Position.Y >= 0 && y + offset.Y - Position.Y < (float)Size
+					&& z + offset.Z - Position.Z >= 0 && z + offset.Z - Position.Z < (float)Size)
+
+					CreatePillarAtPosition(x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z);
+			}
+		}
+		else
+		{
+
 		}
 	}
-
-	// 얼음기둥을 생성할 위치 목록
-	TArray<FVector> positionsToCheckPillar = {
-		{60, 10, 4}, {60, -10, 4}, {-65, 10, 4}, {-65, -10, 4}
-	};
-
-	// 각 위치에 얼음기둥을 생성
-	for (const FVector& offset : positionsToCheckPillar)
-	{
-		if (x + offset.X - Position.X >= 0 && x + offset.X - Position.X < (float)Size
-			&& y + offset.Y - Position.Y >= 0 && y + offset.Y - Position.Y < (float)Size
-			&& z + offset.Z - Position.Z >= 0 && z + offset.Z - Position.Z < (float)Size)
-
-			CreatePillarAtPosition(x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z);
-	}
-
 }
 
 void ABKNaiveChunk::GenerateMesh()
