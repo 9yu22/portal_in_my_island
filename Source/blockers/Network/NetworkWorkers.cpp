@@ -257,7 +257,7 @@ void FRecvWorker::ProcessPacket(uint8* packet)
             {
                 for (auto& p : Instance->Players) {
                     if (p->id == respawn.id) {
-                        p->health = respawn.hp;
+                        p->health = respawn.hp + 1.0;
                         FVector respawn_location(respawn.x, respawn.y, respawn.z);
                         FRotator respawn_Rotation = FRotator::ZeroRotator;
                         p->SetActorLocation(respawn_location);
