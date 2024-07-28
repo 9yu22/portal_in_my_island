@@ -232,6 +232,7 @@ void ABKChunkBase::SendModifiedBlockPacket(const FVector World_Position, const F
 			remove_block.nz = World_Normal.Z;
 
 			BKEBlock block = Block.block;
+			remove_block.collapsibleType = Block.CollapsibleType;
 			remove_block.blocktype = static_cast<int8>(block);
 
 			instance->Socket->Send((uint8*)&remove_block, sizeof(remove_block), BytesSent);
@@ -293,7 +294,7 @@ void ABKChunkBase::RemoveBlock(const SC_REMOVE_BLOCK_PACKET& remove_block)
 	FVector normal{ remove_block.nx, remove_block.ny, remove_block.nz };
 	FBlockk Block;
 	Block.block = static_cast<BKEBlock>(remove_block.blocktype);
-
+	//Block.CollapsibleType = remove_block.collapsibleType;
 
 	bool modifySuccess = ModifyVoxelData(Position, Block);
 
@@ -305,11 +306,11 @@ void ABKChunkBase::RemoveBlock(const SC_REMOVE_BLOCK_PACKET& remove_block)
 
 		ApplyMesh();
 
-		CreateBlockDestroyEffect(world_index, normal);
+		CreateBlockDestroyEffect(world_index, normal, remove_block.collapsibleType);
 	}
 }
 
-void ABKChunkBase::CreateBlockDestroyEffect(const FVector& world_index, const FVector& normal) // 블록이 사라진 자리에 엑터 스폰 및 파괴 이펙트 생성->컨트롤러 코드 가져옴
+void ABKChunkBase::CreateBlockDestroyEffect(const FVector& world_index, const FVector& normal, uint8 collapsibleType) // 블록이 사라진 자리에 엑터 스폰 및 파괴 이펙트 생성->컨트롤러 코드 가져옴
 {
 	// 이미 자기 자신 청크에 대한 함수이다. 청크를 얻어올 이유가 없다. this를 넘겨야 하나?-> 자기 자신에 대한 청크 월드를 가져온다.
 	ABKChunkWorld* OwningWorld = ABKChunkWorld::FindOwningChunkWorld(this);
@@ -333,13 +334,34 @@ void ABKChunkBase::CreateBlockDestroyEffect(const FVector& world_index, const FV
 		FVector SpawnLocationV = FVector(static_cast<float>(SpawnLocationInt.X), static_cast<float>(SpawnLocationInt.Y), static_cast<float>(SpawnLocationInt.Z));
 		FRotator SpawnRotation = FRotator::ZeroRotator; // 기본 회전값 사용
 
-		UClass* CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Stone.BP_CollapsibleBlock_Stone_C"));
-		if (CollapsibleBlockName == "Amethyst")
+		UClass* CollapsibleBlockClass;
+		switch (collapsibleType) {
+		case 0:
+			CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Stone.BP_CollapsibleBlock_Stone_C"));
+			break;
+
+		case 1:
 			CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Amethyst.BP_CollapsibleBlock_Amethyst_C"));
-		else if (CollapsibleBlockName == "Ruby")
+			break;
+
+		case 2:
 			CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Ruby.BP_CollapsibleBlock_Ruby_C"));
-		else if (CollapsibleBlockName == "Diamond")
+			break;
+			
+		case 3:
 			CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Diamond.BP_CollapsibleBlock_Diamond_C"));
+			break;
+
+		default:
+			CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Stone.BP_CollapsibleBlock_Stone_C"));
+			break;
+		}
+		
+		//UClass* CollapsibleBlockClass1 = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Stone.BP_CollapsibleBlock_Stone_C"));
+		//UClass* CollapsibleBlockClass2 = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Amethyst.BP_CollapsibleBlock_Amethyst_C"));
+		//UClass* CollapsibleBlockClass3 = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Ruby.BP_CollapsibleBlock_Ruby_C"));
+		//UClass* CollapsibleBlockClass4 = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Diamond.BP_CollapsibleBlock_Diamond_C"));
+		
 		
 		if (CollapsibleBlockClass)
 		{

@@ -168,6 +168,7 @@ void process_packet(int c_id, char* packet)
 	case CS_REMOVE_BLOCK: {
 		CS_REMOVE_BLOCK_PACKET* p = reinterpret_cast<CS_REMOVE_BLOCK_PACKET*>(packet);
 		std::cout << "블록 삭제 ->Chunk Index: " << p->chunk_index << ", Indices: (" << p->ix << ", " << p->iy << ", " << p->iz << ")" << std::endl;
+		std::cout << "폭파 블럭 타입: " << p->collapsibleType;
 	/*		if (map.RemoveBlockToMap(p)) {
 				for (auto& pl : clients)
 					if (true == pl.b_use)

@@ -72,7 +72,7 @@ public:
 	void ProcessBlock(const BlockInfo& Block);
 	void AddBlock(const SC_ADD_BLOCK_PACKET& add_block);
 	void RemoveBlock(const SC_REMOVE_BLOCK_PACKET& remove_block);
-	void CreateBlockDestroyEffect(const FVector& world_index, const FVector& normal);
+	void CreateBlockDestroyEffect(const FVector& world_index, const FVector& normal, uint8 collapsibleType);
 	int8 GetMyChunkIndex() const;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Block")
