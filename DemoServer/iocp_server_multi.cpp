@@ -59,42 +59,42 @@ void process_packet(int c_id, char* packet)
 	static CS_ADD_BLOCK_PACKET prev_add;
 	static CS_REMOVE_BLOCK_PACKET prev_remove;
 
-	//if (!is_timer) {
-	//	item_manager.InitStartTime();
-	//	is_timer = true;
-	//}
+	if (!is_timer) {
+		item_manager.InitStartTime();
+		is_timer = true;
+	}
 
-	//// 일단 임시로 여기에..
-	//item_manager.CalculateItemSpawnTime(); // 시간 계산
-	//Item_type type = item_manager.CheckCanSpawn(); // 스폰 시간이 된 아이템을 반환
+	// 일단 임시로 여기에..
+	item_manager.CalculateItemSpawnTime(); // 시간 계산
+	Item_type type = item_manager.CheckCanSpawn(); // 스폰 시간이 된 아이템을 반환
 
-	//if (type != NONE) { // 모든 클라에게 해당 아이템(4개 위치) 전송
-	//	for (int i = 0; i < 4; i++) {
-	//		Item item(++set_item_id, type, i);
+	if (type != NONE) { // 모든 클라에게 해당 아이템(4개 위치) 전송
+		for (int i = 0; i < 4; i++) {
+			Item item(++set_item_id, type, i);
 
-	//		for (auto& pl : clients) {
-	//			if (false == pl.b_use) continue;
-	//			pl.send_add_item_packet(item);
-	//			//switch (item.item_type) {
-	//			//case STONE:
-	//			//	std::cout << "클라이언트 " <<pl.m_player.m_id << "에게 돌 전송" << std::endl;
-	//			//	break;
+			for (auto& pl : clients) {
+				if (false == pl.b_use) continue;
+				pl.send_add_item_packet(item);
+				//switch (item.item_type) {
+				//case STONE:
+				//	std::cout << "클라이언트 " <<pl.m_player.m_id << "에게 돌 전송" << std::endl;
+				//	break;
 
-	//			//case AMETHYST:
-	//			//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 자수정 전송" << std::endl;
-	//			//	break;
+				//case AMETHYST:
+				//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 자수정 전송" << std::endl;
+				//	break;
 
-	//			//case RUBY:
-	//			//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 루비 전송" << std::endl;
-	//			//	break;
+				//case RUBY:
+				//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 루비 전송" << std::endl;
+				//	break;
 
-	//			//case DIAMOND:
-	//			//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 다이아 전송" << std::endl;
-	//			//	break;
-	//			//}
-	//		}
-	//	}
-	//}
+				//case DIAMOND:
+				//	std::cout << "클라이언트 " << pl.m_player.m_id << "에게 다이아 전송" << std::endl;
+				//	break;
+				//}
+			}
+		}
+	}
 
 	//for (int i = 0; i < 4; i++)
 	//{
@@ -256,8 +256,8 @@ void process_packet(int c_id, char* packet)
 	}
 
 	case CS_STRESS_TEST: {
-		//CS_STRESS_TEST_PACKET* p = reinterpret_cast<CS_STRESS_TEST_PACKET*>(packet);
-		//clients[c_id].m_player.last_move_time = p->move_time;
+		CS_STRESS_TEST_PACKET* p = reinterpret_cast<CS_STRESS_TEST_PACKET*>(packet);
+		clients[c_id].m_player.last_move_time = p->move_time;
 		////std::cout << p->move_time << std::endl; // -> 잘 옴
 		//clients[c_id].m_player.SetWorldLocation(p->x, p->y, p->z);
 		//clients[c_id].m_player.SetWorldRotation(p->pitch, p->yaw, p->roll);	

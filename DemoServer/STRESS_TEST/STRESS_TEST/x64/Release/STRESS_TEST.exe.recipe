@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\givoo\Documents\GitHub\portal_in_my_island\DemoServer\STRESS_TEST\STRESS_TEST\x64\Release\STRESS_TEST.exe</FullPath>
+      <FullPath>C:\Users\givoo\source\repos\portal_in_my_island\DemoServer\STRESS_TEST\x64\Release\STRESS_TEST.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
