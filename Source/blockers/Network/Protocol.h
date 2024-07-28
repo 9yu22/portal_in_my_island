@@ -90,6 +90,7 @@ struct SC_MOVE_PLAYER_PACKET {
 struct SC_ADD_BLOCK_PACKET {
     uint8 size;
     int8 type;
+    int8 block_hp;
     int chunk_index;
     int ix, iy, iz;
     int8 blocktype;
@@ -98,6 +99,7 @@ struct SC_ADD_BLOCK_PACKET {
 struct CS_ADD_BLOCK_PACKET {
     uint8 size;
     int8 type;
+    int8 block_hp;
     int chunk_index;
     int ix, iy, iz;
     int8 blocktype;
@@ -106,6 +108,7 @@ struct CS_ADD_BLOCK_PACKET {
 struct SC_REMOVE_BLOCK_PACKET {
     uint8 size;
     int8 type;
+    //int8 block_hp;
     int chunk_index;
     int ix, iy, iz;
     float wx, wy, wz; // 히트된 부분의 월드 좌표 벡터
@@ -116,6 +119,7 @@ struct SC_REMOVE_BLOCK_PACKET {
 struct CS_REMOVE_BLOCK_PACKET {
     uint8 size;
     int8 type;
+    //int8 block_hp;
     int chunk_index;
     int ix, iy, iz;
     float wx, wy, wz; // 히트된 부분의 월드 좌표 벡터

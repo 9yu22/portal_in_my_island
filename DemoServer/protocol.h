@@ -120,6 +120,7 @@ struct SC_MOVE_PLAYER_PACKET {
 struct SC_ADD_BLOCK_PACKET {
     u_char size;
     char type;
+    char hp;
     int chunk_index;
     int ix, iy, iz;
     char blocktype;
@@ -128,6 +129,7 @@ struct SC_ADD_BLOCK_PACKET {
 struct CS_ADD_BLOCK_PACKET {
     u_char size;
     char type;
+    char hp;
     int chunk_index;
     int ix, iy, iz;
     char blocktype;
