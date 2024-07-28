@@ -24,8 +24,8 @@ struct FBlockk {
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	BKEDirection backDir;
 
-	UPROPERTY(EditAnywhere)
-	int8 health;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 health;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isCollapsible;
@@ -55,6 +55,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Chunk")
 	bool SendModifiedVoxel(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const FBlockk Block);
+
+	UFUNCTION(BlueprintCallable, Category = "Chunk")
+	void SendAddBlockPacket(const FIntVector Position, const FBlockk Block);
+
+	UFUNCTION(BlueprintCallable, Category = "Chunk")
+	void SendModifiedBlockPacket(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const FBlockk Block);
 
 	// Reference to the owning ChunkWorld
 	UPROPERTY()
