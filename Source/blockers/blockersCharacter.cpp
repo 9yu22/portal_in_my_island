@@ -122,7 +122,7 @@ void AblockersCharacter::Tick(float DeltaTime) {
 
 	Super::Tick(DeltaTime);
 
-	if (health < 1.f && health > -9.f) {
+	if (health < 1.f) {
 		health = MaxHealth;
 	}
 
