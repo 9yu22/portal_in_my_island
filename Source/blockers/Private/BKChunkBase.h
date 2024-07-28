@@ -14,12 +14,32 @@ class FastNoiseLite;
 class UProceduralMeshComponent;
 class ABKChunkWorld;
 
+USTRUCT(BlueprintType)
+struct FBlockk {
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	BKEBlock block;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	BKEDirection backDir;
+
+	UPROPERTY(EditAnywhere)
+	int8 health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool isCollapsible;
+};
+
 UCLASS(ABSTRACT)
 class BLOCKERS_API ABKChunkBase : public AActor
 {
 	GENERATED_BODY()
 
-	public:
+public:
+	
+
+public:
 	// Sets default values for this actor's properties
 	ABKChunkBase();
 
@@ -34,7 +54,7 @@ class BLOCKERS_API ABKChunkBase : public AActor
 	bool ModifyVoxel(const FIntVector Position, const BKEBlock Block);
 
 	UFUNCTION(BlueprintCallable, Category = "Chunk")
-	bool SendModifiedVoxel(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const BKEBlock Block);
+	bool SendModifiedVoxel(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const FBlockk Block);
 
 	// Reference to the owning ChunkWorld
 	UPROPERTY()

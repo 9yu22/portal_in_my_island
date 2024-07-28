@@ -31,15 +31,8 @@ protected:
 	void CreateTreeAtPosition(double x, double y, double z);
 	void CreateObjects(int32 x, int32 y, int32 z, FVector Position);
 
-	struct Block {
-		BKEBlock block;
-		BKEDirection backDir;
-		int8 health;
-		bool isCollapsible;
-	};
-
 public:
-	TArray<Block> Blocks;
+	TArray<FBlockk> Blocks;
 
 	// 맵 정보를 알아내 서버에 파일로 저장하기 위해 만든 두 함수
 	void GetMapList();
@@ -66,7 +59,7 @@ private:
 	};
 
 	bool Check(FVector Position) const;
-	void CreateFace(const Block Block, BKEDirection Direction, FVector Position);
+	void CreateFace(const FBlockk Block, BKEDirection Direction, FVector Position);
 	TArray<FVector> GetFaceVertices(BKEDirection Direction, FVector Position) const;
 	TArray<FVector> GetStairFaceVertices(BKEDirection Direction, const FVector Position, const FVector Ratio, const FVector relationalPosition) const;
 	FVector GetPositionInDirection(BKEDirection Direction, FVector Position) const;
