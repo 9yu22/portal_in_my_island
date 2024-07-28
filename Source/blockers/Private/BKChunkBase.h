@@ -31,7 +31,7 @@ struct FBlockk {
 	bool isCollapsible;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	uint8 CollapsibleType;
+	int32 CollapsibleType;
 };
 
 UCLASS(ABSTRACT)
