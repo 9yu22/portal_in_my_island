@@ -582,7 +582,7 @@ bool ABKNaiveChunk::Check(const FVector Position) const
 	return Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)].block == BKEBlock::Air || Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)].block == BKEBlock::Stair || Blocks[GetBlockIndex(Position.X, Position.Y, Position.Z)].block == BKEBlock::Leaves;
 }
 
-void ABKNaiveChunk::CreateFace(const Block Block, const BKEDirection Direction, const FVector Position)
+void ABKNaiveChunk::CreateFace(const FBlockk Block, const BKEDirection Direction, const FVector Position)
 {
 	const auto Normal = GetNormal(Direction);
 	const auto Color = FColor(0, 0, 0, GetTextureIndex(Block.block, Normal));

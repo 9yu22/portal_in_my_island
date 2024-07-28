@@ -93,7 +93,7 @@ bool ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
 	return removingSuccess;
 }
 
-bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const BKEBlock Block)
+bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const FBlockk Block)
 {
 	// 블록 수정 패킷이 여러번 보내지는 것을 방지
 	static FIntVector prevPosition;
@@ -103,14 +103,14 @@ bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector
 	}
 	else {
 		prevPosition = Position;
-		prevBlock = Block;
+		prevBlock = Block.block;
 	}
 
 	// 조건에 따라 일부 인자는 안쓰인다. 함수를 합쳐놔서 이런 구조로 되어있다.
 	USGameInstance* instance = USGameInstance::GetMyInstance(this);
 	if (instance && instance->Socket != nullptr) {
 		int BytesSent = 0;
-		if (Block != BKEBlock::Air) // 블록 추가에는 인덱스와 블록 타입만 쓰인다.
+		if (Block.block != BKEBlock::Air) // 블록 추가에는 인덱스와 블록 타입만 쓰인다.
 		{
 			int8 index = GetMyChunkIndex();
 			CS_ADD_BLOCK_PACKET new_block;
@@ -121,7 +121,7 @@ bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector
 			new_block.ix = Position.X;
 			new_block.iy = Position.Y;
 			new_block.iz = Position.Z;
-			BKEBlock block = Block;
+			BKEBlock block = Block.block;
 			new_block.blocktype = static_cast<int8>(block);
 
 			instance->Socket->Send((uint8*)&new_block, sizeof(new_block), BytesSent);
@@ -150,7 +150,7 @@ bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector
 			remove_block.ny = World_Normal.Y;
 			remove_block.nz = World_Normal.Z;
 
-			BKEBlock block = Block;
+			BKEBlock block = Block.block;
 			remove_block.blocktype = static_cast<int8>(block);
 
 			instance->Socket->Send((uint8*)&remove_block, sizeof(remove_block), BytesSent);
@@ -160,7 +160,7 @@ bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector
 		}
 	}
 	if(instance && instance->Socket == nullptr) {
-		bool removingSuccess = ModifyVoxel(Position, Block);
+		bool removingSuccess = ModifyVoxel(Position, Block.block);
 		return removingSuccess;
 	}
 	//ModifyVoxel(Position, Block);
