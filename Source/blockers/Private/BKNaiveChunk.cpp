@@ -63,6 +63,8 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				// 기본 맵은 부술 수 없음.
 				Blocks[GetBlockIndex(x, y, z)].isCollapsible = false;
 
+				Blocks[GetBlockIndex(x, y, z)].health = -2;		// 부술 수 없는 블록의 health
+
 				BKEBlock groundBlock;
 				USGameInstance* GameInstance = USGameInstance::GetMyInstance(this);
 				if (GameInstance->selectedMap == 0)
@@ -444,6 +446,7 @@ void ABKNaiveChunk::Generate3DHeightMap(const FVector Position)
 				}*/
 				else {
 					Blocks[GetBlockIndex(x, y, z)].block = BKEBlock::Air;
+					Blocks[GetBlockIndex(x, y, z)].health = -1;		// 부술 수 있는 블록의 health
 				}
 				//const auto NoiseValue = Noise->GetNoise(x + Position.X, y + Position.Y, z + Position.Z);
 				//if (NoiseValue >= 0)
@@ -1023,12 +1026,56 @@ bool ABKNaiveChunk::ModifyVoxelData(const FIntVector Position, const BKEBlock Bl
 	if (Block == BKEBlock::Air) {
 		if (Blocks[Index].isCollapsible == false) { return false; }
 		else {
+			/*if (Blocks[Index].health > 0) {
+				Blocks[Index].health -= 20;
+			}*/
 			Blocks[Index].block = Block;
+			Blocks[Index].health = -1;
+
 			return true;
+			
+			/*if (Blocks[Index].health <= 0) {
+				Blocks[Index].block = Block;
+				return true;
+			}
+			else if (Blocks[Index].health <= 25) {
+				if (Blocks[Index].block == BKEBlock::StoneB2)
+					Blocks[Index].block = BKEBlock::StoneB3;
+				else if (Blocks[Index].block == BKEBlock::AmethystB2)
+					Blocks[Index].block = BKEBlock::AmethystB3;
+				else if (Blocks[Index].block == BKEBlock::RubyB2)
+					Blocks[Index].block = BKEBlock::RubyB3;
+				else if (Blocks[Index].block == BKEBlock::DiamondB2)
+					Blocks[Index].block = BKEBlock::DiamondB3;
+			}
+			else if (Blocks[Index].health <= 50) {
+				if (Blocks[Index].block == BKEBlock::StoneB1)
+					Blocks[Index].block = BKEBlock::StoneB2;
+				else if (Blocks[Index].block == BKEBlock::AmethystB1)
+					Blocks[Index].block = BKEBlock::AmethystB2;
+				else if (Blocks[Index].block == BKEBlock::RubyB1)
+					Blocks[Index].block = BKEBlock::RubyB2;
+				else if (Blocks[Index].block == BKEBlock::DiamondB1)
+					Blocks[Index].block = BKEBlock::DiamondB2;
+			}
+			else if (Blocks[Index].health <= 75) {
+				if (Blocks[Index].block == BKEBlock::Stone)
+					Blocks[Index].block = BKEBlock::StoneB1;
+				else if (Blocks[Index].block == BKEBlock::Amethyst)
+					Blocks[Index].block = BKEBlock::AmethystB1;
+				else if (Blocks[Index].block == BKEBlock::Ruby)
+					Blocks[Index].block = BKEBlock::RubyB1;
+				else if (Blocks[Index].block == BKEBlock::Diamond)
+					Blocks[Index].block = BKEBlock::DiamondB1;
+			}*/
 		}
 	}
 	else {
-		Blocks[Index].isCollapsible = true;
+		if (Blocks[Index].health == -1)
+		{
+			Blocks[Index].isCollapsible = true;
+			Blocks[Index].health = 100;
+		}
 		Blocks[Index].block = Block;
 		return true;
 	}
@@ -1038,6 +1085,58 @@ bool ABKNaiveChunk::ModifyVoxelData(const FIntVector Position, const BKEBlock Bl
 int ABKNaiveChunk::GetBlockIndex(const int X, const int Y, const int Z) const
 {
 	return Z * Size * Size + Y * Size + X;
+}
+
+BKEBlock ABKNaiveChunk::GetBreakingBlock(FIntVector Position)
+{
+	const int Index = GetBlockIndex(Position.X, Position.Y, Position.Z);
+
+	if (Blocks[Index].health > 0) {
+		Blocks[Index].health -= 20;
+	}
+
+	if (Blocks[Index].health <= 0) {
+		if (Blocks[Index].block == BKEBlock::StoneB3)
+			CollapsibleBlockName = "Stone";
+		else if (Blocks[Index].block == BKEBlock::AmethystB3)
+			CollapsibleBlockName = "Amethyst";
+		else if (Blocks[Index].block == BKEBlock::RubyB3)
+			CollapsibleBlockName = "Ruby";
+		else if (Blocks[Index].block == BKEBlock::DiamondB3)
+			CollapsibleBlockName = "Diamond";
+		return BKEBlock::Air;
+	}
+	else if (Blocks[Index].health <= 25) {
+		if (Blocks[Index].block == BKEBlock::StoneB2)
+			return BKEBlock::StoneB3;
+		else if (Blocks[Index].block == BKEBlock::AmethystB2)
+			return BKEBlock::AmethystB3;
+		else if (Blocks[Index].block == BKEBlock::RubyB2)
+			return BKEBlock::RubyB3;
+		else if (Blocks[Index].block == BKEBlock::DiamondB2)
+			return BKEBlock::DiamondB3;
+	}
+	else if (Blocks[Index].health <= 50) {
+		if (Blocks[Index].block == BKEBlock::StoneB1)
+			return BKEBlock::StoneB2;
+		else if (Blocks[Index].block == BKEBlock::AmethystB1)
+			return BKEBlock::AmethystB2;
+		else if (Blocks[Index].block == BKEBlock::RubyB1)
+			return BKEBlock::RubyB2;
+		else if (Blocks[Index].block == BKEBlock::DiamondB1)
+			return BKEBlock::DiamondB2;
+	}
+	else if (Blocks[Index].health <= 75) {
+		if (Blocks[Index].block == BKEBlock::Stone)
+			return BKEBlock::StoneB1;
+		else if (Blocks[Index].block == BKEBlock::Amethyst)
+			return BKEBlock::AmethystB1;
+		else if (Blocks[Index].block == BKEBlock::Ruby)
+			return BKEBlock::RubyB1;
+		else if (Blocks[Index].block == BKEBlock::Diamond)
+			return BKEBlock::DiamondB1;
+	}
+	return Blocks[Index].block;
 }
 
 int ABKNaiveChunk::GetTextureIndex(BKEBlock Block, FVector Normal) const
@@ -1088,6 +1187,42 @@ int ABKNaiveChunk::GetTextureIndex(BKEBlock Block, FVector Normal) const
 		break;
 	case BKEBlock::HellGround:
 		return 14;
+		break;
+	case BKEBlock::StoneB1:
+		return 15;
+		break;
+	case BKEBlock::StoneB2:
+		return 16;
+		break;
+	case BKEBlock::StoneB3:
+		return 17;
+		break;
+	case BKEBlock::AmethystB1:
+		return 18;
+		break;
+	case BKEBlock::AmethystB2:
+		return 19;
+		break;
+	case BKEBlock::AmethystB3:
+		return 20;
+		break;
+	case BKEBlock::RubyB1:
+		return 21;
+		break;
+	case BKEBlock::RubyB2:
+		return 22;
+		break;
+	case BKEBlock::RubyB3:
+		return 23;
+		break;
+	case BKEBlock::DiamondB1:
+		return 24;
+		break;
+	case BKEBlock::DiamondB2:
+		return 25;
+		break;
+	case BKEBlock::DiamondB3:
+		return 26;
 		break;
 	default:
 		return 255;

@@ -34,6 +34,7 @@ protected:
 	struct Block {
 		BKEBlock block;
 		BKEDirection backDir;
+		int8 health;
 		bool isCollapsible;
 	};
 
@@ -71,6 +72,9 @@ private:
 	FVector GetPositionInDirection(BKEDirection Direction, FVector Position) const;
 	FVector GetNormal(BKEDirection Direction) const;
 	int GetBlockIndex(int X, int Y, int Z) const;
+
+	UFUNCTION(BlueprintPure, Category="BlockInfo")
+	BKEBlock GetBreakingBlock(FIntVector Position);	// 인자: 블록 포지션 (월드 포지션 X)
 
 	int GetTextureIndex(BKEBlock Block, FVector Normal) const;
 

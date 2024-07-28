@@ -5,6 +5,8 @@
 #include "BKChunkWorld.h"
 #include "BKVoxelFunctionLibrary.h"	// for localBlockPosition
 #include "CollapsibleBlockComponent.h"	// for collapsible Block
+#include "Materials/MaterialInstanceDynamic.h"
+
 
 #include "Voxel/BKEnum.h"
 #include "ProceduralMeshComponent.h"
@@ -82,31 +84,27 @@ bool ABKChunkBase::ModifyVoxel(const FIntVector Position, const BKEBlock Block)
 	// 서버 연결 안되어도 블록 설치는 가능하게 일단 아래 코드는 유지
 	bool removingSuccess = ModifyVoxelData(Position, Block);
 
-	if (removingSuccess)
-	{
-		ClearMesh();
+	ClearMesh();
 
-		GenerateMesh();
+	GenerateMesh();
 
-		ApplyMesh();
+	ApplyMesh();
 
-		return true;
-	}
-	return false;
+	return removingSuccess;
 }
 
 bool ABKChunkBase::SendModifiedVoxel(const FVector World_Position, const FVector World_Normal, const FIntVector Position, const BKEBlock Block)
 {
 	// 블록 수정 패킷이 여러번 보내지는 것을 방지
-	//static FIntVector prevPosition;
-	//static BKEBlock prevBlock;
-	//if (memcmp(&prevPosition, &Position, sizeof(FIntVector) == 0 && memcmp(&prevPosition, &Position, sizeof(FIntVector) == 0))) {
-	//	return false;
-	//}
-	//else {
-	//	prevPosition = Position;
-	//	prevBlock = Block;
-	//}
+	static FIntVector prevPosition;
+	static BKEBlock prevBlock;
+	if (memcmp(&prevPosition, &Position, sizeof(FIntVector) == 0 && memcmp(&prevPosition, &Position, sizeof(FIntVector) == 0))) {
+		return false;
+	}
+	else {
+		prevPosition = Position;
+		prevBlock = Block;
+	}
 
 	// 조건에 따라 일부 인자는 안쓰인다. 함수를 합쳐놔서 이런 구조로 되어있다.
 	USGameInstance* instance = USGameInstance::GetMyInstance(this);
@@ -257,7 +255,14 @@ void ABKChunkBase::CreateBlockDestroyEffect(const FVector& world_index, const FV
 		FVector SpawnLocationV = FVector(static_cast<float>(SpawnLocationInt.X), static_cast<float>(SpawnLocationInt.Y), static_cast<float>(SpawnLocationInt.Z));
 		FRotator SpawnRotation = FRotator::ZeroRotator; // 기본 회전값 사용
 
-		UClass* CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock.BP_CollapsibleBlock_C"));
+		UClass* CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Stone.BP_CollapsibleBlock_Stone_C"));
+		if (CollapsibleBlockName == "Amethyst")
+			CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Amethyst.BP_CollapsibleBlock_Amethyst_C"));
+		else if (CollapsibleBlockName == "Ruby")
+			CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Ruby.BP_CollapsibleBlock_Ruby_C"));
+		else if (CollapsibleBlockName == "Diamond")
+			CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Diamond.BP_CollapsibleBlock_Diamond_C"));
+		
 		if (CollapsibleBlockClass)
 		{
 			FActorSpawnParameters SpawnParams;
