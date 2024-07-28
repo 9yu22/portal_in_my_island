@@ -14,7 +14,7 @@ enum class BKEBlock : uint8
 	AmethystB1, AmethystB2, AmethystB3,
 	RubyB1, RubyB2, RubyB3,
 	DiamondB1, DiamondB2, DiamondB3,
-	IcePillar
+	IcePillar, HellPillar, JackOLantern
 };
 
 UENUM(BlueprintType)

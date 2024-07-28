@@ -365,7 +365,7 @@ void ABKNaiveChunk::CreateTreeAtPosition(double x, double y, double z)
 	}
 }
 
-void ABKNaiveChunk::CreatePillarAtPosition(double x, double y, double z)
+void ABKNaiveChunk::CreatePillarAtPosition(double x, double y, double z, BKEBlock block)
 {
 	// 기본 기둥을 구성하는 좌표
 	TArray<FVector> baseCoordinates = {
@@ -404,7 +404,7 @@ void ABKNaiveChunk::CreatePillarAtPosition(double x, double y, double z)
 		int32 targetZ = z + coord.Z;
 
 		if (targetX >= 0 && targetY >= 0 && targetZ >= 0)
-			Blocks[GetBlockIndex(targetX, targetY, targetZ)].block = BKEBlock::IcePillar;
+			Blocks[GetBlockIndex(targetX, targetY, targetZ)].block = block;
 	}
 
 	// 추가 블록 생성
@@ -415,8 +415,18 @@ void ABKNaiveChunk::CreatePillarAtPosition(double x, double y, double z)
 		int32 targetZ = z + coord.Z;
 
 		if (targetX >= 0 && targetY >= 0 && targetZ >= 0)
-			Blocks[GetBlockIndex(targetX, targetY, targetZ)].block = BKEBlock::IcePillar;
+			Blocks[GetBlockIndex(targetX, targetY, targetZ)].block = block;
 	}
+}
+
+void ABKNaiveChunk::CreateJackOLanternAtPosition(double x, double y, double z)
+{
+	int32 targetX = x;
+	int32 targetY = y;
+	int32 targetZ = z;
+
+	if (targetX >= 0 && targetY >= 0 && targetZ >= 0)
+		Blocks[GetBlockIndex(targetX, targetY, targetZ)].block = BKEBlock::JackOLantern;
 }
 
 
@@ -475,12 +485,43 @@ void ABKNaiveChunk::CreateObjects(int32 x, int32 y, int32 z, FVector Position)
 					&& y + offset.Y - Position.Y >= 0 && y + offset.Y - Position.Y < (float)Size
 					&& z + offset.Z - Position.Z >= 0 && z + offset.Z - Position.Z < (float)Size)
 
-					CreatePillarAtPosition(x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z);
+					CreatePillarAtPosition(x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z, BKEBlock::IcePillar);
 			}
 		}
 		else
 		{
+			// 얼음기둥을 생성할 위치 목록
+			TArray<FVector> positionsToCheckPillar = {
+				{80, -10, 4}, {80, 10, 4}, {60, -10, 4}, {60, 10, 4},
+				{-80, -10, 4}, {-80, 10, 4}, {-60, -10, 4}, {-60, 10, 4},
+				{-10, 80, 4}, {-10, 80, 4}, {-10, 60, 4}, {10, 60, 4},
+				{-10, -80, 4}, {-10, -80, 4}, {-10, -60, 4}, {10, -60, 4}
+			};
 
+			// 각 위치에 기둥을 생성
+			for (const FVector& offset : positionsToCheckPillar)
+			{
+				if (x + offset.X - Position.X >= 0 && x + offset.X - Position.X < (float)Size
+					&& y + offset.Y - Position.Y >= 0 && y + offset.Y - Position.Y < (float)Size
+					&& z + offset.Z - Position.Z >= 0 && z + offset.Z - Position.Z < (float)Size)
+
+					CreatePillarAtPosition(x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z, BKEBlock::HellPillar);
+			}
+
+			// 얼음기둥을 생성할 위치 목록
+			TArray<FVector> positionsToCheck = {
+				{70, 0, 4}, {0, 70, 4}, {-70, 0, 4}, {0, -70, 4}
+			};
+			
+			// 각 위치에 기둥을 생성
+			for (const FVector& offset : positionsToCheck)
+			{
+				if (x + offset.X - Position.X >= 0 && x + offset.X - Position.X < (float)Size
+					&& y + offset.Y - Position.Y >= 0 && y + offset.Y - Position.Y < (float)Size
+					&& z + offset.Z - Position.Z >= 0 && z + offset.Z - Position.Z < (float)Size)
+
+					CreateJackOLanternAtPosition(x + offset.X - Position.X, y + offset.Y - Position.Y, z + offset.Z - Position.Z);
+			}
 		}
 	}
 }
@@ -1171,6 +1212,14 @@ int ABKNaiveChunk::GetTextureIndex(BKEBlock Block, FVector Normal) const
 		break;
 	case BKEBlock::IcePillar:
 		return 27;
+		break;
+	case BKEBlock::HellPillar:
+		return 28;
+		break;
+	case BKEBlock::JackOLantern:
+		if (Normal == FVector::UpVector || Normal == FVector::DownVector) return 29;
+		if (Normal == FVector::ForwardVector) return 31;
+		return 30;
 		break;
 	default:
 		return 255;
