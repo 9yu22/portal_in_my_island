@@ -3,7 +3,7 @@
 Player::Player()
 {
 	m_id = -1;
-	m_hp = 101.f;
+	m_hp = 100.f;
 
 	m_rotation.pitch = 0.f;
 	m_rotation.yaw = 0.f;

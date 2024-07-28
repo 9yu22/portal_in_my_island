@@ -154,7 +154,7 @@ void Session::send_respawn_packet(Player player)
 	respawn.size = sizeof(SC_RESPAWN_PACKET);
 	respawn.type = SC_RESPAWN;
 	respawn.id = player.m_id;
-	respawn.hp = 101.f;
+	respawn.hp = 100.f;
 	respawn.x = player.respawn_location.x;
 	respawn.y = player.respawn_location.y;
 	respawn.z = player.respawn_location.z;
