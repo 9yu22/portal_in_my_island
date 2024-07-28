@@ -288,22 +288,22 @@ int main()
 				case 0:
 					clients[client_id].m_player.SetWorldLocation(7000.f, 7000.f, 1100.f);
 					clients[client_id].m_player.SetRespawnLocation(7000.f, 7000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(7500.f, 7500.f, 300.f);
+					clients[client_id].m_player.portal.SetWorldLocation(6500.f, 6500.f, 300.f);
 					break;
 				case 1:
 					clients[client_id].m_player.SetWorldLocation(-7000.f, 7000.f, 1100.f);
 					clients[client_id].m_player.SetRespawnLocation(-7000.f, 7000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(-7500.f, 7500.f, 300.f);
+					clients[client_id].m_player.portal.SetWorldLocation(-6500.f, 6500.f, 300.f);
 					break;
 				case 2:
 					clients[client_id].m_player.SetWorldLocation(7000.f, -7000.f, 1100.f);
 					clients[client_id].m_player.SetRespawnLocation(7000.f, -7000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(7500.f, -7500.f, 300.f);
+					clients[client_id].m_player.portal.SetWorldLocation(6500.f, -6500.f, 300.f);
 					break;
 				case 3:
 					clients[client_id].m_player.SetWorldLocation(-7000.f, -7000.f, 1100.f);
 					clients[client_id].m_player.SetRespawnLocation(-7000.f, -7000.f, 1100.f);
-					clients[client_id].m_player.portal.SetWorldLocation(-7500.f, -7500.f, 300.f);
+					clients[client_id].m_player.portal.SetWorldLocation(-6500.f, -6500.f, 300.f);
 					break;
 				}
 
