@@ -29,15 +29,15 @@ struct FBlockk {
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isCollapsible;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	uint8 CollapsibleType;
 };
 
 UCLASS(ABSTRACT)
 class BLOCKERS_API ABKChunkBase : public AActor
 {
 	GENERATED_BODY()
-
-public:
-	
 
 public:
 	// Sets default values for this actor's properties
