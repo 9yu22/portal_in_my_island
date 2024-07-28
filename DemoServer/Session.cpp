@@ -97,6 +97,7 @@ void Session::send_player_hp_packet(Player player)
 	change_hp.type = SC_CHANGE_PLAYER_HP;
 	change_hp.hp = player.m_hp;
 	change_hp.id = player.m_id;
+	std::cout << "플레이어 " << player.m_id << "의 hp: " << player.m_hp << " 전송" << std::endl;
 	do_send(&change_hp);
 }
 
@@ -120,6 +121,7 @@ void Session::send_portal_hp_packet(Portal portal)
 	change_hp.type = SC_CHANGE_PORTAL_HP;
 	change_hp.hp = portal.m_hp;
 	change_hp.id = portal.m_id;
+	std::cout << "플레이어 " << portal.m_id << "의 Portal hp: " << portal.m_hp << " 전송" << std::endl;
 	do_send(&change_hp);
 }
 
