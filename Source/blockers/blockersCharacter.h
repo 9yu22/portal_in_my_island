@@ -85,8 +85,6 @@ public:
 	void SendAnimationPacket(int32 anim_type);
 	void SetTextureForCharacter(int Character_id);
 
-	void SendAnimationPacket(int32 anim_type);
-
 	UFUNCTION(BlueprintCallable)
 	void SetMontage(int32 montageSectionNum);
 
