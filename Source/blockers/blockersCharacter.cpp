@@ -130,8 +130,9 @@ void AblockersCharacter::Tick(float DeltaTime) {
 
 	if (instance->Socket != nullptr) {
 		SendMovePacketTime += DeltaTime;
-		if (IsSelf == true && SendMovePacketTime >= 0.2f) {
+		if (IsSelf == true && SendMovePacketTime >= 0.1f) {
 			SendMovePacket();
+			SendMovePacketTime = 0.0f;
 		}
 
 		if (IsSelf == false) {
