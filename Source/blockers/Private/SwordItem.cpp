@@ -3,7 +3,7 @@
 
 #include "SwordItem.h"
 #include "../blockersCharacter.h"
-#include "BKChunkBase.h"
+#include "BKNaiveChunk.h"
 #include "../Network/SGameInstance.h"
 
 
@@ -72,7 +72,7 @@ void ASwordItem::UseItem()
 					}
 				}
 
-				ABKChunkBase* TargetChunk = Cast<ABKChunkBase>(HitResult.GetActor());
+				ABKNaiveChunk* TargetChunk = Cast<ABKNaiveChunk>(HitResult.GetActor());
 
 				if (TargetChunk)
 				{
@@ -87,4 +87,44 @@ void ASwordItem::UseItem()
 			}
 		}
 	}
+}
+
+float ASwordItem::GetBlockDamage()
+{
+	if (IsCastToDiamond(this))
+		return 100.f;
+	return 20.0f;
+}
+
+float ASwordItem::GetPlayerDamage()
+{
+	return 0.0f;
+}
+
+bool ASwordItem::IsCastToDiamond(ASwordItem* MyActor) const
+{
+	const FString& BlueprintPath = "Blueprint'Blockers/Blueprints/Item/BP_PickaxItem_Diamond.BP_PickaxItem_Diamond_C'";
+
+	if (MyActor == nullptr || BlueprintPath.IsEmpty())
+	{
+		return false;
+	}
+
+	// 블루프린트 클래스를 로드
+	UBlueprint* LoadedBlueprint = Cast<UBlueprint>(StaticLoadObject(UBlueprint::StaticClass(), nullptr, *BlueprintPath));
+	if (LoadedBlueprint == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("블루프린트를 로드할 수 없습니다: %s"), *BlueprintPath);
+		return false;
+	}
+
+	UClass* BlueprintClass = LoadedBlueprint->GeneratedClass;
+	if (BlueprintClass == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("블루프린트 클래스가 유효하지 않습니다: %s"), *BlueprintPath);
+		return false;
+	}
+
+	// MyActor가 로드된 블루프린트 클래스의 인스턴스인지 확인
+	return MyActor->IsA(BlueprintClass);
 }

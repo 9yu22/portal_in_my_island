@@ -6,3 +6,13 @@
 void ABlockItem::UseItem()
 {
 }
+
+float ABlockItem::GetBlockDamage()
+{
+    return 0.0f;
+}
+
+float ABlockItem::GetPlayerDamage()
+{
+    return 0.0f;
+}

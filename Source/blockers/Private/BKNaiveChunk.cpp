@@ -1089,13 +1089,25 @@ FBlockk ABKNaiveChunk::GetBreakingBlock(FIntVector Position, float DamageAmount)
 	if (Blocks[Index].health <= 0) {
 		newBlock.health = 0;
 		if (Blocks[Index].block == BKEBlock::StoneB3)
+		{
+			newBlock.CollapsibleType = static_cast<int32>(BKEBlock::Stone);
 			CollapsibleBlockName = "Stone";
+		}
 		else if (Blocks[Index].block == BKEBlock::AmethystB3)
+		{
+			newBlock.CollapsibleType = static_cast<int32>(BKEBlock::Amethyst);
 			CollapsibleBlockName = "Amethyst";
+		}
 		else if (Blocks[Index].block == BKEBlock::RubyB3)
+		{
+			newBlock.CollapsibleType = static_cast<int32>(BKEBlock::Ruby);
 			CollapsibleBlockName = "Ruby";
+		}
 		else if (Blocks[Index].block == BKEBlock::DiamondB3)
+		{
+			newBlock.CollapsibleType = static_cast<int32>(BKEBlock::Diamond);
 			CollapsibleBlockName = "Diamond";
+		}
 		newBlock.block = BKEBlock::Air;
 	}
 	else if (Blocks[Index].health <= 25) {

@@ -16,6 +16,8 @@ class BLOCKERS_API ASwordItem : public APickUpItem
 	
 protected:
 	virtual void UseItem() override;
+	virtual float GetBlockDamage() override;
+	virtual float GetPlayerDamage() override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -23,4 +25,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FHitResult HitResult;
+
+	// 캐스팅 확인 함수
+	UFUNCTION(BlueprintCallable, Category = "Casting")
+	bool IsCastToDiamond(ASwordItem* MyActor) const;
 };

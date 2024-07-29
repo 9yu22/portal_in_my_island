@@ -16,4 +16,9 @@ class BLOCKERS_API APickaxItem : public APickUpItem
 	
 protected:
 	virtual void UseItem() override;
+	virtual float GetBlockDamage() override;
+	virtual float GetPlayerDamage() override;
+
+public:
+	int8 GetPickaxType(APickaxItem* MyActor) const;
 };

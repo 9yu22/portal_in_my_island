@@ -6,3 +6,13 @@
 void APickUpPotionItem::UseItem()
 {
 }
+
+float APickUpPotionItem::GetBlockDamage()
+{
+    return 0.0f;
+}
+
+float APickUpPotionItem::GetPlayerDamage()
+{
+    return 0.0f;
+}
