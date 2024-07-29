@@ -336,19 +336,19 @@ void ABKChunkBase::CreateBlockDestroyEffect(const FVector& world_index, const FV
 
 		UClass* CollapsibleBlockClass;
 		switch (collapsibleType) {
-		case 0:
+		case 2:
 			CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Stone.BP_CollapsibleBlock_Stone_C"));
 			break;
 
-		case 1:
+		case 5:
 			CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Amethyst.BP_CollapsibleBlock_Amethyst_C"));
 			break;
 
-		case 2:
+		case 11:
 			CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Ruby.BP_CollapsibleBlock_Ruby_C"));
 			break;
 			
-		case 3:
+		case 8:
 			CollapsibleBlockClass = LoadClass<AActor>(nullptr, TEXT("/Game/Blockers/Blueprints/BP_CollapsibleBlock_Diamond.BP_CollapsibleBlock_Diamond_C"));
 			break;
 
