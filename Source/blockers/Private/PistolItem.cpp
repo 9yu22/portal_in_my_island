@@ -7,3 +7,13 @@ void APistolItem::UseItem()
 {
 	Durability -= Usage;
 }
+
+float APistolItem::GetBlockDamage()
+{
+	return 0.0f;
+}
+
+float APistolItem::GetPlayerDamage()
+{
+	return 0.0f;
+}

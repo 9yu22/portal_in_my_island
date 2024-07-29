@@ -19,4 +19,6 @@ public:
 	
 protected:
 	virtual void UseItem() override;
+	virtual float GetBlockDamage() override;
+	virtual float GetPlayerDamage() override;
 };

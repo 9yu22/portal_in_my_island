@@ -80,4 +80,10 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = Pickup)
 	virtual void UseItem() PURE_VIRTUAL(APickUpItem::UseItem);
 
+	UFUNCTION(BlueprintCallable, Category = Pickup)
+	virtual float GetBlockDamage() PURE_VIRTUAL(APickUpItem::GetBlockDamage, return 0.0f;);
+
+	UFUNCTION(BlueprintCallable, Category = Pickup)
+	virtual float GetPlayerDamage() PURE_VIRTUAL(APickUpItem::GetPlayerDamage, return 0.0f;);
+
 };
