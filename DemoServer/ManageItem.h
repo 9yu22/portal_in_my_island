@@ -34,5 +34,6 @@ public:
 
 	//void SpawnItem(Item_type type);
 	void Init();
+	void UpdateTime();
 	Item_type CheckCanSpawn();
 };
